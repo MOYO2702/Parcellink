@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<link rel="stylesheet" href="/css/theme.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Investor ROI Dashboard | ParcelLink</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif}
+body{background:#f4f7ff;color:#0f172a}
+header{min-height:86px;background:#fff;display:flex;align-items:center;justify-content:space-between;padding:14px 32px;border-bottom:1px solid #dbe3f0;box-shadow:0 8px 20px rgba(2,22,60,.07)}
+header img{height:48px !important;width:auto;display:block}
+header ul{list-style:none;display:flex;gap:18px;flex-wrap:wrap}
+header a{text-decoration:none;color:#0c2356;font-weight:600;font-size:14px}
+header a.active{color:#1d6cff}
+.hero{background:linear-gradient(135deg,#1242a6,#1d6cff);color:#fff;padding:48px 6% 40px}
+.hero h1{font-size:clamp(2rem,3.8vw,3rem);line-height:1.08}
+.hero p{margin-top:8px;line-height:1.7;opacity:.96}
+.wrap{width:min(1160px,93%);margin:20px auto 50px}
+.card{background:#fff;border:1px solid #dbe3f0;border-radius:14px;padding:16px;box-shadow:0 10px 24px rgba(15,40,90,.06)}
+.card+.card{margin-top:12px}
+.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.metric{border:1px solid #dbe3f0;border-radius:12px;background:#f8fbff;padding:12px}
+.metric .k{font-size:12px;color:#64748b}
+.metric .v{margin-top:4px;font-size:18px;font-weight:700;color:#0d2559}
+.split{display:grid;grid-template-columns:2fr 1fr;gap:12px}
+.mini{font-size:13px;color:#475569;line-height:1.6}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th,td{padding:10px;border-bottom:1px solid #e2e8f0;text-align:left}
+th{background:#0f172a;color:#fff}
+.ok{border:1px solid #bbf7d0;background:#ecfdf3;border-radius:12px;padding:12px;color:#166534}
+button{border:none;background:#1242a6;color:#fff;border-radius:10px;padding:10px 14px;font-size:13px;font-weight:600;cursor:pointer}
+button:hover{background:#0f3686}
+@media (max-width:980px){.grid{grid-template-columns:1fr 1fr}.split{grid-template-columns:1fr}}
+@media (max-width:600px){header{padding:10px 16px;flex-wrap:wrap}.grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header>
+  <a href="/"><img src="/images/logo.png" alt="ParcelLink"></a>
+  <ul>
+    <li><a href="/">Home</a></li>
+    <li><a href="/investor">Investor Portal</a></li>
+    <li><a class="active" href="/investor-dashboard">ROI Dashboard</a></li>
+  </ul>
+</header>
+<section class="hero">
+  <h1>Investor ROI Dashboard</h1>
+  <p>Annual ROI model: <strong>25%</strong> split into daily growth tracking across 365 days.</p>
+</section>
+<main class="wrap" id="app"></main>
+<script>
+function getInvestorSession() {
+  try {
+    const userRaw = sessionStorage.getItem("parcelInvestorUser");
+    const token = sessionStorage.getItem("parcelInvestorToken") || "";
+    const user = userRaw ? JSON.parse(userRaw) : null;
+    return { user, token };
+  } catch {
+    return { user: null, token: "" };
+  }
+}
+
+function formatMoney(v) {
+  const n = Number(v || 0);
+  return new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 2 }).format(n);
+}
+
+function renderDashboard(d) {
+  const app = document.getElementById("app");
+  const profile = d.profile || {};
+  const metrics = d.metrics || {};
+  const projections = d.projections || {};
+  const timeline = Array.isArray(d.timeline) ? d.timeline : [];
+
+  app.innerHTML = `
+    <section class="card">
+      <h2 style="font-size:1.2rem;color:#0d2559;">Investor Profile</h2>
+      <p class="mini" style="margin-top:6px;">${profile.investorName || ""} | ${profile.email || ""} | Start: ${profile.investmentStartDate || "-"}</p>
+      <div class="ok" style="margin-top:10px;">
+        Confirmation is active. ROI tracking runs daily and compounds from your start date.
+      </div>
+    </section>
+
+    <section class="card">
+      <h2 style="font-size:1.1rem;color:#0d2559;">ROI Metrics</h2>
+      <div class="grid" style="margin-top:10px;">
+        <div class="metric"><div class="k">Initial Investment</div><div class="v">${formatMoney(profile.initialInvestment)}</div></div>
+        <div class="metric"><div class="k">Elapsed Days</div><div class="v">${metrics.elapsedDays || 0}</div></div>
+        <div class="metric"><div class="k">Annual ROI</div><div class="v">${Number(metrics.annualRoiPercent || 25).toFixed(2)}%</div></div>
+        <div class="metric"><div class="k">Daily Rate</div><div class="v">${Number(metrics.dailyRatePercent || 0).toFixed(4)}%</div></div>
+        <div class="metric"><div class="k">Current Value</div><div class="v">${formatMoney(metrics.currentPortfolioValue)}</div></div>
+        <div class="metric"><div class="k">Total Growth</div><div class="v">${formatMoney(metrics.totalGrowthAmount)}</div></div>
+        <div class="metric"><div class="k">Growth %</div><div class="v">${Number(metrics.totalGrowthPercent || 0).toFixed(2)}%</div></div>
+        <div class="metric"><div class="k">Reference</div><div class="v" style="font-size:14px;">${profile.inquiryId || "-"}</div></div>
+      </div>
+    </section>
+
+    <section class="card split">
+      <div>
+        <h2 style="font-size:1.1rem;color:#0d2559;">Daily ROI Timeline</h2>
+        <div style="overflow:auto;margin-top:10px;">
+          <table>
+            <thead><tr><th>Day</th><th>Date</th><th>Opening</th><th>Daily Profit</th><th>Closing</th></tr></thead>
+            <tbody>
+              ${timeline.map((t) => `
+                <tr>
+                  <td>${t.dayIndex ?? (t.day + 1)}</td>
+                  <td>${t.date || ""}</td>
+                  <td>${formatMoney(t.openingBalance)}</td>
+                  <td>${formatMoney(t.dailyProfit)}</td>
+                  <td>${formatMoney(t.closingBalance)}</td>
+                </tr>
+              `).join("")}
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div>
+        <h2 style="font-size:1.1rem;color:#0d2559;">Projections</h2>
+        <div class="metric" style="margin-top:10px;"><div class="k">After 30 Days</div><div class="v">${formatMoney(projections.after30Days)}</div></div>
+        <div class="metric" style="margin-top:10px;"><div class="k">After 90 Days</div><div class="v">${formatMoney(projections.after90Days)}</div></div>
+        <div class="metric" style="margin-top:10px;"><div class="k">After 365 Days</div><div class="v">${formatMoney(projections.after365Days)}</div></div>
+        <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap;">
+          <button onclick="goInvestorPortal()">Back to Investor Portal</button>
+          <button onclick="logoutInvestor()" style="background:#0f172a;">Logout</button>
+        </div>
+      </div>
+    </section>
+  `;
+}
+
+function clearInvestorSession() {
+  sessionStorage.removeItem("parcelInvestorUser");
+  sessionStorage.removeItem("parcelInvestorToken");
+  sessionStorage.removeItem("parcelInvestorLastInquiry");
+}
+
+function goInvestorPortal() {
+  clearInvestorSession();
+  window.location.href = "/investor";
+}
+
+function logoutInvestor() {
+  clearInvestorSession();
+  window.location.href = "/investor";
+}
+
+async function init() {
+  const app = document.getElementById("app");
+  const { token, user } = getInvestorSession();
+  if (!token || !user) {
+    window.location.href = "/investor";
+    return;
+  }
+
+  app.innerHTML = `<section class="card"><p class="mini">Loading ROI dashboard...</p></section>`;
+  try {
+    const res = await fetch("/api/investor-interest/me/dashboard", {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok || !data.success || !data.dashboard) {
+      throw new Error(data.message || "Unable to load ROI dashboard.");
+    }
+    renderDashboard(data.dashboard);
+  } catch (err) {
+    app.innerHTML = `<section class="card"><p class="mini" style="color:#991b1b;">${err.message || "Unable to load ROI dashboard."}</p><div style="margin-top:10px;"><button onclick="goInvestorPortal()">Back to Investor Portal</button></div></section>`;
+  }
+}
+
+init();
+</script>
+</body>
+</html>

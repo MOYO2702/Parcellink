@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<link rel="stylesheet" href="/css/theme.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Investor Portal | ParcelLink</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif}
+body{background:#f4f7ff;color:#0f172a}
+header{
+  min-height:86px;background:#fff;display:flex;align-items:center;justify-content:space-between;
+  padding:14px 40px;border-bottom:1px solid #dbe3f0;box-shadow:0 8px 20px rgba(2,22,60,.07)
+}
+header img{height:48px !important;width:auto;display:block}
+header ul{list-style:none;display:flex;gap:24px;flex-wrap:wrap}
+header a{text-decoration:none;color:#0c2356;font-weight:600;font-size:14px}
+header a.active{color:#1d6cff}
+#headerLogout{
+  display:none;border:none;background:#0f172a;color:#fff;border-radius:8px;padding:8px 12px;
+  font-size:13px;font-weight:600;cursor:pointer
+}
+#headerLogout:hover{background:#0b1220}
+.hero{
+  background:linear-gradient(135deg,#1242a6,#1d6cff);
+  color:#fff;padding:56px 6% 46px
+}
+.hero h1{font-size:clamp(2rem,3.7vw,3rem);line-height:1.1}
+.hero p{margin-top:10px;max-width:760px;opacity:.96;line-height:1.7}
+.wrap{width:min(980px,92%);margin:26px auto 52px}
+.card{
+  background:#fff;border:1px solid #dbe3f0;border-radius:16px;padding:22px;
+  box-shadow:0 12px 24px rgba(15,40,90,.06)
+}
+.card+.card{margin-top:16px}
+.row{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.group{display:flex;flex-direction:column;gap:6px}
+label{font-size:13px;font-weight:600;color:#334155}
+input{
+  width:100%;border:1px solid #cbd5e1;border-radius:10px;padding:11px 12px;font-size:14px
+}
+button{
+  border:none;background:#1242a6;color:#fff;border-radius:10px;padding:11px 16px;
+  font-size:14px;font-weight:600;cursor:pointer
+}
+button:hover{background:#0f3686}
+.status{
+  margin-top:10px;padding:10px 12px;border-radius:10px;font-size:13px;display:none
+}
+.status.ok{display:block;background:#dcfce7;border:1px solid #bbf7d0;color:#166534}
+.status.err{display:block;background:#fee2e2;border:1px solid #fecaca;color:#991b1b}
+.dashboard{display:none}
+.mini{font-size:13px;color:#475569}
+.table-wrap{overflow-x:auto;margin-top:10px}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th,td{padding:10px;border-bottom:1px solid #e2e8f0;text-align:left}
+th{background:#0f172a;color:#fff}
+@media (max-width:860px){
+  header{padding:10px 16px;gap:10px;flex-wrap:wrap}
+  .row{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+<header>
+  <a href="/"><img src="/images/logo.png" alt="ParcelLink"></a>
+  <ul>
+    <li><a href="/">Home</a></li>
+    <li><a href="/track">Track</a></li>
+    <li><a href="/send">Send</a></li>
+    <li><a href="/services">Services</a></li>
+    <li><a href="/staff">Staff Portal</a></li>
+    <li><a class="active" href="/investor">Investor Portal</a></li>
+  </ul>
+  <button id="headerLogout" type="button" onclick="logout()">Logout</button>
+</header>
+
+<section class="hero">
+  <h1>Investor Portal</h1>
+  <p>Secure investor login for portfolio tracking and daily growth visibility. Use your assigned `INV` ID and password.</p>
+</section>
+
+<main class="wrap">
+  <section id="loginCard" class="card">
+    <h2>Investor Login</h2>
+    <div class="row" style="margin-top:12px;">
+      <div class="group">
+        <label for="staffId">Investor ID</label>
+        <input id="staffId" type="text" placeholder="INV003">
+      </div>
+      <div class="group">
+        <label for="password">Password</label>
+        <input id="password" type="password" placeholder="Enter password">
+      </div>
+    </div>
+    <div style="margin-top:14px;">
+      <button type="button" onclick="login()">Login</button>
+    </div>
+    <div id="loginStatus" class="status"></div>
+  </section>
+
+  <section id="dashboard" class="card dashboard">
+    <h2 id="welcomeTitle">Investor Portal</h2>
+    <p id="welcomeSub" class="mini"></p>
+    <div id="defaultInvestorView" class="mini" style="margin-top:12px;"></div>
+    <div style="margin-top:12px;">
+      <button type="button" onclick="logout()" style="background:#0f172a;">Logout</button>
+    </div>
+    <div id="investorResult" class="table-wrap"></div>
+  </section>
+</main>
+
+<script>
+let investorToken = "";
+let investorUser = null;
+let keepInvestorSessionOnNavigate = false;
+let lastInquiryReference = "";
+
+function setStatus(message, ok) {
+  const el = document.getElementById("loginStatus");
+  if (!el) return;
+  el.textContent = message || "";
+  el.className = `status ${ok ? "ok" : "err"}`;
+}
+
+function saveSession(user, token) {
+  investorUser = user || null;
+  investorToken = token || "";
+  sessionStorage.setItem("parcelInvestorUser", JSON.stringify(investorUser || {}));
+  if (investorToken) sessionStorage.setItem("parcelInvestorToken", investorToken);
+}
+
+function clearSession() {
+  investorUser = null;
+  investorToken = "";
+  lastInquiryReference = "";
+  sessionStorage.removeItem("parcelInvestorUser");
+  sessionStorage.removeItem("parcelInvestorToken");
+  sessionStorage.removeItem("parcelInvestorLastInquiry");
+  const headerLogout = document.getElementById("headerLogout");
+  if (headerLogout) headerLogout.style.display = "none";
+}
+
+function isInvestorUser(user) {
+  const role = String(user?.role || "").toLowerCase();
+  const department = String(user?.department || "").toLowerCase();
+  const accountType = String(user?.accountType || "").toLowerCase();
+  return role === "investor" || department === "investors" || accountType === "investor";
+}
+
+function renderDashboard(user) {
+  document.getElementById("loginCard").style.display = "none";
+  document.getElementById("dashboard").style.display = "block";
+  const headerLogout = document.getElementById("headerLogout");
+  if (headerLogout) headerLogout.style.display = "inline-block";
+  document.getElementById("welcomeTitle").textContent = "Investor Portal";
+  document.getElementById("welcomeSub").textContent = `Logged in as ${user.name || user.id || "Investor"} | ID: ${user.id || ""} | Role: ${user.role || "Investor"} | Department: ${user.department || "Investors"}`;
+  const investorResult = document.getElementById("investorResult");
+  if (investorResult) investorResult.innerHTML = "";
+  const defaultView = document.getElementById("defaultInvestorView");
+  if (defaultView) {
+    const savedReference = sessionStorage.getItem("parcelInvestorLastInquiry") || "";
+    lastInquiryReference = savedReference;
+    defaultView.innerHTML = `
+      <div style="border:1px solid #dbeafe;background:#f8fbff;border-radius:12px;padding:16px;">
+        <h3 style="margin-bottom:8px;color:#0f172a;">Investor Portfolio - ParcelLink</h3>
+        <p class="mini">Asset-backed growth with predictable monthly returns.</p>
+
+        <div style="margin-top:12px;border-top:1px solid #dbe3f0;padding-top:12px;">
+          <h4 style="margin-bottom:8px;color:#0f172a;">Portfolio Summary</h4>
+          <table>
+            <thead>
+              <tr>
+                <th>Metric</th>
+                <th>Current Value</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Monthly ROA</td>
+                <td><strong>8.75%</strong></td>
+              </tr>
+              <tr>
+                <td>Payout Date</td>
+                <td>15th of every month</td>
+              </tr>
+              <tr>
+                <td>Contract Review</td>
+                <td>Every 3 years</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div style="margin-top:12px;border-top:1px solid #dbe3f0;padding-top:12px;">
+          <h4 style="margin-bottom:8px;color:#0f172a;">Investment Model</h4>
+          <p class="mini">ParcelLink operates an investment-driven logistics model built for sustainable, repeatable growth through asset-backed operations.</p>
+          <p class="mini" style="margin-top:6px;">Capital is deployed into working transport assets and managed through a transparent cost-to-revenue structure.</p>
+        </div>
+
+        <div style="margin-top:12px;border-top:1px solid #dbe3f0;padding-top:12px;">
+          <h4 style="margin-bottom:8px;color:#0f172a;">Asset Deployment</h4>
+          <ul style="padding-left:18px;color:#334155;line-height:1.7;">
+            <li>Delivery vans</li>
+            <li>Motor bikes for last-mile dispatch</li>
+            <li>Operational insurance coverage for investor-funded assets</li>
+          </ul>
+        </div>
+
+        <div style="margin-top:12px;border-top:1px solid #dbe3f0;padding-top:12px;">
+          <h4 style="margin-bottom:8px;color:#0f172a;">Investment Structure</h4>
+          <table>
+            <thead>
+              <tr>
+                <th>Tier</th>
+                <th>Minimum Investment</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Tier 1</td>
+                <td>$2,200</td>
+              </tr>
+              <tr>
+                <td>Tier 2</td>
+                <td>$4,400</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div style="margin-top:12px;border-top:1px solid #dbe3f0;padding-top:12px;">
+          <h4 style="margin-bottom:8px;color:#0f172a;">Contract Notes</h4>
+          <ul style="padding-left:18px;color:#334155;line-height:1.7;">
+            <li>3-month written notice is required for cancellation.</li>
+            <li>Annual depreciation for the investment year is deducted.</li>
+            <li>10% liquidation and administrative fee applies.</li>
+            <li>If contract is not renewed, remaining capital is returned after deductions.</li>
+          </ul>
+        </div>
+
+        <div style="margin-top:12px;border-left:4px solid #1242a6;background:#eef4ff;border-radius:10px;padding:12px;">
+          <p class="mini" style="color:#1e3a8a;">Capital stays active in revenue-generating logistics assets to produce steady monthly returns.</p>
+        </div>
+      </div>
+
+      <div style="border:1px solid #dbe3f0;background:#fff;border-radius:12px;padding:14px;margin-top:12px;">
+        <h3 style="margin-bottom:8px;color:#0f172a;">Join the Investment Train</h3>
+        <p class="mini">Complete this onboarding form. ROI tracking starts from the next day after confirmation.</p>
+        <form id="investmentForm" onsubmit="submitInvestmentInterest(event)">
+          <div class="row" style="margin-top:8px;">
+            <div class="group">
+              <label for="invName">Name</label>
+              <input id="invName" type="text" value="${(user.name || "").replace(/"/g, "&quot;")}" readonly>
+            </div>
+            <div class="group">
+              <label for="invEmail">Email</label>
+              <input id="invEmail" type="email" value="${(user.email || "").replace(/"/g, "&quot;")}" readonly>
+            </div>
+            <div class="group">
+              <label for="invPhone">Phone</label>
+              <input id="invPhone" type="text" placeholder="+9715XXXXXXXX" required>
+            </div>
+            <div class="group">
+              <label for="invAmount">Initial Investment</label>
+              <input id="invAmount" type="number" min="1" step="0.01" placeholder="2200" required>
+            </div>
+            <div class="group">
+              <label for="invStartDate">Start Date</label>
+              <input id="invStartDate" type="date" value="${new Date().toISOString().slice(0, 10)}" required>
+            </div>
+          </div>
+          <div style="margin-top:12px;">
+            <button type="submit">Submit Investment Form</button>
+          </div>
+        </form>
+      </div>
+      ${savedReference ? `
+      <div style="border:1px solid #dbeafe;background:#eff6ff;border-radius:12px;padding:14px;margin-top:12px;">
+        <h3 style="margin-bottom:8px;color:#1e3a8a;">Previous Confirmation Found</h3>
+        <p class="mini">Reference: <strong>${savedReference}</strong></p>
+        <div style="margin-top:10px;">
+          <button type="button" onclick="viewRoiDashboardByRef('${savedReference}')">View ROI Dashboard</button>
+        </div>
+      </div>` : ""}
+    `;
+  }
+}
+
+function tryRestoreSession() {
+  try {
+    const rawUser = sessionStorage.getItem("parcelInvestorUser");
+    const rawToken = sessionStorage.getItem("parcelInvestorToken");
+    if (!rawUser || !rawToken) return;
+    const user = JSON.parse(rawUser);
+    if (!user || !user.id || !isInvestorUser(user)) return;
+    investorUser = user;
+    investorToken = rawToken;
+    renderDashboard(user);
+  } catch (_) { /* ignored */ }
+}
+
+async function login() {
+  const staffId = document.getElementById("staffId")?.value?.trim() || "";
+  const password = document.getElementById("password")?.value?.trim() || "";
+  if (!staffId || !password) {
+    setStatus("Investor ID and password are required.", false);
+    return;
+  }
+
+  try {
+    const res = await fetch("/api/staff-login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ staffId, password })
+    });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok || !data.success || !data.staff) {
+      throw new Error(data.message || "Invalid Investor ID or password.");
+    }
+
+    if (!isInvestorUser(data.staff)) {
+      throw new Error("This account is not an investor account.");
+    }
+
+    saveSession(data.staff, data.token || "");
+    setStatus("Login successful.", true);
+
+    // If investor already has a confirmed onboarding record, open full ROI dashboard directly.
+    try {
+      const meRes = await fetch("/api/investor-interest/me/dashboard", {
+        headers: { Authorization: `Bearer ${data.token || ""}` }
+      });
+      const meData = await meRes.json().catch(() => ({}));
+      if (meRes.ok && meData.success && meData.dashboard) {
+        keepInvestorSessionOnNavigate = true;
+        window.location.href = "/investor-dashboard";
+        return;
+      }
+    } catch (_) { /* ignored */ }
+
+    renderDashboard(data.staff);
+  } catch (err) {
+    setStatus(err.message || "Unable to login.", false);
+  }
+}
+
+async function submitInvestmentInterest(event) {
+  event.preventDefault();
+
+  const result = document.getElementById("investorResult");
+  if (!result) return;
+
+  const name = document.getElementById("invName")?.value?.trim() || "";
+  const email = document.getElementById("invEmail")?.value?.trim() || "";
+  const phone = document.getElementById("invPhone")?.value?.trim() || "";
+  const initialInvestment = Number(document.getElementById("invAmount")?.value || 0);
+  const startDate = document.getElementById("invStartDate")?.value?.trim() || "";
+
+  if (!name || !email || !phone || !initialInvestment || !startDate) {
+    result.innerHTML = `<p class="mini" style="color:#991b1b;">Please complete all form fields.</p>`;
+    return;
+  }
+
+  result.innerHTML = `<p class="mini">Submitting investment form...</p>`;
+
+  try {
+    const res = await fetch("/api/investor-interest", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name, email, phone, initialInvestment, startDate })
+    });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok || !data.success) {
+      throw new Error(data.message || "Unable to submit investment form.");
+    }
+    lastInquiryReference = data.inquiryId || "";
+    if (lastInquiryReference) {
+      sessionStorage.setItem("parcelInvestorLastInquiry", lastInquiryReference);
+    }
+
+    result.innerHTML = `
+      <div style="border:1px solid #bbf7d0;background:#ecfdf3;border-radius:12px;padding:14px;">
+        <h3 style="margin-bottom:8px;color:#166534;">Investment Request Confirmed</h3>
+        <p class="mini" style="color:#166534;">Your onboarding has been received successfully.</p>
+        <p class="mini" style="margin-top:6px;color:#166534;"><strong>ROI tracking starts from the next day</strong> after confirmation.</p>
+        <p class="mini" style="margin-top:6px;color:#166534;">Reference: ${data.inquiryId || "N/A"}</p>
+        ${data.inquiryId ? `<div style="margin-top:10px;"><button type="button" onclick="viewRoiDashboardByRef('${data.inquiryId}')">View ROI Dashboard</button></div>` : ""}
+      </div>
+    `;
+    setTimeout(() => {
+      keepInvestorSessionOnNavigate = true;
+      window.location.href = "/investor-dashboard";
+    }, 900);
+  } catch (err) {
+    result.innerHTML = `<p class="mini" style="color:#991b1b;">${err.message || "Unable to submit investment form."}</p>`;
+  }
+}
+
+async function viewRoiDashboardByRef(referenceId) {
+  const inquiryId = String(referenceId || "").trim();
+  const result = document.getElementById("investorResult");
+  if (!result) return;
+  if (!inquiryId) {
+    result.innerHTML = `<p class="mini" style="color:#991b1b;">Missing reference ID.</p>`;
+    return;
+  }
+
+  result.innerHTML = `<p class="mini">Loading ROI dashboard...</p>`;
+  try {
+    const res = await fetch(`/api/investor-interest/${encodeURIComponent(inquiryId)}/dashboard`);
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok || !data.success || !data.dashboard) {
+      throw new Error(data.message || "Unable to load ROI dashboard.");
+    }
+
+    const timeline = Array.isArray(data.dashboard.timeline) ? data.dashboard.timeline : [];
+    if (!timeline.length) {
+      result.innerHTML = `<p class="mini">No ROI timeline records yet for this reference.</p>`;
+      return;
+    }
+
+    result.innerHTML = `
+      <div style="margin:10px 0;color:#166534;" class="mini"><strong>ROI Dashboard:</strong> ${inquiryId}</div>
+      <table>
+        <thead>
+          <tr>
+            <th>Day</th>
+            <th>Date</th>
+            <th>Opening</th>
+            <th>Daily Profit</th>
+            <th>Closing</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${timeline.map((item) => `
+            <tr>
+              <td>${item.dayIndex || ""}</td>
+              <td>${item.date || ""}</td>
+              <td>${item.openingBalance || ""}</td>
+              <td>${item.dailyProfit || ""}</td>
+              <td>${item.closingBalance || ""}</td>
+            </tr>
+          `).join("")}
+        </tbody>
+      </table>
+    `;
+  } catch (err) {
+    result.innerHTML = `<p class="mini" style="color:#991b1b;">${err.message || "Unable to load ROI dashboard."}</p>`;
+  }
+}
+
+function logout() {
+  clearSession();
+  document.getElementById("dashboard").style.display = "none";
+  document.getElementById("loginCard").style.display = "block";
+}
+
+window.addEventListener("pagehide", () => {
+  if (!keepInvestorSessionOnNavigate) {
+    clearSession();
+  }
+});
+
+tryRestoreSession();
+</script>
+</body>
+</html>

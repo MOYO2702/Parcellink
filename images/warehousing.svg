@@ -1,0 +1,7 @@
+<svg width="120" height="120" viewBox="0 0 100 100" fill="none"
+     stroke="#8b5cf6" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M10 40l40-20l40 20v40H10z"/>
+  <rect x="35" y="55" width="30" height="25"/>
+  <rect x="40" y="60" width="8" height="8"/>
+  <rect x="52" y="60" width="8" height="8"/>
+</svg>

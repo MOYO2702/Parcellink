@@ -1,0 +1,261 @@
+﻿:root {
+  --brand-primary: #1242a6;
+  --brand-primary-strong: #0f3686;
+  --brand-accent: #1d6cff;
+  --brand-accent-soft: #eaf1ff;
+  --brand-dark: #001c48;
+  --bg-page: #f6f8fc;
+  --bg-surface: #ffffff;
+  --text-primary: #0f172a;
+  --text-muted: #475569;
+  --border-subtle: #dbe3f0;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+body {
+  background: var(--bg-page);
+  color: var(--text-primary);
+}
+
+a {
+  color: inherit;
+}
+
+img,
+video,
+svg {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Global header/logo normalization across pages */
+header {
+  width: 100%;
+}
+
+header > a:first-child {
+  display: inline-flex;
+  align-items: center;
+  width: auto;
+  height: auto;
+  overflow: visible;
+  flex: 0 0 auto;
+}
+
+header > a:first-child img {
+  width: auto !important;
+  height: 46px !important;
+  object-fit: contain !important;
+  object-position: left center !important;
+  transform: none !important;
+}
+
+/* Home page specific logo box */
+.nav-bar .logo {
+  width: auto;
+  height: 46px;
+  overflow: visible;
+}
+
+.nav-bar .logo a {
+  width: auto;
+  height: auto;
+  display: block;
+  overflow: visible;
+}
+
+.nav-bar .logo img {
+  width: auto;
+  height: 46px;
+  object-fit: contain;
+  object-position: left center;
+  transform: none;
+  margin-left: 0;
+}
+
+.btn-primary,
+button.primary {
+  background: var(--brand-primary);
+  color: #fff;
+}
+
+.btn-primary:hover,
+button.primary:hover {
+  background: var(--brand-primary-strong);
+}
+
+section {
+  scroll-margin-top: 90px;
+}
+
+/* Large tablets/laptops */
+@media (max-width: 1200px) {
+  header {
+    padding-left: 24px !important;
+    padding-right: 24px !important;
+  }
+
+  header nav ul {
+    gap: 18px !important;
+  }
+
+  .container {
+    width: min(96%, 1200px) !important;
+  }
+
+  .hero,
+  .services-hero,
+  .send-hero {
+    padding-left: 5% !important;
+    padding-right: 5% !important;
+  }
+
+  .value-grid,
+  .quick-links,
+  .faq-grid,
+  .footer-container,
+  .footer-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+}
+
+/* Tablets */
+@media (max-width: 992px) {
+  header > a:first-child {
+    width: auto;
+    height: auto;
+  }
+
+  .nav-bar .logo {
+    width: auto;
+    height: 42px;
+  }
+
+  .hero,
+  .services-hero,
+  .send-hero {
+    min-height: auto !important;
+  }
+
+  .form-row,
+  .send-form-row {
+    gap: 12px !important;
+  }
+
+  .logistics-container {
+    gap: 20px !important;
+  }
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  header {
+    min-height: 72px;
+    height: auto !important;
+    gap: 8px;
+    flex-wrap: wrap !important;
+    padding: 10px 16px !important;
+  }
+
+  header > a:first-child {
+    width: auto;
+    height: auto;
+  }
+
+  .nav-bar .logo {
+    width: auto;
+    height: 40px;
+  }
+
+  header > a:first-child img,
+  .nav-bar .logo img {
+    height: 40px !important;
+  }
+
+  header nav {
+    width: 100%;
+  }
+
+  header nav ul {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center !important;
+    gap: 10px !important;
+    margin-top: 6px;
+  }
+
+  header nav ul li a {
+    font-size: 13px !important;
+    padding: 6px 8px !important;
+  }
+
+  .hero-content h1,
+  .services-hero h1,
+  .send-hero-content h1 {
+    font-size: clamp(1.8rem, 6.5vw, 2.4rem) !important;
+    line-height: 1.15 !important;
+  }
+
+  .hero-content p,
+  .services-hero p,
+  .send-hero-content p {
+    font-size: 15px !important;
+    line-height: 1.6 !important;
+  }
+
+  .value-grid,
+  .quick-links,
+  .faq-grid,
+  .footer-container,
+  .footer-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .form-row,
+  .send-form-row {
+    flex-direction: column !important;
+  }
+
+  .client-zone,
+  .faq-container,
+  .categories,
+  .service-section,
+  #orderStatus {
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  header > a:first-child {
+    width: auto;
+    height: auto;
+  }
+
+  .nav-bar .logo {
+    width: auto;
+    height: 34px;
+  }
+
+  header > a:first-child img,
+  .nav-bar .logo img {
+    height: 34px !important;
+  }
+
+  .promo-slide span {
+    font-size: 13px !important;
+  }
+}
+

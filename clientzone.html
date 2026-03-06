@@ -1,0 +1,493 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<link rel="stylesheet" href="/css/theme.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ParcelLink - Client Zone</title>
+
+<style>
+/* RESET */
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif;}
+
+/* HEADER */
+header{
+    height:86px;background:#fff;display:flex;align-items:center;
+    justify-content:space-between;padding:0 48px;
+    box-shadow:0 2px 14px rgba(0,0,0,0.07);position:sticky;top:0;z-index:100;border-bottom:1px solid #e7eefb;
+}
+header img{
+      height:62px;
+      width:auto;
+      display:block;
+      transform:scale(1.95);
+      transform-origin:left center;
+}
+header nav ul{list-style:none;display:flex;gap:34px;}
+header nav ul li a{
+    text-decoration:none;color:#001c48;font-size:16px;font-weight:500;padding:6px 10px;border-radius:6px;
+}
+header nav ul li a.active{
+    background:rgba(29,108,255,0.1);color:#1d6cff;
+}
+
+/* HERO SECTION */
+.hero{
+  width:100%;
+  min-height:72vh;
+  background:url('/images/client-background.jpg') no-repeat top center / cover;
+  display:flex;
+  align-items:center;
+  padding:56px 7%;
+  position:relative;
+}
+.hero-overlay{
+  position:absolute;
+  inset:0;
+  background:rgba(0,0,0,0.45);
+}
+.hero-content{
+  position:relative;
+  z-index:2;
+  color:#fff;
+  max-width:550px;
+}
+.hero-content h1{
+  font-size:clamp(2rem,4.2vw,3.1rem);
+  line-height:1.12;
+  letter-spacing:-0.02em;
+  margin-bottom:20px;
+}
+.hero-content p{
+  font-size:18px;
+  line-height:1.65;
+  opacity:0.93;
+}
+
+/* CLIENT ZONE BODY */
+.client-zone{
+  max-width:1200px;
+  margin:44px auto;
+  padding:0 20px;
+}
+
+.section-title{
+  font-size:30px;
+  font-weight:700;
+  margin-bottom:20px;
+  color:#001c48;
+  letter-spacing:-0.01em;
+}
+
+/* LOGIN BOX */
+.login-box{
+  background:#fff;
+  padding:30px;
+  border-radius:14px;
+  box-shadow:0 12px 28px rgba(0,28,72,0.09);
+  border:1px solid #dbe3f0;
+  max-width:450px;
+  margin-bottom:40px;
+}
+.login-box h2{
+  margin-bottom:15px;
+}
+.login-box label{
+  display:block;
+  margin:10px 0 5px;
+}
+.login-box input{
+  width:100%;
+  padding:11px 12px;
+  border:1px solid #cfd8ea;
+  border-radius:8px;
+  margin-bottom:15px;
+  transition:border-color .2s ease, box-shadow .2s ease;
+}
+.login-box input:focus{
+  outline:none;
+  border-color:#1d6cff;
+  box-shadow:0 0 0 3px rgba(29,108,255,0.14);
+}
+.login-box button{
+  width:100%;
+  padding:12px;
+  background:linear-gradient(135deg,#1242a6,#1d6cff);
+  border:none;
+  border-radius:8px;
+  color:#fff;
+  font-size:16px;
+  cursor:pointer;
+  font-weight:600;
+}
+
+/* QUICK LINKS */
+.quick-links{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:18px;
+  margin-top:26px;
+}
+.quick-links .card{
+  background:#fff;
+  padding:24px;
+  border-radius:14px;
+  box-shadow:0 10px 24px rgba(0,28,72,0.08);
+  border:1px solid #dbe3f0;
+  text-align:center;
+  cursor:pointer;
+  transition:.25s;
+}
+.quick-links .card:hover{
+  transform:translateY(-5px);
+  box-shadow:0 14px 30px rgba(0,28,72,0.12);
+  border-color:#1d6cff;
+}
+
+/* FOOTER */
+footer{
+  margin-top:48px;
+  background:#001c48;
+  color:#fff;
+  padding:20px;
+  text-align:center;
+}
+
+/* RESPONSIVE */
+@media (max-width: 992px) {
+  header{
+    padding:0 24px;
+  }
+  header nav ul{
+    gap:20px;
+  }
+  .hero{
+    padding:0 40px;
+  }
+  .hero-content h1{
+    font-size:42px;
+  }
+  .client-zone{
+    padding:15px;
+  }
+  .quick-links{
+    grid-template-columns:repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  header{
+    padding:0 20px;
+    height:auto;
+    min-height:70px;
+    flex-wrap:wrap;
+  }
+  header img{
+    height:60px;
+    transform:scale(1.6);
+  }
+  header nav{
+    width:100%;
+    margin-top:10px;
+  }
+  header nav ul{
+    flex-wrap:wrap;
+    gap:12px;
+    justify-content:center;
+  }
+  header nav ul li a{
+    font-size:14px;
+    padding:6px 10px;
+  }
+  .hero{
+    height:auto;
+    min-height:60vh;
+    padding:40px 20px;
+  }
+  .hero-content{
+    max-width:100%;
+  }
+  .hero-content h1{
+    font-size:36px;
+    line-height:1.2;
+  }
+  .hero-content p{
+    font-size:16px;
+  }
+  .client-zone{
+    margin:40px auto;
+    padding:10px;
+  }
+  .section-title{
+    font-size:24px;
+  }
+  .login-box{
+    width:100%;
+    max-width:100%;
+    padding:25px 20px;
+  }
+  .login-box h2{
+    font-size:22px;
+  }
+  .login-box input{
+    padding:10px;
+    font-size:14px;
+  }
+  .login-box button{
+    padding:12px;
+    font-size:15px;
+  }
+  .quick-links{
+    grid-template-columns:1fr;
+    gap:15px;
+  }
+  .quick-links .card{
+    padding:20px;
+  }
+}
+
+@media (max-width: 480px) {
+  header img{
+    height:50px;
+    transform:scale(1.4);
+  }
+  .hero-content h1{
+    font-size:28px;
+  }
+  .hero-content p{
+    font-size:14px;
+  }
+  .login-box{
+    padding:20px 15px;
+  }
+  .section-title{
+    font-size:20px;
+  }
+}
+</style>
+
+</head>
+<body>
+
+
+
+<!-- HEADER -->
+<header>
+  <a href="/"><img src="/images/logo.png" alt="ParcelLink"></a>
+  <nav>
+    <ul>
+      <li><a href="/">Home</a></li>
+      <li><a href="/track">Track</a></li>
+      <li><a href="/send">Send</a></li>
+      <li><a href="/services">Services</a></li>
+      <li><a href="/career">Careers</a></li>
+      <li><a href="/help">Help</a></li>
+      <li><a class="active" href="/clientzone">Client Zone</a></li>
+    </ul>
+  </nav>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-overlay"></div>
+  <div class="hero-content">
+    <h1>Welcome to Your Client Zone</h1>
+    <p>Manage your parcels, view shipment history, download invoices, and track deliveries in one secure place.</p>
+  </div>
+</section>
+
+<!-- CLIENT ZONE CONTENT -->
+<div class="client-zone">
+
+  <h2 class="section-title">Client Login</h2>
+
+  <div class="login-box">
+    <h2>Sign In</h2>
+    <label>Email</label>
+    <input type="email" id="email">
+    <label>Password</label>
+    <input type="password" id="password">
+    <button onclick="loginClient()">Login</button>
+    <p id="login-msg" style="margin-top:10px;color:red;"></p>
+  </div>
+
+  <h2 class="section-title">Quick Actions</h2>
+
+  <div class="quick-links">
+    <div class="card" onclick="alert('Track Shipments')">
+      <h3>Track Shipments</h3>
+    </div>
+
+    <div class="card" onclick="alert('View Invoice History')">
+      <h3>Invoice History</h3>
+    </div>
+
+    <div class="card" onclick="alert('Download Statements')">
+      <h3>Download Statements</h3>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  &copy; 2026 ParcelLink - All Rights Reserved
+</footer>
+
+<script>
+// Dynamic API URL - works in both dev and production
+const API_URL = window.location.origin;
+
+let currentUser = null;
+let authToken = null;
+
+async function loginClient(){
+  const email = document.getElementById("email").value.trim();
+  const password = document.getElementById("password").value;
+  const msg = document.getElementById("login-msg");
+
+  if(email === "" || password === ""){
+    msg.style.color = "red";
+    msg.textContent = "Please enter your credentials.";
+    return;
+  }
+
+  try {
+    const response = await fetch(`${API_URL}/api/login`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ identifier: email, password })
+    });
+
+    const result = await response.json();
+
+    if (result.success) {
+      currentUser = result.user;
+      authToken = result.token || null;
+      msg.style.color = "green";
+      msg.textContent = "Login successful! Loading your dashboard...";
+      
+      // Store user data
+      sessionStorage.setItem('user', JSON.stringify(currentUser));
+      if (authToken) {
+        sessionStorage.setItem('userToken', authToken);
+      }
+      
+      // Load user dashboard
+      setTimeout(() => {
+        loadUserDashboard();
+      }, 1000);
+    } else {
+      msg.style.color = "red";
+      msg.textContent = result.message || "Invalid credentials.";
+    }
+  } catch (error) {
+    console.error('Login error:', error);
+    msg.style.color = "red";
+    msg.textContent = "Connection error. Please try again.";
+  }
+}
+
+async function loadUserDashboard() {
+  if (!currentUser) {
+    const stored = sessionStorage.getItem('user');
+    if (stored) {
+      currentUser = JSON.parse(stored);
+      authToken = sessionStorage.getItem('userToken') || localStorage.getItem('parcelAuthToken') || null;
+    } else {
+      return;
+    }
+  }
+
+  // Hide login box and show dashboard
+  document.querySelector('.login-box').style.display = 'none';
+  document.querySelector('.section-title').textContent = `Welcome, ${currentUser.fullName}!`;
+  
+  // Update quick links with real functionality
+  document.querySelector('.quick-links').innerHTML = `
+    <div class="card" onclick="viewShipments()">
+      <h3>My Shipments</h3>
+    </div>
+    <div class="card" onclick="viewReceipts()">
+      <h3>Download Receipts</h3>
+    </div>
+    <div class="card" onclick="logout()">
+      <h3>Logout</h3>
+    </div>
+  `;
+}
+
+async function viewShipments() {
+  try {
+    const response = await fetch(`${API_URL}/api/parcels/user/${currentUser.email}`, {
+      headers: authToken ? { Authorization: `Bearer ${authToken}` } : {}
+    });
+    const result = await response.json();
+
+    if (result.success && result.parcels.length > 0) {
+      let html = '<h3>Your Shipments:</h3><ul>';
+      result.parcels.forEach(p => {
+        html += `<li><strong>${p.trackingCode}</strong> - From: ${p.from} To: ${p.to} | Weight: ${p.weight}kg | Status: ${p.paymentStatus || 'Pending Payment'}</li>`;
+      });
+      html += '</ul>';
+      alert(html.replace(/<[^>]*>/g, '\n'));
+    } else {
+      alert('No shipments found.');
+    }
+  } catch (error) {
+    console.error('Error:', error);
+    alert('Failed to load shipments.');
+  }
+}
+
+async function viewReceipts() {
+  try {
+    const response = await fetch(`${API_URL}/api/receipts/${currentUser.email}`, {
+      headers: authToken ? { Authorization: `Bearer ${authToken}` } : {}
+    });
+    const result = await response.json();
+
+    if (result.success && result.receipts.length > 0) {
+      let html = '=== YOUR RECEIPTS ===\n\n';
+      result.receipts.forEach(r => {
+        html += `Receipt: ${r.receiptNumber}\n`;
+        html += `Tracking: ${r.trackingCode}\n`;
+        html += `Amount: ${r.amount} ${r.pricing?.currency || 'AED'}\n`;
+        html += `Paid: ${new Date(r.paidAt).toLocaleString()}\n`;
+        html += `Payment: ${r.paymentMethod} ****${r.cardLast4}\n`;
+        html += `-----------------\n`;
+      });
+      alert(html);
+    } else {
+      alert('No receipts found. Make a payment first!');
+    }
+  } catch (error) {
+    console.error('Error:', error);
+    alert('Failed to load receipts.');
+  }
+}
+
+function logout() {
+  sessionStorage.removeItem('user');
+  sessionStorage.removeItem('userToken');
+  currentUser = null;
+  authToken = null;
+  location.reload();
+}
+
+// Check if user is already logged in
+window.addEventListener('DOMContentLoaded', () => {
+  const stored = sessionStorage.getItem('user');
+  if (stored) {
+    currentUser = JSON.parse(stored);
+    authToken = sessionStorage.getItem('userToken') || localStorage.getItem('parcelAuthToken') || null;
+    loadUserDashboard();
+  }
+});
+</script>
+
+</body>
+</html>
+
+
+
+

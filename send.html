@@ -1,0 +1,604 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<link rel="stylesheet" href="/css/theme.css">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Send Parcel | ParcelLink</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+    *{
+        margin:0;
+        padding:0;
+        box-sizing:border-box;
+        font-family:'Poppins',sans-serif;
+    }
+
+    body{
+        background:#f5f6f7;
+        overflow-x:hidden;
+        color:#0f172a;
+    }
+
+    /* HEADER */
+    header{
+        width:100%;
+        height:86px;
+        background:#fff;
+        display:flex;
+        align-items:center;
+        justify-content:space-between;
+        padding:0 46px;
+        box-shadow:0 2px 14px rgba(0,0,0,0.07);
+        position:sticky;
+        top:0;
+        z-index:50;
+    }
+    header img{
+        height:70px;        /* stays the same */
+      width:auto;
+      display:block;
+      transform:scale(2);   /* makes it visually bigger */
+      transform-origin:left center
+    }
+    header nav ul{
+        list-style:none;
+        display:flex;
+        gap:34px;
+    }
+    header nav ul li a{
+        text-decoration:none;
+        font-size:16px;
+        color:#001c48;
+        font-weight:500;
+        padding:8px 12px;
+        border-radius:6px;
+        transition:0.3s;
+    }
+    header nav ul li a.active{
+        color:#1d6cff;
+        background:#eaf1ff;
+    }
+
+    /* PROMO SLIDING BANNER */
+.promo-banner {
+    width: 100%;
+    background: linear-gradient(90deg, #0f3686, #1d6cff);
+    color: #fff;
+    padding: 4px 0;
+    overflow: hidden;
+    position: relative;
+    z-index: 40;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.promo-slide {
+    display: flex;
+    gap: 70px;
+    white-space: nowrap;
+    animation: slideText 15s linear infinite;
+    align-items: center;
+    
+}
+
+.promo-slide span {
+    font-size: 16px;
+    font-weight: 500;
+     padding: 0 20px;
+}
+
+@keyframes slideText {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+}
+
+
+    /* HERO SECTION */
+    .send-hero{
+        width:100%;
+        min-height:420px;
+        background-color: #001c48;
+        display:flex;
+        align-items:center;
+        padding:72px 8%;
+        color:white;
+        position:relative;
+    }
+    .send-hero::before{
+        content:"";
+        position:absolute;
+        inset:0;
+        background:rgba(0,0,0,0.55);
+    }
+    .send-hero-content{
+        position:relative;
+        z-index:2;
+        max-width:680px;
+    }
+    .send-hero-content h1{
+        font-size:clamp(2.2rem, 4.7vw, 3.5rem);
+        font-weight:700;
+        line-height:1.08;
+        letter-spacing:-0.02em;
+        margin-bottom:14px;
+    }
+    .send-hero-content p{
+        font-size:18px;
+        line-height:1.6;
+        opacity:0.96;
+    }
+
+    /* SEND FORM BOX */
+    .send-wrapper{
+        width:min(1040px, 92%);
+        background:#fff;
+        margin:48px auto;
+        padding:40px;
+        border-radius:16px;
+        border:1px solid #dbe3f0;
+        box-shadow:0 20px 40px rgba(0,28,72,0.08);
+    }
+    .form-section-title{
+        font-size:21px;
+        font-weight:700;
+        margin-bottom:16px;
+        color:#001c48;
+        letter-spacing:-0.01em;
+    }
+    .send-form-row{
+        display:flex;
+        gap:18px;
+        margin-bottom:18px;
+    }
+    .send-group{
+        flex:1;
+        display:flex;
+        flex-direction:column;
+    }
+    .send-group label{
+        font-size:13px;
+        font-weight:600;
+        color:#475569;
+        margin-bottom:7px;
+        letter-spacing:0.01em;
+        text-transform:uppercase;
+    }
+    .send-group input, .send-group select{
+        height:48px;
+        border:1px solid #cfd8ea;
+        padding:0 14px;
+        border-radius:8px;
+        font-size:15px;
+        outline:none;
+        transition:border-color .2s ease, box-shadow .2s ease;
+    }
+    .send-group input:focus, .send-group select:focus{
+        border-color:#1d6cff;
+        box-shadow:0 0 0 3px rgba(29,108,255,0.14);
+    }
+
+    .send-submit{
+        width:100%;
+        height:52px;
+        background:#1d6cff;
+        border:none;
+        color:white;
+        border-radius:10px;
+        font-size:18px;
+        font-weight:600;
+        margin-top:15px;
+        cursor:pointer;
+        transition:0.3s;
+    }
+    .send-submit:hover{
+        background:#1242a6;
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 992px) {
+        header{
+            padding:0 24px;
+        }
+        header nav ul{
+            gap:20px;
+        }
+        .send-wrapper{
+            width:95%;
+            padding:32px 24px;
+        }
+    }
+
+    @media (max-width: 768px) {
+        header{
+            padding:0 20px;
+            height:auto;
+            min-height:70px;
+            flex-wrap:wrap;
+        }
+        header img{
+            height:60px;
+            transform:scale(1.6);
+        }
+        header nav{
+            width:100%;
+            margin-top:10px;
+        }
+        header nav ul{
+            flex-wrap:wrap;
+            gap:12px;
+            justify-content:center;
+        }
+        header nav ul li a{
+            font-size:14px;
+            padding:6px 10px;
+        }
+        .promo-slide span{
+            font-size:14px;
+        }
+        .send-hero{
+            min-height:340px;
+            padding:42px 20px;
+        }
+        .send-hero-content h1{
+            font-size:30px;
+            line-height:1.2;
+        }
+        .send-hero-content p{
+            font-size:16px;
+        }
+        .send-wrapper{
+            width:100%;
+            padding:30px 18px;
+            margin:30px auto;
+        }
+        .form-section-title{
+            font-size:20px;
+        }
+        .send-form-row{
+            flex-direction:column;
+            gap:15px;
+        }
+        .send-group{
+            width:100%;
+        }
+        .send-group input,
+        .send-group select{
+            font-size:14px;
+        }
+    }
+
+    @media (max-width: 480px) {
+        header img{
+            height:50px;
+            transform:scale(1.4);
+        }
+        .send-hero-content h1{
+            font-size:26px;
+        }
+        .send-wrapper{
+            padding:25px 15px;
+        }
+        .send-submit{
+            font-size:16px;
+            height:48px;
+        }
+    }
+</style>
+
+</head>
+<body>
+<div class="promo-banner">
+    <div class="promo-slide">
+        <span> 10% discount on all freights</span>
+        <span> 20% discount if parcel is greater than 100kg</span>
+
+        <span> 10% discount on all freights</span>
+        <span> 20% discount if parcel is greater than 100kg</span>
+
+    </div>
+</div>
+<!-- HEADER -->
+<header>
+  <a href="/"><img src="/images/logo.png" alt="ParcelLink"></a>
+  <nav>
+    <ul>
+      <li><a href="/">Home</a></li>
+      <li><a href="/track">Track</a></li>
+      <li><a class="active" href="/send">Send</a></li>
+      <li><a href="/services">Services</a></li>
+      <li><a href="/career">Careers</a></li>
+      <li><a href="/help">Help</a></li>
+      <li><a href="/clientzone">Client Zone</a></li>
+    </ul>
+  </nav>
+</header>
+
+<!-- HERO -->
+<section class="send-hero">
+    <div class="send-hero-content">
+        <h1>Send a Parcel</h1>
+        <p>Provide sender and receiver details to create a seamless delivery experience.</p>
+    </div>
+</section>
+
+<!-- SEND FORM -->
+<div class="send-wrapper">
+
+    <!-- Sender Details -->
+    <h2 class="form-section-title">Sender Information</h2>
+    <div class="send-form-row">
+        <div class="send-group">
+            <label>Sender Name</label>
+            <input type="text" id="senderName" placeholder="John Doe" required>
+        </div>
+        <div class="send-group">
+            <label>Phone Number</label>
+            <input type="text" id="senderPhone" placeholder="+971 55 123 4567">
+        </div>
+    </div>
+
+    <div class="send-form-row">
+        <div class="send-group">
+            <label>Pickup Address</label>
+            <input type="text" id="pickupAddress" placeholder="123 Main St, Dubai" required>
+        </div>
+        <div class="send-group">
+            <label>City</label>
+            <input type="text" id="pickupCity" placeholder="Dubai" required>
+        </div>
+    </div>
+
+    <div class="send-form-row">
+        <div class="send-group">
+            <label>P.O. Box (optional)</label>
+            <input type="text" id="senderPOBox" placeholder="P.O. Box 12345">
+        </div>
+    </div>
+
+    <!-- Receiver Details -->
+    <h2 class="form-section-title">Receiver Information</h2>
+    <div class="send-form-row">
+        <div class="send-group">
+            <label>Receiver Name</label>
+            <input type="text" id="receiverName" placeholder="Jane Smith" required>
+        </div>
+        <div class="send-group">
+            <label>Phone Number</label>
+            <input type="text" id="receiverPhone" placeholder="+44 123 456 7890">
+        </div>
+    </div>
+
+    <div class="send-form-row">
+        <div class="send-group">
+            <label>Delivery Address</label>
+            <input type="text" id="deliveryAddress" placeholder="456 Oxford St, London" required>
+        </div>
+        <div class="send-group">
+            <label>City</label>
+            <input type="text" id="deliveryCity" placeholder="London" required>
+        </div>
+    </div>
+
+    <div class="send-form-row">
+        <div class="send-group">
+            <label>P.O. Box (optional)</label>
+            <input type="text" id="receiverPOBox" placeholder="P.O. Box 67890">
+        </div>
+    </div>
+
+    <!-- Parcel Details -->
+    <h2 class="form-section-title">Parcel Information</h2>
+    <div class="send-form-row">
+        <div class="send-group">
+            <label>Weight (kg)</label>
+            <input type="number" id="weight" placeholder="0.5" step="0.1" required>
+        </div>
+        <div class="send-group">
+            <label>Parcel Type</label>
+            <select id="parcelType">
+                <option value="Document">Document</option>
+                <option value="Small Box">Small Box</option>
+                <option value="Medium Box">Medium Box</option>
+                <option value="Large Box">Large Box</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="send-form-row">
+        <div class="send-group">
+            <label>Dimensions (optional)</label>
+            <input type="text" id="dimensions" placeholder="L x W x H (cm)">
+        </div>
+        <div class="send-group">
+            <label>Notes (optional)</label>
+            <input type="text" id="notes" placeholder="Fragile, handle with care">
+        </div>
+    </div>
+
+    <button class="send-submit">Submit Shipment</button>
+
+</div>
+
+<script>
+    // Dynamic API URL - works in both dev and production
+    const API_URL = window.location.origin;
+
+    function getAuthToken() {
+        return (
+            sessionStorage.getItem('userToken') ||
+            localStorage.getItem('parcelAuthToken') ||
+            null
+        );
+    }
+
+    document.querySelector('.send-submit').addEventListener('click', async () => {
+        const authToken = getAuthToken();
+        if (!authToken) {
+            alert('Please log in first before creating a shipment.');
+            window.location.href = '/login';
+            return;
+        }
+
+        // Get form values
+        const senderName = document.getElementById('senderName').value.trim();
+        const pickupAddress = document.getElementById('pickupAddress').value.trim();
+        const pickupCity = document.getElementById('pickupCity').value.trim();
+        const senderPOBox = document.getElementById('senderPOBox').value.trim();
+        const receiverName = document.getElementById('receiverName').value.trim();
+        const deliveryAddress = document.getElementById('deliveryAddress').value.trim();
+        const deliveryCity = document.getElementById('deliveryCity').value.trim();
+        const receiverPOBox = document.getElementById('receiverPOBox').value.trim();
+        const weight = document.getElementById('weight').value;
+        const parcelType = document.getElementById('parcelType').value;
+        const dimensions = document.getElementById('dimensions').value.trim();
+        const notes = document.getElementById('notes').value.trim();
+
+        // Validation
+        if (!senderName || !pickupAddress || !pickupCity || !receiverName || !deliveryAddress || !deliveryCity || !weight) {
+            alert('Please fill in all required fields.');
+            return;
+        }
+
+        // Prepare data
+        const from = `${pickupAddress}, ${pickupCity}${senderPOBox ? ', ' + senderPOBox : ''}`;
+        const to = `${deliveryAddress}, ${deliveryCity}${receiverPOBox ? ', ' + receiverPOBox : ''}`;
+
+        const parcelData = {
+            senderName,
+            receiverName,
+            from,
+            to,
+            weight: parseFloat(weight),
+            notes: `${parcelType}${dimensions ? ' | Dimensions: ' + dimensions : ''}${notes ? ' | ' + notes : ''}`
+        };
+
+        try {
+            const response = await fetch(`${API_URL}/api/parcels`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${authToken}`
+                },
+                body: JSON.stringify(parcelData)
+            });
+
+            const result = await response.json();
+
+            if (result.success) {
+                // Build pricing details message
+                const pricing = result.pricing;
+                const trackingCode = result.trackingCode;
+                
+                let priceMessage = `Shipment created successfully!\n\n`;
+                priceMessage += `Tracking Code: ${trackingCode}\n\n`;
+                priceMessage += `PRICING DETAILS:\n`;
+                priceMessage += `Weight: ${pricing.weight} kg\n`;
+                priceMessage += `Base Rate: ${pricing.baseRatePerKg} ${pricing.currency}/kg\n`;
+                priceMessage += `Base Cost: ${pricing.baseCost} ${pricing.currency}\n`;
+                priceMessage += `Discount: ${pricing.discountPercentage}% (-${pricing.discountAmount} ${pricing.currency})\n`;
+                priceMessage += `\n`;
+                priceMessage += `TOTAL COST: ${pricing.finalCost} ${pricing.currency}\n\n`;
+                priceMessage += `Proceed to payment?`;
+                
+                if (confirm(priceMessage)) {
+                    // Show payment form
+                    showPaymentForm(trackingCode, pricing);
+                } else {
+                    alert('Shipment saved! You can pay later. Tracking: ' + trackingCode);
+                    clearForm();
+                }
+            } else {
+                alert('Error: ' + result.message);
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('Failed to create shipment. Please check your connection and try again.');
+        }
+    });
+
+    function clearForm() {
+        document.getElementById('senderName').value = '';
+        document.getElementById('senderPhone').value = '';
+        document.getElementById('pickupAddress').value = '';
+        document.getElementById('pickupCity').value = '';
+        document.getElementById('senderPOBox').value = '';
+        document.getElementById('receiverName').value = '';
+        document.getElementById('receiverPhone').value = '';
+        document.getElementById('deliveryAddress').value = '';
+        document.getElementById('deliveryCity').value = '';
+        document.getElementById('receiverPOBox').value = '';
+        document.getElementById('weight').value = '';
+        document.getElementById('dimensions').value = '';
+        document.getElementById('notes').value = '';
+    }
+
+    function showPaymentForm(trackingCode, pricing) {
+        const email = prompt('Enter your email for receipt:');
+        if (!email) {
+            alert('Payment cancelled. You can pay later from Client Zone.');
+            clearForm();
+            return;
+        }
+
+        const cardNumberInput = prompt('Enter card number:');
+        const cardNumber = (cardNumberInput || '').replace(/\s+/g, '');
+        if (!/^\d{13,19}$/.test(cardNumber)) {
+            alert('Invalid card number format. Payment cancelled.');
+            clearForm();
+            return;
+        }
+
+        const cardLast4 = cardNumber.slice(-4);
+        processPayment(trackingCode, email, pricing.finalCost, cardLast4, pricing);
+    }
+
+    async function processPayment(trackingCode, email, amount, cardLast4, pricing) {
+        try {
+            const authToken = getAuthToken();
+            if (!authToken) {
+                alert('Session expired. Please log in again.');
+                window.location.href = '/login';
+                return;
+            }
+
+            const response = await fetch(`${API_URL}/api/payments`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${authToken}`
+                },
+                body: JSON.stringify({
+                    trackingCode,
+                    userEmail: email,
+                    amount,
+                    paymentMethod: 'Card',
+                    cardDetails: { last4: cardLast4 }
+                })
+            });
+
+            const result = await response.json();
+
+            if (result.success) {
+                alert(`PAYMENT SUCCESSFUL!\n\nReceipt Number: ${result.receiptNumber}\n\nYou can download your receipt from Client Zone.\n\nTracking Code: ${trackingCode}`);
+                clearForm();
+                setTimeout(() => {
+                    window.location.href = `clientzone.html`;
+                }, 2000);
+            } else {
+                alert('Payment failed: ' + result.message);
+            }
+        } catch (error) {
+            console.error('Payment error:', error);
+            alert('Payment processing failed. Please try again from Client Zone.');
+        }
+    }
+</script>
+
+</body>
+</html>
+
+
+
+

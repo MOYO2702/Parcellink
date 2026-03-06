@@ -1,0 +1,906 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<link rel="stylesheet" href="/css/theme.css">
+  <meta charset="UTF-8" />
+  <title>Careers | ParcelLink Logistics</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- GOOGLE FONT -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <!-- FONT AWESOME -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet" />
+
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif}
+    body{background:#f6f7fb;color:#0f172a;}
+
+    a{text-decoration:none;color:inherit;}
+
+    /* HEADER */
+    header{
+      height:86px;
+      background:#fff;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      padding:0 48px;
+      box-shadow:0 2px 14px rgba(0,0,0,0.07);
+      position:sticky;
+      top:0;
+      z-index:100;
+    }
+    header img{
+      height:70px;
+      width:auto;
+      display:block;
+      transform:scale(2);
+      transform-origin:left center;
+    }
+    header nav ul{
+      list-style:none;
+      display:flex;
+      gap:34px;
+    }
+    header nav ul li a{
+      text-decoration:none;
+      color:#001c48;
+      font-size:16px;
+      font-weight:500;
+      padding:6px 10px;
+      border-radius:6px;
+    }
+    header nav ul li a.active{
+      background:rgba(10,102,255,0.08);
+      color:#0a66ff;
+    }
+
+    /* ============ HERO ============ */
+    .hero{
+      background:linear-gradient(135deg,#1242a6,#1d6cff);
+      color:#fff;
+      padding:60px 0;
+    }
+    .hero-inner{
+      width:90%;
+      margin:0 auto;
+      display:grid;
+      grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);
+      gap:40px;
+      align-items:center;
+    }
+    .hero h1{
+      font-size:2.4rem;
+      margin-bottom:10px;
+    }
+    .hero p{
+      font-size:0.98rem;
+      max-width:520px;
+      margin-bottom:20px;
+    }
+    .hero-badges{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      margin-bottom:18px;
+    }
+    .hero-badge{
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      background:rgba(15,23,42,0.35);
+      border-radius:999px;
+      padding:6px 12px;
+      font-size:0.8rem;
+    }
+    .hero-cta{
+      display:flex;
+      gap:12px;
+      flex-wrap:wrap;
+    }
+    .btn-primary,
+    .btn-outline{
+      border-radius:999px;
+      padding:10px 18px;
+      font-size:0.9rem;
+      cursor:pointer;
+      border:none;
+    }
+    .btn-primary{
+      background:#fff;
+      color:#1242a6;
+      font-weight:600;
+    }
+    .btn-primary:hover{background:#f1f5f9;}
+    .btn-outline{
+      background:transparent;
+      border:1px solid #e5e7eb;
+      color:#f9fafb;
+    }
+    .hero-right{
+      background:rgba(15,23,42,0.16);
+      border-radius:18px;
+      padding:18px 20px;
+    }
+    .hero-right h3{
+      font-size:1rem;
+      margin-bottom:10px;
+    }
+    .hero-right ul{
+      font-size:0.9rem;
+      padding-left:18px;
+    }
+    .hero-right li{margin-bottom:6px;}
+
+    @media(max-width:900px){
+      .hero-inner{
+        grid-template-columns:1fr;
+      }
+    }
+
+    /* ============ JOB FILTERS ============ */
+    .section-wrap{
+      width:90%;
+      margin:30px auto 50px;
+    }
+    .section-header{
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-end;
+      gap:20px;
+      margin-bottom:18px;
+      flex-wrap:wrap;
+    }
+    .section-header h2{
+      font-size:1.5rem;
+    }
+    .section-header p{
+      font-size:0.9rem;
+      color:#6b7280;
+    }
+
+    .filters{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+    }
+    .filter-btn{
+      border-radius:999px;
+      border:1px solid #d1d5db;
+      padding:6px 14px;
+      font-size:0.84rem;
+      background:#fff;
+      cursor:pointer;
+      color:#374151;
+    }
+    .filter-btn.active{
+      background:#1242a6;
+      color:#fff;
+      border-color:#1242a6;
+    }
+
+    /* ============ JOB CARDS ============ */
+    .jobs-grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+      gap:18px;
+      margin-top:20px;
+      margin-bottom:40px;
+    }
+    .job-card{
+      background:#fff;
+      border-radius:14px;
+      padding:16px 16px 14px;
+      box-shadow:0 10px 28px rgba(15,23,42,0.08);
+      display:flex;
+      flex-direction:column;
+      gap:6px;
+    }
+    .job-label{
+      font-size:0.75rem;
+      text-transform:uppercase;
+      letter-spacing:.06em;
+      color:#6b7280;
+    }
+    .job-title{
+      font-weight:600;
+      font-size:1.02rem;
+    }
+    .job-meta{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      font-size:0.82rem;
+      color:#6b7280;
+    }
+    .job-meta span{
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+    }
+    .job-pill{
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      padding:4px 10px;
+      border-radius:999px;
+      background:#eef4ff;
+      color:#4338ca;
+      font-size:0.75rem;
+      margin-top:2px;
+    }
+    .job-snippet{
+      font-size:0.86rem;
+      color:#4b5563;
+      margin-top:4px;
+    }
+    .job-actions{
+      margin-top:10px;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+    .job-actions button{
+      font-size:0.8rem;
+      border-radius:999px;
+      padding:7px 14px;
+      border:1px solid #d1d5db;
+      background:#fff;
+      cursor:pointer;
+    }
+    .job-actions button.primary{
+      background:#1242a6;
+      border-color:#1242a6;
+      color:#fff;
+    }
+    .job-details{
+      margin-top:10px;
+      font-size:0.85rem;
+      color:#4b5563;
+      border-top:1px dashed #e5e7eb;
+      padding-top:8px;
+      display:none;
+    }
+    .job-details ul{
+      padding-left:18px;
+      margin-top:4px;
+    }
+    .job-details li{margin-bottom:4px;}
+
+    /* ============ APPLICATION SECTION ============ */
+    .apply-section{
+      background:#0f172a;
+      color:#e5e7eb;
+      padding:40px 0 50px;
+    }
+    .apply-inner{
+      width:90%;
+      margin:0 auto;
+      display:grid;
+      grid-template-columns:minmax(0,1.1fr) minmax(0,1.1fr);
+      gap:30px;
+    }
+    .apply-inner h2{
+      font-size:1.5rem;
+      margin-bottom:10px;
+    }
+    .apply-inner p{
+      font-size:0.9rem;
+      color:#cbd5f5;
+      margin-bottom:12px;
+    }
+    .apply-highlights{
+      margin-top:8px;
+      font-size:0.85rem;
+    }
+    .apply-highlights li{
+      margin-bottom:6px;
+    }
+
+    .apply-form{
+      background:#111827;
+      border-radius:14px;
+      padding:20px 18px 18px;
+      box-shadow:0 10px 30px rgba(0,0,0,0.5);
+    }
+    .form-row{
+      display:flex;
+      gap:12px;
+      flex-wrap:wrap;
+    }
+    .form-group{
+      flex:1;
+      min-width:130px;
+      margin-bottom:12px;
+    }
+    .form-group label{
+      display:block;
+      font-size:0.8rem;
+      margin-bottom:4px;
+      color:#e5e7eb;
+    }
+    .form-group input,
+    .form-group select,
+    .form-group textarea{
+      width:100%;
+      padding:8px 9px;
+      border-radius:8px;
+      border:1px solid #4b5563;
+      background:#020617;
+      color:#f9fafb;
+      font-size:0.85rem;
+    }
+    .form-group textarea{min-height:80px;resize:vertical;}
+    .small-note{
+      font-size:0.75rem;
+      color:#9ca3af;
+      margin-top:4px;
+    }
+    .apply-submit{
+      margin-top:8px;
+      display:flex;
+      justify-content:flex-end;
+    }
+    .apply-submit button{
+      border-radius:999px;
+      padding:9px 18px;
+      border:none;
+      background:linear-gradient(135deg,#1242a6,#1d6cff);
+      color:#fff;
+      font-size:0.88rem;
+      cursor:pointer;
+      font-weight:500;
+    }
+    .apply-submit button:hover{
+      opacity:.95;
+    }
+    .apply-message{
+      margin-top:8px;
+      font-size:0.8rem;
+    }
+
+    @media(max-width:900px){
+      .apply-inner{
+        grid-template-columns:1fr;
+      }
+    }
+
+    /* ============ FOOTER ============ */
+    footer{
+      background:#020617;
+      color:#9ca3af;
+      padding:18px 0;
+      font-size:0.8rem;
+    }
+    .footer-inner{
+      width:90%;
+      margin:0 auto;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+    .footer-links{
+      display:flex;
+      gap:12px;
+      flex-wrap:wrap;
+    }
+    .footer-links a{
+      color:#9ca3af;
+    }
+    .footer-links a:hover{color:#e5e7eb;}
+  </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <a href="/"><img src="/images/logo.png" alt="ParcelLink"></a>
+  <nav>
+    <ul>
+      <li><a href="/">Home</a></li>
+      <li><a href="/track">Track</a></li>
+      <li><a href="/send">Send</a></li>
+      <li><a href="/services">Services</a></li>
+      <li><a class="active" href="/career">Careers</a></li>
+      <li><a href="/help">Help</a></li>
+      <li><a href="/clientzone">Client Zone</a></li>
+    </ul>
+  </nav>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-inner">
+    <div>
+      <h1>Build Your Career with ParcelLink</h1>
+      <p>
+        Join a fast-growing last-mile logistics team in Dubai, delivering thousands of parcels daily
+        for individuals, SMEs, and enterprise clients across the UAE.
+      </p>
+
+      <div class="hero-badges">
+        <span class="hero-badge"><i class="fa-solid fa-truck-fast"></i> Logistics & Fleet</span>
+        <span class="hero-badge"><i class="fa-solid fa-headset"></i> Customer Experience</span>
+        <span class="hero-badge"><i class="fa-solid fa-chart-line"></i> Growth & Innovation</span>
+      </div>
+
+      <div class="hero-cta">
+        <button class="btn-primary" id="view-openings-btn">
+          View Open Roles
+        </button>
+        <button class="btn-outline" id="scroll-apply-btn">
+          Send a General Application
+        </button>
+      </div>
+    </div>
+
+    <div class="hero-right">
+      <h3>Why Work at ParcelLink?</h3>
+      <ul>
+        <li>Be part of a modern tech-enabled logistics company.</li>
+        <li>Opportunities across Operations, Dispatch, Fleet, and Corporate roles.</li>
+        <li>Structured training, mentorship and clear growth paths.</li>
+        <li>Inclusive and performance-driven culture.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- JOB LISTINGS -->
+<main class="section-wrap" id="open-roles">
+  <div class="section-header">
+    <div>
+      <h2>Open Positions</h2>
+      <p>Browse available roles and apply for the one that best matches your experience.</p>
+    </div>
+    <div class="filters">
+      <button class="filter-btn active" data-filter="all">All</button>
+      <button class="filter-btn" data-filter="Operations">Operations</button>
+      <button class="filter-btn" data-filter="Dispatch">Dispatch</button>
+      <button class="filter-btn" data-filter="Warehouse">Warehouse</button>
+      <button class="filter-btn" data-filter="Customer Service">Customer Service</button>
+      <button class="filter-btn" data-filter="Driver">Drivers & Riders</button>
+      <button class="filter-btn" data-filter="Corporate">Corporate</button>
+    </div>
+  </div>
+
+  <div class="jobs-grid" id="jobs-grid">
+
+    <!-- Job 1 -->
+    <article class="job-card" data-dept="Operations">
+      <div class="job-label">Full-time - Dubai</div>
+      <div class="job-title">Operations Supervisor</div>
+      <div class="job-meta">
+        <span><i class="fa-solid fa-location-dot"></i> Dubai</span>
+        <span><i class="fa-solid fa-building"></i> Operations</span>
+      </div>
+      <div class="job-pill"><i class="fa-solid fa-clock"></i> Sunday - Friday</div>
+      <p class="job-snippet">
+        Oversee day-to-day hub activities, ensuring parcels move on time and according to service-level agreements.
+      </p>
+      <div class="job-actions">
+        <button class="primary job-apply-btn" data-role="Operations Supervisor">Apply for this role</button>
+        <button class="job-toggle">View details</button>
+      </div>
+      <div class="job-details">
+        <strong>Key Responsibilities</strong>
+        <ul>
+          <li>Coordinate inbound and outbound parcel flow.</li>
+          <li>Monitor KPIs such as delivery time, exceptions and returns.</li>
+          <li>Work closely with Dispatch and Warehouse teams.</li>
+        </ul>
+        <strong>Requirements</strong>
+        <ul>
+          <li>2+ years in logistics or operations.</li>
+          <li>Strong communication and people management skills.</li>
+        </ul>
+      </div>
+    </article>
+
+    <!-- Job 2 -->
+    <article class="job-card" data-dept="Dispatch">
+      <div class="job-label">Full-time - Dubai</div>
+      <div class="job-title">Dispatch Coordinator</div>
+      <div class="job-meta">
+        <span><i class="fa-solid fa-location-dot"></i> Dubai</span>
+        <span><i class="fa-solid fa-route"></i> Dispatch</span>
+      </div>
+      <div class="job-pill"><i class="fa-solid fa-bolt"></i> Same-day & Next-day</div>
+      <p class="job-snippet">
+        Plan and assign delivery routes, support drivers on-road and optimize last-mile coverage.
+      </p>
+      <div class="job-actions">
+        <button class="primary job-apply-btn" data-role="Dispatch Coordinator">Apply for this role</button>
+        <button class="job-toggle">View details</button>
+      </div>
+      <div class="job-details">
+        <strong>Key Responsibilities</strong>
+        <ul>
+          <li>Plan daily routes based on shipment volume.</li>
+          <li>Coordinate with drivers to avoid failed deliveries.</li>
+          <li>Track live performance using internal tools.</li>
+        </ul>
+        <strong>Requirements</strong>
+        <ul>
+          <li>Experience in route planning or dispatch preferred.</li>
+          <li>Good knowledge of Dubai roads and industrial areas.</li>
+        </ul>
+      </div>
+    </article>
+
+    <!-- Job 3 -->
+    <article class="job-card" data-dept="Warehouse">
+      <div class="job-label">Full-time - Dubai</div>
+      <div class="job-title">Warehouse Associate</div>
+      <div class="job-meta">
+        <span><i class="fa-solid fa-location-dot"></i> Dubai</span>
+        <span><i class="fa-solid fa-boxes-stacked"></i> Warehouse</span>
+      </div>
+      <div class="job-pill"><i class="fa-solid fa-moon"></i> Night Shift Available</div>
+      <p class="job-snippet">
+        Scan, sort and stage parcels accurately while maintaining safety and cleanliness standards.
+      </p>
+      <div class="job-actions">
+        <button class="primary job-apply-btn" data-role="Warehouse Associate">Apply for this role</button>
+        <button class="job-toggle">View details</button>
+      </div>
+      <div class="job-details">
+        <strong>Key Responsibilities</strong>
+        <ul>
+          <li>Sort parcels by route and destination.</li>
+          <li>Handle loading/unloading of vehicles.</li>
+          <li>Report damages and discrepancies promptly.</li>
+        </ul>
+        <strong>Requirements</strong>
+        <ul>
+          <li>Physically fit and comfortable with manual handling.</li>
+          <li>Basic English or Arabic communication.</li>
+        </ul>
+      </div>
+    </article>
+
+    <!-- Job 4 -->
+    <article class="job-card" data-dept="Customer Service">
+      <div class="job-label">Full-time - Dubai (Hybrid)</div>
+      <div class="job-title">Customer Experience Officer</div>
+      <div class="job-meta">
+        <span><i class="fa-solid fa-location-dot"></i> Dubai</span>
+        <span><i class="fa-solid fa-headset"></i> Customer Service</span>
+      </div>
+      <div class="job-pill"><i class="fa-solid fa-language"></i> English + Arabic preferred</div>
+      <p class="job-snippet">
+        Support senders and receivers with tracking, delivery changes and issue resolution across channels.
+      </p>
+      <div class="job-actions">
+        <button class="primary job-apply-btn" data-role="Customer Experience Officer">Apply for this role</button>
+        <button class="job-toggle">View details</button>
+      </div>
+      <div class="job-details">
+        <strong>Key Responsibilities</strong>
+        <ul>
+          <li>Respond to customer queries via phone, email and chat.</li>
+          <li>Coordinate with operations for escalated cases.</li>
+          <li>Capture feedback and suggest service improvements.</li>
+        </ul>
+        <strong>Requirements</strong>
+        <ul>
+          <li>1-3 years in customer support or call centre.</li>
+          <li>Excellent communication skills and empathy.</li>
+        </ul>
+      </div>
+    </article>
+
+    <!-- Job 5 -->
+    <article class="job-card" data-dept="Driver">
+      <div class="job-label">Full-time - Field</div>
+      <div class="job-title">Delivery Rider (Motorbike)</div>
+      <div class="job-meta">
+        <span><i class="fa-solid fa-location-dot"></i> Dubai & Sharjah</span>
+        <span><i class="fa-solid fa-motorcycle"></i> Fleet</span>
+      </div>
+      <div class="job-pill"><i class="fa-solid fa-id-card"></i> Valid UAE license required</div>
+      <p class="job-snippet">
+        Pick up and deliver parcels safely and professionally while representing the ParcelLink brand.
+      </p>
+      <div class="job-actions">
+        <button class="primary job-apply-btn" data-role="Delivery Rider">Apply for this role</button>
+        <button class="job-toggle">View details</button>
+      </div>
+      <div class="job-details">
+        <strong>Key Responsibilities</strong>
+        <ul>
+          <li>Complete daily assigned delivery routes.</li>
+          <li>Capture proof of delivery via mobile app.</li>
+          <li>Maintain safety, speed and professionalism.</li>
+        </ul>
+        <strong>Requirements</strong>
+        <ul>
+          <li>Valid UAE motorbike license.</li>
+          <li>Good knowledge of city routes.</li>
+        </ul>
+      </div>
+    </article>
+
+    <!-- Job 6 -->
+    <article class="job-card" data-dept="Corporate">
+      <div class="job-label">Full-time - Dubai</div>
+      <div class="job-title">Finance & Billing Officer</div>
+      <div class="job-meta">
+        <span><i class="fa-solid fa-location-dot"></i> Dubai</span>
+        <span><i class="fa-solid fa-coins"></i> Corporate</span>
+      </div>
+      <div class="job-pill"><i class="fa-solid fa-file-invoice-dollar"></i> B2B & corporate clients</div>
+      <p class="job-snippet">
+        Manage billing cycles, reconciliations and financial reporting for parcel accounts and partners.
+      </p>
+      <div class="job-actions">
+        <button class="primary job-apply-btn" data-role="Finance & Billing Officer">Apply for this role</button>
+        <button class="job-toggle">View details</button>
+      </div>
+      <div class="job-details">
+        <strong>Key Responsibilities</strong>
+        <ul>
+          <li>Prepare and issue invoices to clients on time.</li>
+          <li>Reconcile payments, adjustments and credits.</li>
+          <li>Support management with financial insights.</li>
+        </ul>
+        <strong>Requirements</strong>
+        <ul>
+          <li>Degree or diploma in Accounting/Finance.</li>
+          <li>Experience with basic accounting systems.</li>
+        </ul>
+      </div>
+    </article>
+
+  </div>
+</main>
+
+<!-- APPLICATION SECTION -->
+<section class="apply-section" id="apply">
+  <div class="apply-inner">
+    <div>
+      <h2>Didn't see a perfect match?</h2>
+      <p>
+        We're always interested in meeting passionate people who want to grow with us.
+        If you don't find an exact role that fits your profile, you can still send us a general application.
+      </p>
+      <ul class="apply-highlights">
+        <li>We review every application submitted through this form.</li>
+        <li>Shortlisted candidates will be contacted by the HR team.</li>
+        <li>Roles are available across Operations, Fleet, Customer Experience and Corporate teams.</li>
+      </ul>
+    </div>
+
+    <form class="apply-form" id="career-form">
+      <div class="form-row">
+        <div class="form-group">
+          <label for="fullName">Full Name</label>
+          <input type="text" id="fullName" required placeholder="Your full name" />
+        </div>
+        <div class="form-group">
+          <label for="email">Email Address</label>
+          <input type="email" id="email" required placeholder="you@example.com" />
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="phone">Phone (with country code)</label>
+          <input type="tel" id="phone" required placeholder="+971..." />
+        </div>
+        <div class="form-group">
+          <label for="roleInterest">Role / Area of Interest</label>
+          <select id="roleInterest" required>
+            <option value="">Select area</option>
+            <option>Operations Supervisor</option>
+            <option>Dispatch Coordinator</option>
+            <option>Warehouse Associate</option>
+            <option>Customer Experience Officer</option>
+            <option>Delivery Rider</option>
+            <option>Finance & Billing Officer</option>
+            <option>Other / General Application</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="message">Brief Introduction</label>
+        <textarea id="message" placeholder="Tell us a bit about your experience and availability"></textarea>
+      </div>
+
+      <div class="form-group">
+        <label for="cv">Attach CV (optional)</label>
+        <input type="file" id="cv" accept=".pdf,.doc,.docx" />
+        <div class="small-note">You can attach a CV file name for HR review after submission.</div>
+      </div>
+
+      <div class="apply-submit">
+        <button type="submit">
+          Submit Application
+        </button>
+      </div>
+      <div class="apply-message" id="apply-message"></div>
+    </form>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div> <span id="year"></span> ParcelLink Logistics. All rights reserved.</div>
+    <div class="footer-links">
+      <a href="privacy.html">Privacy</a>
+      <a href="terms.html">Terms</a>
+      <a href="career.html">Careers</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    // Scroll helpers
+    const viewBtn = document.getElementById("view-openings-btn");
+    const applyBtn = document.getElementById("scroll-apply-btn");
+
+    if (viewBtn) {
+      viewBtn.addEventListener("click", () => {
+        const section = document.getElementById("open-roles");
+        if (section) section.scrollIntoView({ behavior: "smooth" });
+      });
+    }
+
+    if (applyBtn) {
+      applyBtn.addEventListener("click", () => {
+        const section = document.getElementById("apply");
+        if (section) section.scrollIntoView({ behavior: "smooth" });
+      });
+    }
+
+    // Filter jobs
+    const filterButtons = document.querySelectorAll(".filter-btn");
+    const jobCards = document.querySelectorAll(".job-card");
+
+    function normalize(str){ return (str || "").toLowerCase().trim(); }
+
+    if (filterButtons.length && jobCards.length) {
+      filterButtons.forEach(btn => {
+        btn.addEventListener("click", () => {
+          const dept = normalize(btn.dataset.filter);
+
+          filterButtons.forEach(b => b.classList.remove("active"));
+          btn.classList.add("active");
+
+          jobCards.forEach(card => {
+            const cardDept = normalize(card.dataset.dept);
+            if (dept === "all" || !dept || cardDept === dept) {
+              card.style.display = "flex";
+            } else {
+              card.style.display = "none";
+            }
+          });
+        });
+      });
+
+      // Initialize with "All"
+      filterButtons[0].click();
+    }
+
+    // Toggle job details
+    document.querySelectorAll(".job-toggle").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const card = btn.closest(".job-card");
+        if (!card) return;
+        const details = card.querySelector(".job-details");
+        if (!details) return;
+        const isVisible = details.style.display === "block";
+        details.style.display = isVisible ? "none" : "block";
+        btn.textContent = isVisible ? "View details" : "Hide details";
+      });
+    });
+
+    // Prefill role in form when clicking "Apply for this role"
+    const roleSelect = document.getElementById("roleInterest");
+    document.querySelectorAll(".job-apply-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const role = btn.getAttribute("data-role");
+        if (roleSelect) {
+          let matched = false;
+          const options = Array.from(roleSelect.options);
+          options.forEach(opt => {
+            opt.selected = false;
+            if (opt.text.trim() === role.trim()) {
+              opt.selected = true;
+              matched = true;
+            }
+          });
+          if (!matched) {
+            const fallback = options.find(o => o.text.includes("General Application"));
+            if (fallback) fallback.selected = true;
+          }
+        }
+        const section = document.getElementById("apply");
+        if (section) section.scrollIntoView({ behavior: "smooth" });
+      });
+    });
+
+    // Career application submission
+    const careerForm = document.getElementById("career-form");
+    const msgBox = document.getElementById("apply-message");
+
+    if (careerForm) {
+      careerForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const name = document.getElementById("fullName").value.trim();
+        const email = document.getElementById("email").value.trim();
+        const phone = document.getElementById("phone").value.trim();
+        const role = document.getElementById("roleInterest").value;
+        const message = document.getElementById("message")?.value?.trim() || "";
+        const cvInput = document.getElementById("cv");
+        const cvFileName = cvInput?.files?.[0]?.name || "";
+        const submitButton = careerForm.querySelector('button[type="submit"]');
+        const defaultButtonText = submitButton?.textContent || "Submit Application";
+
+        if (!name || !email || !phone || !role) {
+          msgBox.style.color = "#f97373";
+          msgBox.textContent = "Please complete the required fields before submitting.";
+          return;
+        }
+
+        if (submitButton) {
+          submitButton.disabled = true;
+          submitButton.textContent = "Submitting...";
+        }
+        msgBox.style.color = "#60a5fa";
+        msgBox.textContent = "Submitting your application...";
+
+        try {
+          const response = await fetch("/api/career-applications", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              fullName: name,
+              email,
+              phone,
+              roleInterest: role,
+              message,
+              cvFileName
+            })
+          });
+
+          const result = await response.json().catch(() => ({}));
+          if (!response.ok || !result.success) {
+            throw new Error(result.message || "Unable to submit your application at this time.");
+          }
+
+          const referenceText = result.data?.applicationId
+            ? ` Reference: ${result.data.applicationId}.`
+            : "";
+          msgBox.style.color = "#4ade80";
+          msgBox.textContent = `Thank you, ${name}. Your application has been received.${referenceText} Our HR team will contact you if there is a suitable match.`;
+          careerForm.reset();
+        } catch (err) {
+          msgBox.style.color = "#f97373";
+          msgBox.textContent = err.message || "Unable to submit your application right now. Please try again shortly.";
+        } finally {
+          if (submitButton) {
+            submitButton.disabled = false;
+            submitButton.textContent = defaultButtonText;
+          }
+        }
+      });
+    }
+
+    // Footer year
+    const yearSpan = document.getElementById("year");
+    if (yearSpan) yearSpan.textContent = new Date().getFullYear();
+  });
+</script>
+</body>
+</html>
+
+
+

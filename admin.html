@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<link rel="stylesheet" href="/css/theme.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Portal | ParcelLink</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif}
+body{background:#f4f7ff;color:#0f172a}
+a{text-decoration:none;color:inherit}
+header{
+  min-height:86px;background:#fff;display:flex;align-items:center;justify-content:space-between;
+  gap:12px;padding:14px 32px;border-bottom:1px solid #dbe3f0;box-shadow:0 8px 20px rgba(2,22,60,.07)
+}
+header img{height:48px !important;width:auto;display:block}
+header ul{list-style:none;display:flex;gap:18px;flex-wrap:wrap}
+header a{font-size:14px;font-weight:600;color:#0c2356}
+header a.active{color:#1d6cff}
+.hero{background:linear-gradient(135deg,#1242a6,#1d6cff);color:#fff;padding:52px 6% 42px}
+.hero h1{font-size:clamp(2rem,3.8vw,3rem);line-height:1.08}
+.hero p{margin-top:10px;max-width:760px;line-height:1.7;opacity:.96}
+.wrap{width:min(1120px,92%);margin:24px auto 50px}
+.card{
+  background:#fff;border:1px solid #dbe3f0;border-radius:16px;padding:22px;
+  box-shadow:0 12px 24px rgba(15,40,90,.06)
+}
+.card+.card{margin-top:14px}
+.title{font-size:1.18rem;font-weight:700;color:#0d2559}
+.muted{font-size:13px;color:#475569;line-height:1.7}
+.row{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.grid-3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.group{display:flex;flex-direction:column;gap:6px}
+label{font-size:13px;font-weight:600;color:#334155}
+input,select{
+  width:100%;border:1px solid #cbd5e1;border-radius:10px;padding:11px 12px;font-size:14px
+}
+button{
+  border:none;background:#1242a6;color:#fff;border-radius:10px;padding:11px 16px;
+  font-size:14px;font-weight:600;cursor:pointer
+}
+button:hover{background:#0f3686}
+.btn-soft{background:#eaf1ff;color:#1242a6}
+.btn-soft:hover{background:#dbe7ff}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+.status{
+  margin-top:10px;padding:10px 12px;border-radius:10px;font-size:13px;display:none
+}
+.status.ok{display:block;background:#dcfce7;border:1px solid #bbf7d0;color:#166534}
+.status.err{display:block;background:#fee2e2;border:1px solid #fecaca;color:#991b1b}
+.status.info{display:block;background:#eff6ff;border:1px solid #bfdbfe;color:#1e3a8a}
+.portal{display:none}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.tab{
+  border:1px solid #cbd5e1;background:#fff;color:#0f172a;border-radius:999px;padding:8px 14px;
+  font-size:13px;font-weight:600;cursor:pointer
+}
+.tab.active{background:#1242a6;border-color:#1242a6;color:#fff}
+.panel{display:none;margin-top:12px}
+.panel.active{display:block}
+.table-wrap{overflow-x:auto;margin-top:10px}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th,td{padding:10px;border-bottom:1px solid #e2e8f0;text-align:left}
+th{background:#0f172a;color:#fff}
+@media (max-width:900px){
+  header{padding:10px 16px;flex-wrap:wrap}
+  .row,.grid-3{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+<header>
+  <a href="/"><img src="/images/logo.png" alt="ParcelLink"></a>
+  <ul>
+    <li><a href="/">Home</a></li>
+    <li><a href="/staff">Staff Portal</a></li>
+    <li><a href="/investor">Investor Portal</a></li>
+    <li><a href="/admin" class="active">Admin Portal</a></li>
+  </ul>
+</header>
+
+<section class="hero">
+  <h1>Admin Portal</h1>
+  <p>Manager-only workspace to create staff and investor logins. Sign in once, then generate IDs and passwords easily.</p>
+</section>
+
+<main class="wrap">
+  <section id="loginCard" class="card">
+    <h2 class="title">Manager Login</h2>
+    <p class="muted" style="margin-top:6px;">Use your manager/admin staff account. Non-manager accounts will be redirected to Staff or Investor portal.</p>
+    <div class="row" style="margin-top:12px;">
+      <div class="group">
+        <label for="staffId">Staff ID</label>
+        <input id="staffId" type="text" placeholder="ADM005">
+      </div>
+      <div class="group">
+        <label for="password">Password</label>
+        <input id="password" type="password" placeholder="Enter password">
+      </div>
+    </div>
+    <div class="actions">
+      <button type="button" onclick="loginManager()">Login</button>
+      <a class="btn-soft" href="/staff" style="padding:11px 16px;border-radius:10px;font-weight:600;">Go to Staff Portal</a>
+      <a class="btn-soft" href="/investor" style="padding:11px 16px;border-radius:10px;font-weight:600;">Go to Investor Portal</a>
+    </div>
+    <div id="loginStatus" class="status"></div>
+  </section>
+
+  <section id="portalCard" class="card portal">
+    <div style="display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:flex-start;">
+      <div>
+        <h2 class="title">Staff Access Manager Console</h2>
+        <p id="managerMeta" class="muted"></p>
+      </div>
+      <div class="actions" style="margin-top:0;">
+        <button type="button" class="btn-soft" onclick="logoutManager()">Logout</button>
+      </div>
+    </div>
+
+    <div class="tabs">
+      <button class="tab active" data-tab="create">Create Account</button>
+      <button class="tab" data-tab="reset">Reset Password</button>
+      <button class="tab" data-tab="list">View Accounts</button>
+    </div>
+
+    <div id="panel-create" class="panel active">
+      <div class="grid-3">
+        <div class="group">
+          <label for="createType">Account Type</label>
+          <select id="createType" onchange="setCreateDefaults()">
+            <option value="admin">Staff/Admin</option>
+            <option value="investor">Investor</option>
+          </select>
+        </div>
+        <div class="group">
+          <label for="createName">Full Name</label>
+          <input id="createName" type="text" placeholder="Full name">
+        </div>
+        <div class="group">
+          <label for="createEmail">Email</label>
+          <input id="createEmail" type="email" placeholder="name@company.com">
+        </div>
+      </div>
+      <div class="row" style="margin-top:12px;">
+        <div class="group">
+          <label for="createPassword">Password</label>
+          <input id="createPassword" type="password" minlength="8" placeholder="Minimum 8 characters">
+        </div>
+        <div class="group">
+          <label for="createRole">Role</label>
+          <input id="createRole" type="text" placeholder="Administrator">
+        </div>
+      </div>
+      <div class="row" style="margin-top:12px;">
+        <div class="group">
+          <label for="createDepartment">Department</label>
+          <input id="createDepartment" type="text" placeholder="Management">
+        </div>
+        <div class="group">
+          <label for="createProvisionKey">Provision Key (optional fallback)</label>
+          <input id="createProvisionKey" type="password" placeholder="Only if needed">
+        </div>
+      </div>
+      <div class="actions">
+        <button type="button" onclick="createAccount()">Create Login</button>
+      </div>
+      <div id="createStatus" class="status"></div>
+    </div>
+
+    <div id="panel-reset" class="panel">
+      <div class="row">
+        <div class="group">
+          <label for="resetId">Staff/Investor ID</label>
+          <input id="resetId" type="text" placeholder="ADM005 or INV003">
+        </div>
+        <div class="group">
+          <label for="resetPassword">New Password</label>
+          <input id="resetPassword" type="password" minlength="8" placeholder="New secure password">
+        </div>
+      </div>
+      <div class="row" style="margin-top:12px;">
+        <div class="group">
+          <label for="resetProvisionKey">Provision Key (optional fallback)</label>
+          <input id="resetProvisionKey" type="password" placeholder="Only if needed">
+        </div>
+      </div>
+      <div class="actions">
+        <button type="button" onclick="resetPassword()">Reset Password</button>
+      </div>
+      <div id="resetStatus" class="status"></div>
+    </div>
+
+    <div id="panel-list" class="panel">
+      <div class="grid-3">
+        <div class="group">
+          <label for="listType">Type</label>
+          <select id="listType">
+            <option value="all">All</option>
+            <option value="admin">Staff/Admin</option>
+            <option value="investor">Investor</option>
+          </select>
+        </div>
+        <div class="group">
+          <label for="listSearch">Search</label>
+          <input id="listSearch" type="text" placeholder="ID, name, email, role">
+        </div>
+        <div class="group">
+          <label for="listLimit">Limit</label>
+          <input id="listLimit" type="number" min="1" max="200" value="50">
+        </div>
+      </div>
+      <div class="row" style="margin-top:12px;">
+        <div class="group">
+          <label for="listProvisionKey">Provision Key (optional fallback)</label>
+          <input id="listProvisionKey" type="password" placeholder="Only if needed">
+        </div>
+      </div>
+      <div class="actions">
+        <button type="button" onclick="loadAccounts()">Load Accounts</button>
+      </div>
+      <div id="listStatus" class="status"></div>
+      <div id="listResults" class="table-wrap"></div>
+    </div>
+  </section>
+</main>
+
+<script>
+let managerToken = "";
+let managerUser = null;
+
+function hasManagerPrivileges(staff) {
+  if (!staff) return false;
+  const accountType = String(staff.accountType || "").toLowerCase();
+  const role = String(staff.role || "").toLowerCase();
+  const department = String(staff.department || "").toLowerCase();
+  if (accountType === "investor" || role === "investor" || department === "investors") return false;
+  if (role.includes("head") || role.includes("admin") || role.includes("manager")) return true;
+  return department === "management" || department === "operations";
+}
+
+function setStatus(id, message, type) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.textContent = message || "";
+  if (!message) {
+    el.className = "status";
+    return;
+  }
+  el.className = `status ${type || "info"}`;
+}
+
+function authHeaders() {
+  const headers = { "Content-Type": "application/json" };
+  if (managerToken) headers.Authorization = `Bearer ${managerToken}`;
+  return headers;
+}
+
+function saveManagerSession() {
+  sessionStorage.setItem("parcelAdminManagerUser", JSON.stringify(managerUser || {}));
+  sessionStorage.setItem("parcelAdminManagerToken", managerToken || "");
+}
+
+function clearManagerSession() {
+  managerToken = "";
+  managerUser = null;
+  sessionStorage.removeItem("parcelAdminManagerUser");
+  sessionStorage.removeItem("parcelAdminManagerToken");
+}
+
+function showPortal() {
+  document.getElementById("loginCard").style.display = "none";
+  document.getElementById("portalCard").style.display = "block";
+  const meta = document.getElementById("managerMeta");
+  if (meta && managerUser) {
+    meta.textContent = `Logged in as ${managerUser.name} (${managerUser.id}) | ${managerUser.role} | ${managerUser.department}`;
+  }
+}
+
+function hidePortal() {
+  document.getElementById("portalCard").style.display = "none";
+  document.getElementById("loginCard").style.display = "block";
+}
+
+function setCreateDefaults() {
+  const type = document.getElementById("createType")?.value || "admin";
+  const role = document.getElementById("createRole");
+  const dept = document.getElementById("createDepartment");
+  if (!role || !dept) return;
+  if (type === "investor") {
+    role.value = "Investor";
+    dept.value = "Investors";
+    role.readOnly = true;
+    dept.readOnly = true;
+    return;
+  }
+  if (role.readOnly && role.value === "Investor") role.value = "Administrator";
+  if (dept.readOnly && dept.value === "Investors") dept.value = "Management";
+  role.readOnly = false;
+  dept.readOnly = false;
+}
+
+function setupTabs() {
+  const tabs = document.querySelectorAll(".tab");
+  tabs.forEach((tab) => {
+    tab.addEventListener("click", () => {
+      const target = tab.getAttribute("data-tab");
+      tabs.forEach((t) => t.classList.remove("active"));
+      tab.classList.add("active");
+      document.querySelectorAll(".panel").forEach((panel) => panel.classList.remove("active"));
+      const activePanel = document.getElementById(`panel-${target}`);
+      if (activePanel) activePanel.classList.add("active");
+    });
+  });
+}
+
+async function loginManager() {
+  const staffId = document.getElementById("staffId")?.value?.trim() || "";
+  const password = document.getElementById("password")?.value?.trim() || "";
+  if (!staffId || !password) {
+    setStatus("loginStatus", "Staff ID and password are required.", "err");
+    return;
+  }
+
+  try {
+    setStatus("loginStatus", "Signing in...", "info");
+    const res = await fetch("/api/staff-login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ staffId, password })
+    });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok || !data.success || !data.staff) {
+      throw new Error(data.message || "Invalid Staff ID or password.");
+    }
+
+    if (!hasManagerPrivileges(data.staff)) {
+      const isInvestor = String(data.staff.accountType || "").toLowerCase() === "investor" ||
+        String(data.staff.department || "").toLowerCase() === "investors";
+      window.location.href = isInvestor ? "/investor" : "/staff";
+      return;
+    }
+
+    managerToken = data.token || "";
+    managerUser = data.staff;
+    saveManagerSession();
+    setStatus("loginStatus", "Login successful. Admin tools unlocked.", "ok");
+    showPortal();
+  } catch (err) {
+    setStatus("loginStatus", err.message || "Unable to login.", "err");
+  }
+}
+
+async function createAccount() {
+  const payload = {
+    accountType: document.getElementById("createType")?.value || "admin",
+    fullName: document.getElementById("createName")?.value?.trim() || "",
+    email: document.getElementById("createEmail")?.value?.trim() || "",
+    password: document.getElementById("createPassword")?.value || "",
+    role: document.getElementById("createRole")?.value?.trim() || "",
+    department: document.getElementById("createDepartment")?.value?.trim() || ""
+  };
+  const provisionKey = document.getElementById("createProvisionKey")?.value?.trim() || "";
+  if (provisionKey) payload.provisionKey = provisionKey;
+
+  if (!payload.fullName || !payload.email || !payload.password) {
+    setStatus("createStatus", "Full name, email and password are required.", "err");
+    return;
+  }
+
+  try {
+    setStatus("createStatus", "Creating account...", "info");
+    const res = await fetch("/api/staff/register", {
+      method: "POST",
+      headers: authHeaders(),
+      body: JSON.stringify(payload)
+    });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok || !data.success) {
+      throw new Error(data.message || "Unable to create account.");
+    }
+    const createdId = data.data?.staffId || "N/A";
+    setStatus("createStatus", `Account created successfully. Assigned ID: ${createdId}`, "ok");
+    document.getElementById("createName").value = "";
+    document.getElementById("createEmail").value = "";
+    document.getElementById("createPassword").value = "";
+    if (payload.accountType === "admin") {
+      document.getElementById("createRole").value = "Administrator";
+      document.getElementById("createDepartment").value = "Management";
+    }
+  } catch (err) {
+    setStatus("createStatus", err.message || "Unable to create account.", "err");
+  }
+}
+
+async function resetPassword() {
+  const payload = {
+    staffId: document.getElementById("resetId")?.value?.trim() || "",
+    newPassword: document.getElementById("resetPassword")?.value || ""
+  };
+  const provisionKey = document.getElementById("resetProvisionKey")?.value?.trim() || "";
+  if (provisionKey) payload.provisionKey = provisionKey;
+
+  if (!payload.staffId || !payload.newPassword) {
+    setStatus("resetStatus", "Staff ID and new password are required.", "err");
+    return;
+  }
+
+  try {
+    setStatus("resetStatus", "Resetting password...", "info");
+    const res = await fetch("/api/staff/reset-password", {
+      method: "POST",
+      headers: authHeaders(),
+      body: JSON.stringify(payload)
+    });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok || !data.success) throw new Error(data.message || "Unable to reset password.");
+    setStatus("resetStatus", `Password reset successful for ${data.data?.staffId || payload.staffId}.`, "ok");
+    document.getElementById("resetPassword").value = "";
+  } catch (err) {
+    setStatus("resetStatus", err.message || "Unable to reset password.", "err");
+  }
+}
+
+function escapeHtml(value) {
+  return String(value || "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
+async function loadAccounts() {
+  const payload = {
+    accountType: document.getElementById("listType")?.value || "all",
+    search: document.getElementById("listSearch")?.value?.trim() || "",
+    limit: Number(document.getElementById("listLimit")?.value || 50)
+  };
+  const provisionKey = document.getElementById("listProvisionKey")?.value?.trim() || "";
+  if (provisionKey) payload.provisionKey = provisionKey;
+
+  try {
+    setStatus("listStatus", "Loading accounts...", "info");
+    const res = await fetch("/api/staff/accounts/search", {
+      method: "POST",
+      headers: authHeaders(),
+      body: JSON.stringify(payload)
+    });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok || !data.success) throw new Error(data.message || "Unable to load accounts.");
+
+    const accounts = Array.isArray(data.data?.accounts) ? data.data.accounts : [];
+    if (!accounts.length) {
+      document.getElementById("listResults").innerHTML = "";
+      setStatus("listStatus", "No accounts found for the selected filter.", "info");
+      return;
+    }
+
+    document.getElementById("listResults").innerHTML = `
+      <table>
+        <thead>
+          <tr>
+            <th>Staff ID</th>
+            <th>Type</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Role</th>
+            <th>Department</th>
+            <th>Status</th>
+            <th>Created</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${accounts.map((a) => `
+            <tr>
+              <td>${escapeHtml(a.staffId)}</td>
+              <td>${escapeHtml(a.accountType)}</td>
+              <td>${escapeHtml(a.fullName)}</td>
+              <td>${escapeHtml(a.email)}</td>
+              <td>${escapeHtml(a.role)}</td>
+              <td>${escapeHtml(a.department)}</td>
+              <td>${escapeHtml(a.status)}</td>
+              <td>${escapeHtml(a.createdAt ? new Date(a.createdAt).toLocaleString() : "")}</td>
+            </tr>
+          `).join("")}
+        </tbody>
+      </table>
+    `;
+    setStatus("listStatus", `Loaded ${accounts.length} account(s).`, "ok");
+  } catch (err) {
+    setStatus("listStatus", err.message || "Unable to load accounts.", "err");
+  }
+}
+
+function logoutManager() {
+  clearManagerSession();
+  hidePortal();
+  setStatus("loginStatus", "Signed out.", "info");
+}
+
+function restoreSession() {
+  try {
+    const rawUser = sessionStorage.getItem("parcelAdminManagerUser");
+    const rawToken = sessionStorage.getItem("parcelAdminManagerToken");
+    if (!rawUser || !rawToken) return;
+    const user = JSON.parse(rawUser);
+    if (!user || !user.id || !hasManagerPrivileges(user)) return;
+    managerUser = user;
+    managerToken = rawToken;
+    showPortal();
+  } catch (_) { /* ignored */ }
+}
+
+window.addEventListener("pagehide", () => {
+  clearManagerSession();
+});
+
+setupTabs();
+setCreateDefaults();
+restoreSession();
+</script>
+</body>
+</html>

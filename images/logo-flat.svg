@@ -1,0 +1,17 @@
+﻿<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 110" role="img" aria-labelledby="title desc">
+  <title id="title">ParcelLink</title>
+  <desc id="desc">ParcelLink flat logo</desc>
+  <defs>
+    <linearGradient id="brand" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#1242a6"/>
+      <stop offset="100%" stop-color="#1d6cff"/>
+    </linearGradient>
+  </defs>
+  <g transform="translate(8,10)" fill="none" stroke="url(#brand)" stroke-width="4" stroke-linejoin="round">
+    <path d="M28 6 58 22 58 56 28 72 -2 56 -2 22Z"/>
+    <path d="M28 6V40M58 22 28 40 -2 22"/>
+    <path d="M66 53h24"/>
+    <path d="M80 39 94 53 80 67"/>
+  </g>
+  <text x="120" y="72" font-family="Poppins, Inter, Arial, sans-serif" font-size="52" font-weight="700" fill="#0f172a">ParcelLink</text>
+</svg>

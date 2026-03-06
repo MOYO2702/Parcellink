@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<link rel="stylesheet" href="/css/theme.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Staff Portal | ParcelLink</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif}
+body{background:#f4f7ff;color:#0f172a}
+header{
+  min-height:86px;background:#fff;display:flex;align-items:center;justify-content:space-between;
+  padding:14px 40px;border-bottom:1px solid #dbe3f0;box-shadow:0 8px 20px rgba(2,22,60,.07)
+}
+header img{height:48px !important;width:auto;display:block}
+header ul{list-style:none;display:flex;gap:24px;flex-wrap:wrap}
+header a{text-decoration:none;color:#0c2356;font-weight:600;font-size:14px}
+header a.active{color:#1d6cff}
+.hero{
+  background:linear-gradient(135deg,#1242a6,#1d6cff);
+  color:#fff;padding:56px 6% 46px
+}
+.hero h1{font-size:clamp(2rem,3.7vw,3rem);line-height:1.1}
+.hero p{margin-top:10px;max-width:760px;opacity:.96;line-height:1.7}
+.wrap{width:min(1060px,92%);margin:26px auto 52px}
+.card{
+  background:#fff;border:1px solid #dbe3f0;border-radius:16px;padding:22px;
+  box-shadow:0 12px 24px rgba(15,40,90,.06)
+}
+.card+.card{margin-top:16px}
+.row{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.group{display:flex;flex-direction:column;gap:6px}
+label{font-size:13px;font-weight:600;color:#334155}
+input,select{
+  width:100%;border:1px solid #cbd5e1;border-radius:10px;padding:11px 12px;font-size:14px
+}
+button{
+  border:none;background:#1242a6;color:#fff;border-radius:10px;padding:11px 16px;
+  font-size:14px;font-weight:600;cursor:pointer
+}
+button:hover{background:#0f3686}
+.btn-ghost{background:#eaf1ff;color:#1242a6}
+.btn-ghost:hover{background:#dbe7ff}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+.status{
+  margin-top:10px;padding:10px 12px;border-radius:10px;font-size:13px;display:none
+}
+.status.ok{display:block;background:#dcfce7;border:1px solid #bbf7d0;color:#166534}
+.status.err{display:block;background:#fee2e2;border:1px solid #fecaca;color:#991b1b}
+.dashboard{display:none}
+.profile{
+  display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap
+}
+.pill{
+  display:inline-block;background:#eaf1ff;color:#1242a6;padding:6px 10px;border-radius:999px;
+  font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.03em
+}
+.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:14px}
+.tile{
+  border:1px solid #dbe3f0;border-radius:12px;padding:14px;background:#f8fbff
+}
+.tile h3{font-size:1rem;margin-bottom:6px;color:#0d2559}
+.tile p{font-size:13px;color:#475569;line-height:1.6}
+.tile a{display:inline-block;margin-top:8px;color:#1d6cff;font-weight:600;font-size:13px}
+.efficiency-card{
+  margin-top:14px;border:1px solid #dbeafe;background:#f8fbff;border-radius:12px;padding:14px;
+}
+.efficiency-grid{
+  display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-top:10px;
+}
+.eff-box{
+  border:1px solid #dbe3f0;border-radius:10px;padding:10px;background:#fff;
+}
+.eff-box .k{font-size:12px;color:#64748b}
+.eff-box .v{margin-top:4px;font-size:16px;font-weight:700;color:#0d2559}
+.investor-box{margin-top:12px;border:1px solid #dbeafe;background:#f8fbff;border-radius:12px;padding:14px}
+.mini{font-size:13px;color:#475569}
+.table-wrap{overflow-x:auto;margin-top:10px}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th,td{padding:10px;border-bottom:1px solid #e2e8f0;text-align:left}
+th{background:#0f172a;color:#fff}
+@media (max-width:860px){
+  header{padding:10px 16px;gap:10px;flex-wrap:wrap}
+  .row,.grid,.efficiency-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+<header>
+  <a href="/"><img src="/images/logo.png" alt="ParcelLink"></a>
+  <ul>
+    <li><a href="/">Home</a></li>
+    <li><a href="/track">Track</a></li>
+    <li><a href="/send">Send</a></li>
+    <li><a href="/services">Services</a></li>
+    <li><a href="/admin">Admin</a></li>
+    <li><a class="active" href="/staff">Staff Portal</a></li>
+  </ul>
+</header>
+
+<section class="hero">
+  <h1>Staff Portal</h1>
+  <p>Use your assigned unique Staff ID and password to access your workspace. Account creation and password governance are handled by Staff Access Manager.</p>
+</section>
+
+<main class="wrap">
+  <section id="loginCard" class="card">
+    <h2>Portal Login</h2>
+    <div class="row" style="margin-top:12px;">
+      <div class="group">
+        <label for="roleSelect">Role (optional check)</label>
+        <select id="roleSelect">
+          <option value="">-- Select Role --</option>
+          <option value="Operations">Operations</option>
+          <option value="Dispatch">Dispatch</option>
+          <option value="Warehouse">Warehouse</option>
+          <option value="Customer Service">Customer Service</option>
+          <option value="Finance">Finance</option>
+          <option value="IT">IT</option>
+          <option value="Driver">Driver</option>
+          <option value="Investor">Investor</option>
+        </select>
+      </div>
+      <div class="group">
+        <label for="staffId">Staff ID</label>
+        <input id="staffId" type="text" placeholder="ADM005 or INV003">
+      </div>
+      <div class="group">
+        <label for="password">Password</label>
+        <input id="password" type="password" placeholder="Enter password">
+      </div>
+    </div>
+    <div class="actions">
+      <button type="button" onclick="login()">Login</button>
+      <a class="btn-ghost" href="/admin" style="padding:11px 16px;border-radius:10px;font-weight:600;">Manager Access</a>
+    </div>
+    <div id="loginStatus" class="status"></div>
+  </section>
+
+  <section id="dashboard" class="card dashboard">
+    <div class="profile">
+      <div>
+        <h2 id="welcomeTitle">Staff Portal</h2>
+        <p class="mini" id="welcomeSub"></p>
+      </div>
+      <div>
+        <span class="pill" id="accountPill">Staff</span>
+      </div>
+    </div>
+    <div class="actions">
+      <button class="btn-ghost" type="button" onclick="logout()">Logout</button>
+    </div>
+    <div id="dashboardBody"></div>
+  </section>
+</main>
+
+<script>
+const ROLE_DEPARTMENT_MAP = {
+  Operations: ["Management"],
+  Dispatch: ["Dispatch"],
+  Warehouse: ["Warehouse"],
+  "Customer Service": ["Customer Service"],
+  Finance: ["Finance"],
+  IT: ["IT"],
+  Driver: ["Fleet"],
+  Investor: ["Investors"]
+};
+
+let staffToken = "";
+let staffUser = null;
+
+function setLoginStatus(message, ok) {
+  const el = document.getElementById("loginStatus");
+  if (!el) return;
+  el.textContent = message || "";
+  el.className = `status ${ok ? "ok" : "err"}`;
+}
+
+function saveSession(user, token) {
+  staffUser = user || null;
+  staffToken = token || "";
+  sessionStorage.setItem("parcelStaffUser", JSON.stringify(staffUser || {}));
+  if (staffToken) sessionStorage.setItem("parcelStaffToken", staffToken);
+}
+
+function clearSession() {
+  staffUser = null;
+  staffToken = "";
+  sessionStorage.removeItem("parcelStaffUser");
+  sessionStorage.removeItem("parcelStaffToken");
+}
+
+function tryRestoreSession() {
+  try {
+    const rawUser = sessionStorage.getItem("parcelStaffUser");
+    const rawToken = sessionStorage.getItem("parcelStaffToken");
+    if (rawUser && rawToken) {
+      const parsed = JSON.parse(rawUser);
+      if (parsed && parsed.id) {
+        staffUser = parsed;
+        staffToken = rawToken;
+        renderDashboard(parsed);
+      }
+    }
+  } catch (_) { /* ignored */ }
+}
+
+function renderDashboard(user) {
+  const dashboard = document.getElementById("dashboard");
+  const loginCard = document.getElementById("loginCard");
+  const body = document.getElementById("dashboardBody");
+  const isInvestor = String(user.role || "").toLowerCase() === "investor" || String(user.department || "").toLowerCase() === "investors";
+
+  if (loginCard) loginCard.style.display = "none";
+  if (dashboard) dashboard.style.display = "block";
+  document.getElementById("welcomeTitle").textContent = "Staff Portal";
+  document.getElementById("welcomeSub").textContent = `Logged in as ${user.name || user.id || "User"} | ID: ${user.id || ""} | Role: ${user.role || "Staff"} | Department: ${user.department || "-"}`;
+  document.getElementById("accountPill").textContent = isInvestor ? "Investor" : "Staff";
+
+  if (isInvestor) {
+    body.innerHTML = `
+      <div class="investor-box">
+        <h3>Investor Workspace</h3>
+        <p class="mini">Use your inquiry ID to load your growth timeline and portfolio day view.</p>
+        <div class="row" style="margin-top:10px;">
+          <div class="group">
+            <label for="inquiryId">Investor Inquiry ID</label>
+            <input id="inquiryId" type="text" placeholder="INV-XXXXXXXXXXXXX-XXXXXX">
+          </div>
+        </div>
+        <div class="actions">
+          <button type="button" onclick="loadInvestorDashboard()">Load Dashboard</button>
+        </div>
+        <div id="investorResult" class="table-wrap"></div>
+      </div>
+    `;
+    return;
+  }
+
+  body.innerHTML = `
+    <div class="grid">
+      <div class="tile">
+        <h3>Shipment Operations</h3>
+        <p>Create and dispatch parcels using your staff workflow.</p>
+        <a href="/send">Open Send Page</a>
+      </div>
+      <div class="tile">
+        <h3>Tracking Console</h3>
+        <p>Monitor parcel status and customer updates in real time.</p>
+        <a href="/track">Open Tracking</a>
+      </div>
+      <div class="tile">
+        <h3>Client Records</h3>
+        <p>Review customer shipment and receipt history.</p>
+        <a href="/clientzone">Open Client Zone</a>
+      </div>
+    </div>
+    <div class="efficiency-card">
+      <h3>Staff Efficiency (Pilot)</h3>
+      <p class="mini">Initial placeholders for performance tracking. These will be connected to your future yardstick model.</p>
+      <div class="efficiency-grid">
+        <div class="eff-box">
+          <div class="k">On-time Delivery Rate</div>
+          <div class="v">TBD%</div>
+        </div>
+        <div class="eff-box">
+          <div class="k">Average Dispatch Time</div>
+          <div class="v">TBD min</div>
+        </div>
+        <div class="eff-box">
+          <div class="k">Failed Attempt Ratio</div>
+          <div class="v">TBD%</div>
+        </div>
+        <div class="eff-box">
+          <div class="k">Cases Closed (Week)</div>
+          <div class="v">TBD</div>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function selectedRoleMatchesAccount(selectedRole, user) {
+  const roleLabel = String(selectedRole || "").trim().toLowerCase();
+  if (!roleLabel) return true;
+
+  const userRole = String(user?.role || "").trim().toLowerCase();
+  const userDepartment = String(user?.department || "").trim().toLowerCase();
+  const isInvestor = userRole === "investor" || userDepartment === "investors";
+
+  if (roleLabel === "investor") return isInvestor;
+  if (isInvestor) return false;
+
+  const byDepartment = (ROLE_DEPARTMENT_MAP[selectedRole] || [])
+    .map((d) => String(d).toLowerCase())
+    .includes(userDepartment);
+
+  // Also allow match against assigned role name (e.g. Driver, Rider, Operations Admin)
+  const byRole = userRole.includes(roleLabel);
+
+  // Driver selection should accept Fleet-related role wording.
+  const driverAlias = roleLabel === "driver" && (
+    userRole.includes("driver") ||
+    userRole.includes("rider") ||
+    userRole.includes("fleet")
+  );
+
+  return byDepartment || byRole || driverAlias;
+}
+
+async function loadInvestorDashboard() {
+  const inquiryId = document.getElementById("inquiryId")?.value?.trim();
+  const result = document.getElementById("investorResult");
+  if (!result) return;
+  if (!inquiryId) {
+    result.innerHTML = `<p class="mini" style="color:#991b1b;">Enter a valid inquiry ID.</p>`;
+    return;
+  }
+
+  result.innerHTML = `<p class="mini">Loading investor dashboard...</p>`;
+
+  try {
+    const res = await fetch(`/api/investor-interest/${encodeURIComponent(inquiryId)}/dashboard`);
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok || !data.success || !data.dashboard) {
+      throw new Error(data.message || "Unable to load investor dashboard.");
+    }
+
+    const timeline = Array.isArray(data.dashboard.timeline) ? data.dashboard.timeline : [];
+    if (!timeline.length) {
+      result.innerHTML = `<p class="mini">No timeline records found for this inquiry.</p>`;
+      return;
+    }
+
+    result.innerHTML = `
+      <table>
+        <thead>
+          <tr>
+            <th>Day</th>
+            <th>Date</th>
+            <th>Opening</th>
+            <th>Daily Profit</th>
+            <th>Closing</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${timeline.map((item) => `
+            <tr>
+              <td>${item.dayIndex || ""}</td>
+              <td>${item.date || ""}</td>
+              <td>${item.openingBalance || ""}</td>
+              <td>${item.dailyProfit || ""}</td>
+              <td>${item.closingBalance || ""}</td>
+            </tr>
+          `).join("")}
+        </tbody>
+      </table>
+    `;
+  } catch (err) {
+    result.innerHTML = `<p class="mini" style="color:#991b1b;">${err.message || "Unable to load investor dashboard."}</p>`;
+  }
+}
+
+async function login() {
+  const staffId = document.getElementById("staffId")?.value?.trim() || "";
+  const password = document.getElementById("password")?.value?.trim() || "";
+  const selectedRole = document.getElementById("roleSelect")?.value?.trim() || "";
+
+  if (!staffId || !password) {
+    setLoginStatus("Staff ID and password are required.", false);
+    return;
+  }
+
+  try {
+    const res = await fetch("/api/staff-login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ staffId, password })
+    });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok || !data.success || !data.staff) {
+      throw new Error(data.message || "Invalid Staff ID or password.");
+    }
+
+    const user = data.staff;
+    if (selectedRole && !selectedRoleMatchesAccount(selectedRole, user)) {
+      throw new Error("Selected role does not match this staff account.");
+    }
+
+    saveSession(user, data.token || "");
+    setLoginStatus("Login successful.", true);
+    renderDashboard(user);
+  } catch (err) {
+    setLoginStatus(err.message || "Unable to login.", false);
+  }
+}
+
+function logout() {
+  clearSession();
+  const dashboard = document.getElementById("dashboard");
+  const loginCard = document.getElementById("loginCard");
+  if (dashboard) dashboard.style.display = "none";
+  if (loginCard) loginCard.style.display = "block";
+  setLoginStatus("", true);
+}
+
+window.addEventListener("pagehide", () => {
+  clearSession();
+});
+
+tryRestoreSession();
+</script>
+</body>
+</html>

@@ -1,0 +1,241 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<link rel="stylesheet" href="/css/theme.css">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Track | ParcelLink</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+
+<style>
+/* RESET */
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Poppins',sans-serif;
+}
+body{
+    background:#f5f6f7;
+    overflow-x:hidden;
+    color:#0f172a;
+}
+
+/* HEADER */
+header{
+    width:100%;
+    height:86px;
+    background:#ffffff;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 48px;
+    box-shadow:0 2px 14px rgba(0,0,0,0.07);
+    position:sticky;
+    top:0;
+    z-index:100;
+}
+header img{
+    height:70px;
+    width:auto;
+    display:block;
+    transform:scale(2);
+    transform-origin:left center;
+}
+
+
+header nav ul{
+    display:flex;
+    gap:34px;
+    list-style:none;
+}
+header nav ul li a{
+    text-decoration:none;
+    font-size:16px;
+    font-weight:500;
+    color:#001c48;
+    padding:6px 10px;
+    border-radius:6px;
+}
+header nav ul li a.active{
+    color:#1d6cff;
+    background:rgba(29,108,255,0.1);
+}
+
+/* ===== HERO SECTION (full background) ===== */
+.hero{
+    width:100%;
+    min-height:560px;
+    position:relative;
+    background:url('/images/track-background.jpg') center center/cover no-repeat;
+    display:flex;
+    align-items:center;
+    padding:72px 8%;
+}
+
+/* dark overlay for readability */
+.hero::before{
+    content:"";
+    position:absolute;
+    inset:0;
+    backdrop-filter: brightness(0.75);
+    background:linear-gradient(to right, rgba(0,0,0,0.45), rgba(0,0,0,0.15));
+    z-index:1;
+}
+
+/* CONTENT ON HERO */
+.hero-content{
+    position:relative;
+    z-index:3;
+    max-width:640px;
+    color:#fff;
+}
+.hero-content h1{
+    font-size:clamp(2.2rem, 5vw, 3.6rem);
+    font-weight:800;
+    line-height:1.08;
+    letter-spacing:-0.02em;
+    margin-bottom:16px;
+}
+.hero-content p{
+    font-size:19px;
+    line-height:1.6;
+    opacity:0.95;
+    margin-bottom:30px;
+}
+
+/* SEARCH BOX on HERO */
+.track-form{
+    width:100%;
+    max-width:560px;
+    display:flex;
+    background:white;
+    border-radius:12px;
+    overflow:hidden;
+    box-shadow:0 18px 36px rgba(0,28,72,0.18);
+    border:1px solid #dbe3f0;
+}
+.track-form input{
+    flex:1;
+    padding:16px 18px;
+    border:none;
+    outline:none;
+    font-size:16px;
+}
+.track-form button{
+    padding:0 28px;
+    background:#1d6cff;
+    border:none;
+    color:white;
+    font-size:16px;
+    font-weight:600;
+    cursor:pointer;
+    transition:0.3s;
+}
+.track-form button:hover{
+    background:#1242a6;
+}
+
+/* ORDER STATUS SECTION */
+#orderStatus{
+    padding:56px 8%;
+    background:#f8fbff;
+}
+#orderStatus h2{
+    font-size:34px;
+    font-weight:700;
+    margin-bottom:22px;
+    letter-spacing:-0.01em;
+}
+#resultCard{
+    background:white;
+    border-radius:16px;
+    padding:28px;
+    border-left:6px solid #1d6cff;
+    box-shadow:0 14px 34px rgba(0,28,72,0.12);
+    border:1px solid #dbe3f0;
+}
+
+/* MINIMALIST FOOTER */
+footer{
+    background:#001c48;
+    color:white;
+    text-align:center;
+    padding:18px;
+    font-size:14px;
+    margin-top:50px;
+}
+
+/* RESPONSIVE */
+@media (max-width:900px){
+    .hero{
+        height:auto;
+        min-height:420px;
+        padding:56px 24px;
+    }
+    .hero-content h1{
+        font-size:40px;
+    }
+    #orderStatus{
+        padding:42px 24px;
+    }
+    .track-form{
+        border-radius:10px;
+    }
+    .track-form input{
+        padding:14px;
+    }
+}
+</style>
+
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <a href="/"><img src="/images/logo.png" alt="ParcelLink"></a>
+  <nav>
+    <ul>
+      <li><a href="/">Home</a></li>
+      <li><a class="active" href="/track">Track</a></li>
+      <li><a href="/send">Send</a></li>
+      <li><a href="/services">Services</a></li>
+      <li><a href="/career">Careers</a></li>
+      <li><a href="/help">Help</a></li>
+      <li><a href="/clientzone">Client Zone</a></li>
+    </ul>
+  </nav>
+</header>
+
+<!-- HERO FULL BACKGROUND -->
+<section class="hero">
+  <div class="hero-content">
+    <h1>Track Your Order</h1>
+    <p>Type your order number to see the latest delivery status in real time.</p>
+
+    <form id="trackForm" class="track-form">
+      <input id="trackingInput" type="text" placeholder="Enter tracking code">
+      <button type="submit">Track</button>
+    </form>
+  </div>
+</section>
+
+<!-- ORDER STATUS -->
+<section id="orderStatus">
+  <h2>Order Status</h2>
+  <div id="resultCard" hidden></div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+   2025 ParcelLink Logistics - Fast | Secure | Reliable
+</footer>
+
+<script src="/js/script.js"></script>
+</body>
+</html>
+
+
+
+
