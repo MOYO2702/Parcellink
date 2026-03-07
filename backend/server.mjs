@@ -19,6 +19,7 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 const ROOT = path.join(__dirname, "..");
 const IS_PRODUCTION = String(process.env.NODE_ENV || "").toLowerCase() === "production";
+const I18N_SCRIPT_TAG = '<script src="/js/i18n.js"></script>';
 
 console.log("Starting server:", __filename, "PID:", process.pid);
 
@@ -209,6 +210,23 @@ function mapParcelRow(row, statusHistory = []) {
     createdAt: row.created_at,
     statusHistory
   };
+}
+
+async function sendHtmlWithI18n(res, filePath) {
+  try {
+    let html = await fs.readFile(filePath, "utf8");
+    if (!html.includes('/js/i18n.js')) {
+      if (/<\/body>/i.test(html)) {
+        html = html.replace(/<\/body>/i, `\n${I18N_SCRIPT_TAG}\n</body>`);
+      } else {
+        html += `\n${I18N_SCRIPT_TAG}\n`;
+      }
+    }
+    return res.type("html").send(html);
+  } catch (error) {
+    console.error("Failed to render HTML page:", filePath, error);
+    return res.status(500).send("Unable to load page.");
+  }
 }
 
 // Pricing calculation with discounts
@@ -1430,31 +1448,62 @@ app.post("/api/staff-login", async (req, res) => {
 
 // ================= PAGE ROUTES =================
 app.get("/", (req, res) => {
-  return res.sendFile(path.join(ROOT, "index.html"));
+  return sendHtmlWithI18n(res, path.join(ROOT, "index.html"));
 });
 
 app.get("/login", (req, res) => {
-  return res.sendFile(path.join(ROOT, "auth", "login.html"));
+  return sendHtmlWithI18n(res, path.join(ROOT, "auth", "login.html"));
 });
 
 app.get("/register", (req, res) => {
-  return res.sendFile(path.join(ROOT, "auth", "register.html"));
+  return sendHtmlWithI18n(res, path.join(ROOT, "auth", "register.html"));
 });
 
 app.get("/dashboard", (req, res) => {
-  return res.sendFile(path.join(ROOT, "dashboard.html"));
+  return sendHtmlWithI18n(res, path.join(ROOT, "dashboard.html"));
 });
 
 app.get("/staff", (req, res) => {
-  return res.sendFile(path.join(ROOT, "staff.html"));
+  return sendHtmlWithI18n(res, path.join(ROOT, "staff.html"));
 });
 
 app.get("/investor", (req, res) => {
-  return res.sendFile(path.join(ROOT, "investor.html"));
+  return sendHtmlWithI18n(res, path.join(ROOT, "investor.html"));
 });
 
 app.get("/investor-dashboard", (req, res) => {
-  return res.sendFile(path.join(ROOT, "investor-dashboard.html"));
+  return sendHtmlWithI18n(res, path.join(ROOT, "investor-dashboard.html"));
+});
+
+app.use(async (req, res, next) => {
+  if (req.method !== "GET") return next();
+
+  const urlPath = req.path.toLowerCase();
+  const skipPrefixes = ["/api/", "/js/", "/css/", "/images/", "/fonts/", "/favicon"];
+  if (skipPrefixes.some(prefix => urlPath.startsWith(prefix))) return next();
+
+  const fileExtension = path.extname(req.path || "").toLowerCase();
+  if (fileExtension && fileExtension !== ".html") return next();
+
+  try {
+    const cleanPath = (req.path || "/").replace(/^\/+|\/+$/g, "");
+    const relativePath = cleanPath ? cleanPath : "index.html";
+    const htmlPath = relativePath.endsWith(".html") ? relativePath : `${relativePath}.html`;
+    const targetPath = path.join(ROOT, htmlPath);
+
+    const normalizedRoot = path.normalize(ROOT + path.sep);
+    const normalizedTarget = path.normalize(targetPath);
+    if (!normalizedTarget.startsWith(normalizedRoot)) return next();
+
+    const stat = await fs.stat(normalizedTarget).catch(() => null);
+    if (stat && stat.isFile()) {
+      return sendHtmlWithI18n(res, normalizedTarget);
+    }
+  } catch (_) {
+    // continue to remaining middleware
+  }
+
+  return next();
 });
 
 // Favicon handler
@@ -1481,11 +1530,11 @@ app.use(async (req, res, next) => {
     const maybeHtml = path.join(ROOT, req.path.endsWith(".html") ? req.path : req.path + ".html");
     const stat = await fs.stat(maybeHtml).catch(() => null);
     if (stat && stat.isFile()) {
-      return res.sendFile(maybeHtml);
+      return sendHtmlWithI18n(res, maybeHtml);
     }
   } catch (_) { /* ignored */ }
 
-  return res.sendFile(path.join(ROOT, "index.html"));
+  return sendHtmlWithI18n(res, path.join(ROOT, "index.html"));
 });
 
 // ================= START SERVER =================

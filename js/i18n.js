@@ -2,6 +2,9 @@
   const STORAGE_KEY = "parcellink_language";
   const FALLBACK_LANGUAGE = "en";
   const SUPPORTED_LANGUAGES = ["en", "ar"];
+  const GOOGLE_TRANSLATE_CONTAINER_ID = "google_translate_element";
+  const GOOGLE_TRANSLATE_SCRIPT_ID = "parcellink-google-translate-script";
+  const RUNTIME_STYLE_ID = "parcellink-i18n-runtime-style";
 
   const dictionaries = {
     en: {
@@ -270,6 +273,83 @@
     }
   };
 
+  const literalFallbackAr = {
+    "Home": "الرئيسية",
+    "Track": "تتبع",
+    "Send": "إرسال",
+    "Services": "الخدمات",
+    "Careers": "الوظائف",
+    "Help": "المساعدة",
+    "Client Zone": "منطقة العملاء",
+    "Admin": "الإدارة",
+    "Admin Portal": "بوابة الإدارة",
+    "Staff Portal": "بوابة الموظفين",
+    "Investor Portal": "بوابة المستثمر",
+    "ROI Dashboard": "لوحة عائد الاستثمار",
+    "Dashboard": "لوحة التحكم",
+    "Login": "تسجيل الدخول",
+    "Register": "إنشاء حساب",
+    "Logout": "تسجيل الخروج",
+    "Welcome": "مرحبًا",
+    "Sign In": "تسجيل الدخول",
+    "Email": "البريد الإلكتروني",
+    "Password": "كلمة المرور",
+    "Phone": "الهاتف",
+    "Phone Number": "رقم الهاتف",
+    "City": "المدينة",
+    "Order Status": "حالة الطلب",
+    "Track Your Order": "تتبع طلبك",
+    "Enter tracking code": "أدخل رمز التتبع",
+    "Help Center": "مركز المساعدة",
+    "Contact Support": "تواصل مع الدعم",
+    "Frequently Asked Questions": "الأسئلة الشائعة",
+    "Still need help?": "هل ما زلت بحاجة إلى مساعدة؟",
+    "Client Login": "تسجيل دخول العميل",
+    "Quick Actions": "إجراءات سريعة",
+    "Track Shipments": "تتبع الشحنات",
+    "Invoice History": "سجل الفواتير",
+    "Download Statements": "تنزيل الكشوفات",
+    "Welcome to your Dashboard": "مرحبًا بك في لوحة التحكم",
+    "Parcels Sent": "الطرود المرسلة",
+    "In Transit": "قيد النقل",
+    "Delivered": "تم التسليم",
+    "Account Balance": "رصيد الحساب",
+    "Create Account": "إنشاء حساب",
+    "Forgot password?": "نسيت كلمة المرور؟",
+    "Don't have an account?": "ليس لديك حساب؟",
+    "Already have an account?": "لديك حساب بالفعل؟",
+    "Privacy Policy": "سياسة الخصوصية",
+    "Terms & Conditions": "الشروط والأحكام",
+    "Partner With ParcelLink": "كن شريكًا مع بارسل لينك",
+    "View Services": "عرض الخدمات",
+    "Request Partnership": "طلب شراكة",
+    "Send a Parcel": "إرسال طرد",
+    "Sender Information": "معلومات المرسل",
+    "Receiver Information": "معلومات المستلم",
+    "Parcel Information": "معلومات الطرد",
+    "Sender Name": "اسم المرسل",
+    "Receiver Name": "اسم المستلم",
+    "Pickup Address": "عنوان الاستلام",
+    "Delivery Address": "عنوان التسليم",
+    "P.O. Box (optional)": "صندوق بريد (اختياري)",
+    "Weight (kg)": "الوزن (كجم)",
+    "Parcel Type": "نوع الطرد",
+    "Document": "مستند",
+    "Small Box": "صندوق صغير",
+    "Medium Box": "صندوق متوسط",
+    "Large Box": "صندوق كبير",
+    "Dimensions (optional)": "الأبعاد (اختياري)",
+    "Notes (optional)": "ملاحظات (اختياري)",
+    "Submit Shipment": "إرسال الشحنة",
+    "2025 ParcelLink Logistics - Fast | Secure | Reliable": "2025 بارسل لينك للخدمات اللوجستية - سريع | آمن | موثوق",
+    "© 2026 ParcelLink Logistics. All rights reserved.": "© 2026 بارسل لينك للخدمات اللوجستية. جميع الحقوق محفوظة.",
+    "© 2026 ParcelLink - All Rights Reserved": "© 2026 بارسل لينك - جميع الحقوق محفوظة"
+  };
+
+  const literalFallbackEn = Object.fromEntries(
+    Object.entries(literalFallbackAr).map(([en, ar]) => [ar, en])
+  );
+
   const normalizeLanguage = (value) => {
     const normalized = (value || "").toLowerCase();
     return SUPPORTED_LANGUAGES.includes(normalized) ? normalized : FALLBACK_LANGUAGE;
@@ -283,6 +363,11 @@
     }
   };
 
+  const textNodeOriginal = new WeakMap();
+  const attrOriginal = new WeakMap();
+  let googleTranslateReady = false;
+  let pendingGoogleLanguage = null;
+
   let currentLanguage = (() => {
     try {
       return normalizeLanguage(localStorage.getItem(STORAGE_KEY));
@@ -295,6 +380,335 @@
     const activeDictionary = dictionaries[currentLanguage] || {};
     const fallbackDictionary = dictionaries[FALLBACK_LANGUAGE] || {};
     return activeDictionary[key] || fallbackDictionary[key] || fallback || "";
+  };
+
+  const ensureArabicFont = () => {
+    if (document.querySelector('link[data-i18n-font="tajawal"]')) return;
+    const link = document.createElement("link");
+    link.rel = "stylesheet";
+    link.href = "https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap";
+    link.setAttribute("data-i18n-font", "tajawal");
+    document.head.appendChild(link);
+  };
+
+  const injectRuntimeStyles = () => {
+    if (document.getElementById(RUNTIME_STYLE_ID)) return;
+    const style = document.createElement("style");
+    style.id = RUNTIME_STYLE_ID;
+    style.textContent = `
+      #${GOOGLE_TRANSLATE_CONTAINER_ID} {
+        position: fixed;
+        left: -9999px;
+        top: -9999px;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+      }
+      .goog-te-banner-frame.skiptranslate,
+      .goog-te-gadget-icon,
+      .goog-logo-link,
+      .goog-te-gadget span {
+        display: none !important;
+      }
+      body { top: 0 !important; }
+      .goog-te-gadget { font-size: 0 !important; color: transparent !important; }
+
+      .lang-switcher {
+        position: fixed !important;
+        right: 16px !important;
+        top: 16px !important;
+        bottom: auto !important;
+        z-index: 4000;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 10px;
+        background: rgba(255, 255, 255, 0.96);
+        border: 1px solid #dbe3f0;
+        border-radius: 999px;
+        box-shadow: 0 10px 30px rgba(2, 8, 23, 0.15);
+      }
+
+      .lang-switcher-label {
+        font-size: 12px;
+        font-weight: 600;
+        color: #0f172a;
+      }
+
+      .lang-switch-btn {
+        border: 1px solid #c7d2fe;
+        background: #fff;
+        color: #1d6cff;
+        border-radius: 999px;
+        padding: 4px 10px;
+        font-size: 12px;
+        font-weight: 700;
+        cursor: pointer;
+      }
+
+      .lang-switch-btn.active {
+        background: #1d6cff;
+        border-color: #1d6cff;
+        color: #fff;
+      }
+
+      .lang-prompt-overlay {
+        position: fixed;
+        inset: 0;
+        z-index: 5000;
+        display: grid;
+        place-items: center;
+        background: rgba(2, 8, 23, 0.45);
+        padding: 18px;
+      }
+
+      .lang-prompt-card {
+        width: min(520px, 92vw);
+        background: #fff;
+        border-radius: 14px;
+        padding: 22px;
+        border: 1px solid #dbe3f0;
+        box-shadow: 0 20px 50px rgba(2, 8, 23, 0.25);
+      }
+
+      .lang-prompt-title {
+        font-size: 1.15rem;
+        margin-bottom: 8px;
+        color: #0f172a;
+      }
+
+      .lang-prompt-message {
+        font-size: 0.95rem;
+        color: #334155;
+        margin-bottom: 16px;
+        line-height: 1.55;
+      }
+
+      .lang-prompt-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+
+      .lang-prompt-btn {
+        border: 1px solid #dbe3f0;
+        background: #fff;
+        color: #0f172a;
+        border-radius: 8px;
+        padding: 10px 14px;
+        font-weight: 600;
+        cursor: pointer;
+      }
+
+      .lang-prompt-btn.primary {
+        background: #1d6cff;
+        color: #fff;
+        border-color: #1d6cff;
+      }
+
+      html[lang="ar"] body {
+        font-family: 'Tajawal', 'Poppins', sans-serif !important;
+      }
+
+      html[dir="rtl"] .lang-switcher {
+        right: auto !important;
+        left: 16px !important;
+      }
+
+      @media (max-width: 768px) {
+        .lang-switcher {
+          right: 10px !important;
+          top: 10px !important;
+          gap: 6px;
+          padding: 7px 9px;
+        }
+
+        html[dir="rtl"] .lang-switcher {
+          left: 10px !important;
+        }
+
+        .lang-switcher-label {
+          display: none;
+        }
+      }
+    `;
+    document.head.appendChild(style);
+  };
+
+  const ensureGoogleContainer = () => {
+    if (document.getElementById(GOOGLE_TRANSLATE_CONTAINER_ID)) return;
+    const container = document.createElement("div");
+    container.id = GOOGLE_TRANSLATE_CONTAINER_ID;
+    container.setAttribute("aria-hidden", "true");
+    document.body.appendChild(container);
+  };
+
+  const initializeGoogleTranslate = () => {
+    try {
+      if (!(window.google && window.google.translate && window.google.translate.TranslateElement)) return;
+      ensureGoogleContainer();
+      if (!window.__parcelLinkGoogleTranslateInitialized) {
+        new window.google.translate.TranslateElement(
+          {
+            pageLanguage: "en",
+            includedLanguages: "en,ar",
+            autoDisplay: false,
+            layout: window.google.translate.TranslateElement.InlineLayout.SIMPLE
+          },
+          GOOGLE_TRANSLATE_CONTAINER_ID
+        );
+        window.__parcelLinkGoogleTranslateInitialized = true;
+      }
+      googleTranslateReady = true;
+      if (pendingGoogleLanguage) {
+        applyGoogleLanguage(pendingGoogleLanguage);
+      }
+    } catch (error) {
+      console.warn("Google Translate init failed:", error);
+    }
+  };
+
+  const loadGoogleTranslate = () => {
+    ensureGoogleContainer();
+
+    if (window.google && window.google.translate && window.google.translate.TranslateElement) {
+      initializeGoogleTranslate();
+      return;
+    }
+
+    window.googleTranslateElementInit = () => {
+      initializeGoogleTranslate();
+    };
+
+    if (document.getElementById(GOOGLE_TRANSLATE_SCRIPT_ID)) return;
+
+    const script = document.createElement("script");
+    script.id = GOOGLE_TRANSLATE_SCRIPT_ID;
+    script.src = "https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit";
+    script.async = true;
+    script.onerror = () => {
+      console.warn("Google Translate script could not be loaded. Falling back to local phrase translation.");
+    };
+    document.body.appendChild(script);
+  };
+
+  const applyGoogleLanguage = (lang, retries = 12) => {
+    pendingGoogleLanguage = normalizeLanguage(lang);
+    if (!googleTranslateReady) return;
+
+    const combo = document.querySelector(".goog-te-combo");
+    if (!combo) {
+      if (retries > 0) {
+        setTimeout(() => applyGoogleLanguage(lang, retries - 1), 250);
+      }
+      return;
+    }
+
+    const targetValue = pendingGoogleLanguage === "ar" ? "ar" : "en";
+    if (combo.value !== targetValue) {
+      combo.value = targetValue;
+      combo.dispatchEvent(new Event("change"));
+    }
+  };
+
+  const shouldIgnoreTextNode = (node) => {
+    if (!node || !node.parentElement) return true;
+    const parent = node.parentElement;
+    const tag = (parent.tagName || "").toLowerCase();
+    if (["script", "style", "noscript", "textarea"].includes(tag)) return true;
+    if (parent.closest(".lang-switcher, .lang-prompt-overlay, #google_translate_element")) return true;
+    return false;
+  };
+
+  const preserveWhitespace = (originalText, translatedText) => {
+    const leading = originalText.match(/^\s*/)?.[0] || "";
+    const trailing = originalText.match(/\s*$/)?.[0] || "";
+    return `${leading}${translatedText}${trailing}`;
+  };
+
+  const replaceLiteralText = (rawText, language) => {
+    const sourceMap = language === "ar" ? literalFallbackAr : literalFallbackEn;
+    const trimmed = rawText.trim();
+    if (!trimmed) return rawText;
+
+    const direct = sourceMap[trimmed];
+    if (direct) return preserveWhitespace(rawText, direct);
+
+    let updated = rawText;
+    const entries = Object.entries(sourceMap).sort((a, b) => b[0].length - a[0].length);
+    for (const [from, to] of entries) {
+      if (updated.includes(from)) {
+        updated = updated.split(from).join(to);
+      }
+    }
+    return updated;
+  };
+
+  const applyLiteralFallbackTranslations = () => {
+    if (!document.body) return;
+
+    const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
+    const textNodes = [];
+    while (walker.nextNode()) {
+      textNodes.push(walker.currentNode);
+    }
+
+    textNodes.forEach((node) => {
+      if (shouldIgnoreTextNode(node)) return;
+
+      if (!textNodeOriginal.has(node)) {
+        textNodeOriginal.set(node, node.nodeValue || "");
+      }
+
+      const original = textNodeOriginal.get(node) || "";
+      if (currentLanguage === "en") {
+        node.nodeValue = original;
+      } else {
+        node.nodeValue = replaceLiteralText(original, "ar");
+      }
+    });
+
+    document.querySelectorAll("[placeholder], [title], [aria-label]").forEach((element) => {
+      const attrs = ["placeholder", "title", "aria-label"];
+      if (!attrOriginal.has(element)) {
+        attrOriginal.set(element, {});
+      }
+      const originalAttrs = attrOriginal.get(element);
+
+      attrs.forEach((attr) => {
+        const currentValue = element.getAttribute(attr);
+        if (currentValue == null) return;
+        if (!(attr in originalAttrs)) {
+          originalAttrs[attr] = currentValue;
+        }
+
+        if (currentLanguage === "en") {
+          element.setAttribute(attr, originalAttrs[attr]);
+        } else {
+          element.setAttribute(attr, replaceLiteralText(originalAttrs[attr], "ar"));
+        }
+      });
+    });
+  };
+
+  const installDialogTranslationWrappers = () => {
+    if (window.__parcelLinkDialogTranslationInstalled) return;
+    window.__parcelLinkDialogTranslationInstalled = true;
+
+    const nativeAlert = window.alert.bind(window);
+    const nativeConfirm = window.confirm.bind(window);
+    const nativePrompt = window.prompt.bind(window);
+
+    const translateMessage = (message) => {
+      if (typeof message !== "string") return message;
+      if (currentLanguage === "en") return message;
+      return replaceLiteralText(message, "ar");
+    };
+
+    window.alert = (message) => nativeAlert(translateMessage(message));
+    window.confirm = (message) => nativeConfirm(translateMessage(message));
+    window.prompt = (message, defaultValue) => nativePrompt(translateMessage(message), defaultValue);
   };
 
   const applyTranslations = () => {
@@ -321,6 +735,8 @@
       if (translated) node.setAttribute("placeholder", translated);
     });
 
+    applyLiteralFallbackTranslations();
+
     const switcherLabel = document.querySelector("[data-lang-switcher-label]");
     const enButton = document.querySelector("[data-lang-switch='en']");
     const arButton = document.querySelector("[data-lang-switch='ar']");
@@ -336,6 +752,7 @@
     }
 
     document.dispatchEvent(new CustomEvent("parcellink:language-changed", { detail: { lang: currentLanguage } }));
+    applyGoogleLanguage(currentLanguage);
   };
 
   const setLanguage = (lang, options = { persist: true }) => {
@@ -344,6 +761,7 @@
       try {
         localStorage.setItem(STORAGE_KEY, currentLanguage);
       } catch (_) {
+        // ignore storage failures
       }
     }
     applyTranslations();
@@ -404,7 +822,11 @@
   };
 
   document.addEventListener("DOMContentLoaded", () => {
+    ensureArabicFont();
+    injectRuntimeStyles();
+    installDialogTranslationWrappers();
     createLanguageSwitcher();
+    loadGoogleTranslate();
     applyTranslations();
     createLanguagePrompt();
   });
