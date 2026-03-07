@@ -1804,8 +1804,8 @@ html[lang="ar"] body {
 }
 
 html[dir="rtl"] .lang-switcher {
-  right: auto;
-  left: 16px;
+  right: 16px;
+  left: auto;
 }
 
 html[dir="rtl"] .logistics-text {

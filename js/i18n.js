@@ -512,8 +512,8 @@
       }
 
       html[dir="rtl"] .lang-switcher {
-        right: auto !important;
-        left: 16px !important;
+        right: 16px !important;
+        left: auto !important;
       }
 
       @media (max-width: 768px) {
@@ -525,7 +525,8 @@
         }
 
         html[dir="rtl"] .lang-switcher {
-          left: 10px !important;
+          right: 10px !important;
+          left: auto !important;
         }
 
         .lang-switcher-label {
@@ -555,9 +556,7 @@
 
     const blockers = [
       ...document.querySelectorAll(".top-header .auth-links"),
-      ...document.querySelectorAll(".auth-links"),
-      ...document.querySelectorAll(".top-header"),
-      ...document.querySelectorAll("header")
+      ...document.querySelectorAll(".top-header")
     ];
 
     blockers.forEach((element) => {
