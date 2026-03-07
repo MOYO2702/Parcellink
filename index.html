@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
     <title>ParcelLink</title>
     <link rel="stylesheet" href="css/style.css">
 </head>
@@ -18,24 +19,24 @@
       <a href="tel:045773958">
         <span><i class="fa fa-phone"></i> 045773958</span>
       </a>
-      <a href="https://wa.me/971552689069" target="_blank" rel="noopener">
-        <span><i class="fa fa-whatsapp"></i> +971 55 268 9069</span>
+      <a href="https://wa.me/971526123313" target="_blank" rel="noopener">
+        <span><i class="fa fa-whatsapp"></i> +971526123313</span>
       </a>
     </div>
     <div class="auth-links">
-      <a href="/login"><i class="fa fa-sign-in"></i> Login</a>
-      <a href="/register"><i class="fa fa-user"></i> Register</a>
+      <a href="/login"><i class="fa fa-sign-in"></i> <span data-i18n="top.login">Login</span></a>
+      <a href="/register"><i class="fa fa-user"></i> <span data-i18n="top.register">Register</span></a>
     </div>
   </div>
 </div>
 <!-- promotional sliding banner -->
 <div class="promo-banner">
     <div class="promo-slide">
-        <span>🔥 10% discount on all freights</span>
-        <span>🚚 20% discount if parcel is greater than 100kg</span>
+    <span data-i18n="promo.discount10">🔥 10% discount on all freights</span>
+    <span data-i18n="promo.discount20">🚚 20% discount if parcel is greater than 100kg</span>
 
-        <span>🔥 10% discount on all freights</span>
-        <span>🚚 20% discount if parcel is greater than 100kg</span>
+    <span data-i18n="promo.discount10">🔥 10% discount on all freights</span>
+    <span data-i18n="promo.discount20">🚚 20% discount if parcel is greater than 100kg</span>
 
     </div>
 </div>
@@ -50,14 +51,14 @@
 
     <nav class="nav-links">
     <ul id="main-nav-list">
-        <li><a href="/" class="active">HOME</a></li>
-         <li><a href="/send">SEND</a></li>
-        <li><a href="/track">TRACK</a></li>
-        <li><a href="/services">OUR SERVICES</a></li>
-        <li><a href="/help">HELP</a></li>
-        <li><a href="/career">CAREERS</a></li>
-        <li><a href="/admin">ADMINISTRATIVE</a></li>
-        <li><a href="/clientzone">CLIENT ZONE</a></li>
+      <li><a href="/" class="active" data-i18n="nav.home">HOME</a></li>
+       <li><a href="/send" data-i18n="nav.send">SEND</a></li>
+      <li><a href="/track" data-i18n="nav.track">TRACK</a></li>
+      <li><a href="/services" data-i18n="nav.services">OUR SERVICES</a></li>
+      <li><a href="/help" data-i18n="nav.help">HELP</a></li>
+      <li><a href="/career" data-i18n="nav.careers">CAREERS</a></li>
+      <li><a href="/admin" data-i18n="nav.admin">ADMINISTRATIVE</a></li>
+      <li><a href="/clientzone" data-i18n="nav.clientzone">CLIENT ZONE</a></li>
     </ul>
 </nav>
 
@@ -69,33 +70,33 @@
 
 <section class="hero">
   <div class="hero-container">
-    <h1>The Cheapest Parcel Delivery In The UAE.</h1>
+    <h1 data-i18n="hero.title">The Cheapest Parcel Delivery In The UAE.</h1>
 
     <div class="parcel-tabs">
-      <button class="tab-btn active" data-target="international-form">Send Parcel International</button>
-      <button class="tab-btn" data-target="uae-form">Send UAE to UAE</button>
-      <button class="tab-btn" data-target="corporate-form">Corporate SME’s</button>
+      <button class="tab-btn active" data-target="international-form" data-i18n="tabs.international">Send Parcel International</button>
+      <button class="tab-btn" data-target="uae-form" data-i18n="tabs.uae">Send UAE to UAE</button>
+      <button class="tab-btn" data-target="corporate-form" data-i18n="tabs.corporate">Corporate SME’s</button>
     </div>
 
     <form id="international-form" class="parcel-form active">
       <div class="parcel-type">
-        <button type="button" class="type-btn active" data-type="export">Export</button>
-  <button type="button" class="type-btn" data-type="import">Import</button>
+        <button type="button" class="type-btn active" data-type="export" data-i18n="forms.export">Export</button>
+  <button type="button" class="type-btn" data-type="import" data-i18n="forms.import">Import</button>
       </div>
 
       <div class="form-row">
         <div class="form-group">
-          <label for="intl-from">From</label>
+          <label for="intl-from" data-i18n="forms.from">From</label>
           <select id="intl-from" name="from">
-            <option>Dubai</option>
-            <option>Abu Dhabi</option>
+            <option data-i18n="forms.cityDubai">Dubai</option>
+            <option data-i18n="forms.cityAbuDhabi">Abu Dhabi</option>
           </select>
         </div>
         <div class="form-group">
-          <label for="intl-to">To</label>
+          <label for="intl-to" data-i18n="forms.to">To</label>
           <select id="intl-to" name="to">
-            <option>United Kingdom</option>
-            <option>USA</option>
+            <option data-i18n="forms.countryUK">United Kingdom</option>
+            <option data-i18n="forms.countryUSA">USA</option>
           </select>
         </div>
       </div>
@@ -104,22 +105,22 @@
   <div id="packages-container">
     <!-- First package (default) -->
     <div class="package-block">
-      <h4>Package 1</h4>
+      <h4 data-i18n="forms.package1">Package 1</h4>
       <div class="form-row">
         <div class="form-group">
-          <label>Weight (kg)</label>
+          <label data-i18n="forms.weight">Weight (kg)</label>
           <input type="number" name="weight" step="0.01" placeholder="0.5">
         </div>
         <div class="form-group">
-          <label>Length (cm)</label>
+          <label data-i18n="forms.length">Length (cm)</label>
           <input type="number" name="length" step="0.1">
         </div>
         <div class="form-group">
-          <label>Width (cm)</label>
+          <label data-i18n="forms.width">Width (cm)</label>
           <input type="number" name="width" step="0.1">
         </div>
         <div class="form-group">
-          <label>Height (cm)</label>
+          <label data-i18n="forms.height">Height (cm)</label>
           <input type="number" name="height" step="0.1">
         </div>
       </div>
@@ -128,69 +129,69 @@
 
   <!-- Add Package Button -->
   <div class="form-action">
-    <button type="button" class="add-package">➕ Add another package</button>
+    <button type="button" class="add-package" data-i18n="forms.addPackage">➕ Add another package</button>
   </div>
 
   <!-- Submit Button -->
-  <button type="submit" class="submit-btn">Calculate Shipping</button>
+  <button type="submit" class="submit-btn" data-i18n="forms.calcShipping">Calculate Shipping</button>
 
   <div id="response-international"></div>
 </form>
 
     <form id="uae-form" class="parcel-form">
       <div class="parcel-type">
-        <button type="button" class="active">Send UAE To UAE</button>
-        <button type="button">Inter-City</button>
-        <button type="button">Express</button>
+        <button type="button" class="active" data-i18n="forms.sendUae">Send UAE To UAE</button>
+        <button type="button" data-i18n="forms.intercity">Inter-City</button>
+        <button type="button" data-i18n="forms.express">Express</button>
       </div>
 
       <div class="form-row">
         <div class="form-group">
-          <label for="uae-from">Pickup Location</label>
+          <label for="uae-from" data-i18n="forms.pickupLocation">Pickup Location</label>
           <select id="uae-from" name="from">
-            <option>Dubai</option>
-            <option>Abu Dhabi</option>
-            <option>Sharjah</option>
-            <option>Ajman</option>
+            <option data-i18n="forms.cityDubai">Dubai</option>
+            <option data-i18n="forms.cityAbuDhabi">Abu Dhabi</option>
+            <option data-i18n="forms.citySharjah">Sharjah</option>
+            <option data-i18n="forms.cityAjman">Ajman</option>
           </select>
         </div>
 
         <div class="form-group">
-          <label for="uae-to">Delivery Location</label>
+          <label for="uae-to" data-i18n="forms.deliveryLocation">Delivery Location</label>
           <select id="uae-to" name="to">
-            <option>Dubai</option>
-            <option>Abu Dhabi</option>
-            <option>Sharjah</option>
-            <option>Ajman</option>
+            <option data-i18n="forms.cityDubai">Dubai</option>
+            <option data-i18n="forms.cityAbuDhabi">Abu Dhabi</option>
+            <option data-i18n="forms.citySharjah">Sharjah</option>
+            <option data-i18n="forms.cityAjman">Ajman</option>
           </select>
         </div>
       </div>
 
       <div class="form-row">
         <div class="form-group">
-          <label for="uae-type">Package Type</label>
+          <label for="uae-type" data-i18n="forms.packageType">Package Type</label>
           <select id="uae-type" name="packageType">
-            <option>Small Parcel</option>
-            <option>Medium Parcel</option>
-            <option>Large Parcel</option>
-            <option>Document</option>
+            <option data-i18n="forms.smallParcel">Small Parcel</option>
+            <option data-i18n="forms.mediumParcel">Medium Parcel</option>
+            <option data-i18n="forms.largeParcel">Large Parcel</option>
+            <option data-i18n="forms.document">Document</option>
           </select>
         </div>
 
         <div class="form-group">
-          <label for="uae-weight">Weight (kg)</label>
+          <label for="uae-weight" data-i18n="forms.weight">Weight (kg)</label>
           <input id="uae-weight" name="weight" type="number" step="0.01" placeholder="0.5">
         </div>
       </div>
 
-      <button type="submit" class="submit-btn">Calculate UAE Shipping</button>
+      <button type="submit" class="submit-btn" data-i18n="forms.calcUae">Calculate UAE Shipping</button>
       <div id="response-uae"></div>
     </form>
 
     <form id="corporate-form" class="parcel-form">
       <div class="form-row">
         <div class="form-group">
-          <p>Corporate SME quotes coming soon. Please use International or UAE-to-UAE for now.</p>
+          <p data-i18n="forms.corporateNotice">Corporate SME quotes coming soon. Please use International or UAE-to-UAE for now.</p>
         </div>
       </div>
       <div id="response-corporate"></div>
@@ -205,13 +206,8 @@
 
         <!-- LEFT TEXT BLOCK -->
         <div class="logistics-text">
-            <h2>Reliable Logistics Services You Can Trust</h2>
-            <p>
-                Whether you're shipping across the UAE or sending parcels worldwide, 
-                ParcelLink ensures smooth, fast, and secure deliveries. 
-                Our logistics network operates with precision, giving you confidence 
-                that every shipment is handled professionally from pick-up to drop-off.
-            </p>
+      <h2 data-i18n="logistics.title">Reliable Logistics Services You Can Trust</h2>
+      <p data-i18n="logistics.desc">Whether you're shipping across the UAE or sending parcels worldwide, ParcelLink ensures smooth, fast, and secure deliveries. Our logistics network operates with precision, giving you confidence that every shipment is handled professionally from pick-up to drop-off.</p>
         </div>
 
         <!-- RIGHT IMAGE BLOCK -->
@@ -222,7 +218,7 @@
     </div>
 </section>
 <section class="value-services">
-  <h2 class="section-title">Our Value-Added Logistics Services</h2>
+  <h2 class="section-title" data-i18n="services.title">Our Value-Added Logistics Services</h2>
 
   <div class="value-grid">
 
@@ -234,9 +230,9 @@
           <rect x="9" y="9" width="6" height="6" rx="1.3"/>
         </svg>
       </div>
-      <h3>Protect Your Shipments</h3>
-      <p>Secure your parcels against loss, damage, and unexpected transit risks with our comprehensive freight insurance solutions.</p>
-      <a href="services.html#insurance" class="service-btn">Get Protected</a>
+      <h3 data-i18n="services.protectTitle">Protect Your Shipments</h3>
+      <p data-i18n="services.protectDesc">Secure your parcels against loss, damage, and unexpected transit risks with our comprehensive freight insurance solutions.</p>
+      <a href="services.html#insurance" class="service-btn" data-i18n="services.protectBtn">Get Protected</a>
     </div>
 
     <!-- 2. Simplify Customs -->
@@ -250,9 +246,9 @@
           <circle cx="17" cy="15.5" r="1"/>
         </svg>
       </div>
-      <h3>Simplify Customs Duties</h3>
-      <p>Experience faster international shipping with our bonded warehousing and duty-free customs clearance solutions.</p>
-      <a href="services.html#customs" class="service-btn">Clear Shipments Faster</a>
+      <h3 data-i18n="services.customsTitle">Simplify Customs Duties</h3>
+      <p data-i18n="services.customsDesc">Experience faster international shipping with our bonded warehousing and duty-free customs clearance solutions.</p>
+      <a href="services.html#customs" class="service-btn" data-i18n="services.customsBtn">Clear Shipments Faster</a>
     </div>
 
     <!-- 3. Storage Solutions -->
@@ -263,9 +259,9 @@
           <rect x="8" y="13" width="8" height="6" rx="1.3"/>
         </svg>
       </div>
-      <h3>Optimize Storage Solutions</h3>
-      <p>Store, manage, and control your inventory with real-time warehouse visibility and smart storage technology.</p>
-      <a href="services.html#storage" class="service-btn">View Storage Options</a>
+      <h3 data-i18n="services.storageTitle">Optimize Storage Solutions</h3>
+      <p data-i18n="services.storageDesc">Store, manage, and control your inventory with real-time warehouse visibility and smart storage technology.</p>
+      <a href="services.html#storage" class="service-btn" data-i18n="services.storageBtn">View Storage Options</a>
     </div>
 
     <!-- 4. Streamline Transfers -->
@@ -276,9 +272,9 @@
           <path d="M16 12h4m-3-3h3m-3 6h3"/>
         </svg>
       </div>
-      <h3>Streamline Transfers</h3>
-      <p>Accelerate your supply chain using our efficient cross-docking and cargo transfer services.</p>
-      <a href="services.html#transfers" class="service-btn">Speed Up Delivery</a>
+      <h3 data-i18n="services.transferTitle">Streamline Transfers</h3>
+      <p data-i18n="services.transferDesc">Accelerate your supply chain using our efficient cross-docking and cargo transfer services.</p>
+      <a href="services.html#transfers" class="service-btn" data-i18n="services.transferBtn">Speed Up Delivery</a>
     </div>
 
     <!-- 5. Tailored Insights -->
@@ -289,9 +285,9 @@
           <path d="M14 14l5 5"/>
         </svg>
       </div>
-      <h3>Gain Tailored Insights</h3>
-      <p>Monitor shipments, track performance, and analyze logistics data with our intelligent real-time dashboard.</p>
-      <a href="services.html#insights" class="service-btn">Open Live Dashboard</a>
+      <h3 data-i18n="services.insightsTitle">Gain Tailored Insights</h3>
+      <p data-i18n="services.insightsDesc">Monitor shipments, track performance, and analyze logistics data with our intelligent real-time dashboard.</p>
+      <a href="services.html#insights" class="service-btn" data-i18n="services.insightsBtn">Open Live Dashboard</a>
     </div>
 
     <!-- 6. Secure Packaging -->
@@ -303,18 +299,18 @@
           <path d="M3 17l9-5 9 5"/>
         </svg>
       </div>
-      <h3>Ensure Secure Packaging</h3>
-      <p>Protect your goods using professional packaging engineered for impact resistance and long-distance shipping.</p>
-      <a href="services.html#packaging" class="service-btn">Pack & Ship Securely</a>
+      <h3 data-i18n="services.packagingTitle">Ensure Secure Packaging</h3>
+      <p data-i18n="services.packagingDesc">Protect your goods using professional packaging engineered for impact resistance and long-distance shipping.</p>
+      <a href="services.html#packaging" class="service-btn" data-i18n="services.packagingBtn">Pack & Ship Securely</a>
     </div>
 
   </div>
 </section>
 
 <section class="stores-section">
-  <h2>
+  <h2 data-i18n="stores.title">
     Shop Your Favorite UAE & GCC Stores  
-    <span>Fast Delivery • Best Rates • Zero Hassle</span>
+    <span data-i18n="stores.subtitle">Fast Delivery • Best Rates • Zero Hassle</span>
   </h2>
 
   <div class="stores-slider">
@@ -388,7 +384,7 @@
   </div>
 
   <div class="store-btn-wrap">
-    <a href="#" class="store-btn">Explore All Supported Stores</a>
+    <a href="#" class="store-btn" data-i18n="stores.button">Explore All Supported Stores</a>
   </div>
 </section>
 
@@ -400,7 +396,7 @@
       <!-- COMPANY INFO -->
       <div class="footer-col footer-about">
         <img src="images/logo.png" class="footer-logo" alt="ParcelLink Logo">
-        <p class="footer-desc">Your trusted logistics partner delivering excellence across the UAE and worldwide with speed, reliability, and care.</p>
+        <p class="footer-desc" data-i18n="footer.desc">Your trusted logistics partner delivering excellence across the UAE and worldwide with speed, reliability, and care.</p>
         
         <div class="footer-social">
           <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
@@ -413,47 +409,47 @@
 
       <!-- QUICK LINKS -->
       <div class="footer-col">
-        <h4>Company</h4>
+        <h4 data-i18n="footer.company">Company</h4>
         <ul>
-          <li><a href="/">About Us</a></li>
-          <li><a href="/career">Careers</a></li>
-          <li><a href="/services">Our Services</a></li>
-          <li><a href="#">Press & Media</a></li>
-          <li><a href="#">Blog</a></li>
+          <li><a href="/" data-i18n="footer.aboutUs">About Us</a></li>
+          <li><a href="/career" data-i18n="footer.careers">Careers</a></li>
+          <li><a href="/services" data-i18n="footer.ourServices">Our Services</a></li>
+          <li><a href="#" data-i18n="footer.press">Press & Media</a></li>
+          <li><a href="#" data-i18n="footer.blog">Blog</a></li>
         </ul>
       </div>
 
       <!-- SERVICES -->
       <div class="footer-col">
-        <h4>Services</h4>
+        <h4 data-i18n="footer.services">Services</h4>
         <ul>
-          <li><a href="/send">Send Parcel</a></li>
-          <li><a href="/track">Track Shipment</a></li>
-          <li><a href="#">Express Delivery</a></li>
-          <li><a href="#">International Shipping</a></li>
-          <li><a href="#">Freight & Cargo</a></li>
+          <li><a href="/send" data-i18n="footer.sendParcel">Send Parcel</a></li>
+          <li><a href="/track" data-i18n="footer.trackShipment">Track Shipment</a></li>
+          <li><a href="#" data-i18n="footer.expressDelivery">Express Delivery</a></li>
+          <li><a href="#" data-i18n="footer.internationalShipping">International Shipping</a></li>
+          <li><a href="#" data-i18n="footer.freightCargo">Freight & Cargo</a></li>
         </ul>
       </div>
 
       <!-- SUPPORT -->
       <div class="footer-col">
-        <h4>Support</h4>
+        <h4 data-i18n="footer.support">Support</h4>
         <ul>
-          <li><a href="/help">Help Center</a></li>
-          <li><a href="/clientzone">Client Zone</a></li>
-          <li><a href="#">Shipping Calculator</a></li>
-          <li><a href="#">Terms & Conditions</a></li>
-          <li><a href="#">Privacy Policy</a></li>
+          <li><a href="/help" data-i18n="footer.helpCenter">Help Center</a></li>
+          <li><a href="/clientzone" data-i18n="footer.clientZone">Client Zone</a></li>
+          <li><a href="#" data-i18n="footer.shippingCalculator">Shipping Calculator</a></li>
+          <li><a href="#" data-i18n="footer.termsConditions">Terms & Conditions</a></li>
+          <li><a href="#" data-i18n="footer.privacyPolicy">Privacy Policy</a></li>
         </ul>
       </div>
 
       <!-- CONTACT INFO -->
       <div class="footer-col footer-contact">
-        <h4>Get In Touch</h4>
+        <h4 data-i18n="footer.getInTouch">Get In Touch</h4>
         <ul class="footer-contact-list">
           <li>
             <i class="fas fa-map-marker-alt"></i>
-            <span>Business Bay, Dubai<br>United Arab Emirates</span>
+            <span data-i18n="footer.address" data-i18n-html>Business Bay, Dubai<br>United Arab Emirates</span>
           </li>
           <li>
             <i class="fas fa-phone-alt"></i>
@@ -461,7 +457,7 @@
           </li>
           <li>
             <i class="fab fa-whatsapp"></i>
-            <span>+971 55 372 7926</span>
+            <span>+971526123313</span>
           </li>
           <li>
             <i class="fas fa-envelope"></i>
@@ -476,11 +472,11 @@
   <!-- FOOTER BOTTOM -->
   <div class="footer-bottom">
     <div class="footer-bottom-container">
-      <p>&copy; 2025 ParcelLink Logistics. All Rights Reserved.</p>
+      <p data-i18n="footer.rights">&copy; 2025 ParcelLink Logistics. All Rights Reserved.</p>
       <div class="footer-bottom-links">
-        <a href="#">Terms</a>
-        <a href="#">Privacy</a>
-        <a href="#">Cookies</a>
+        <a href="#" data-i18n="footer.terms">Terms</a>
+        <a href="#" data-i18n="footer.privacy">Privacy</a>
+        <a href="#" data-i18n="footer.cookies">Cookies</a>
       </div>
     </div>
   </div>
@@ -490,6 +486,7 @@
 
 
 
+    <script src="/js/i18n.js"></script>
     <script src="/js/script.js"></script>
 </body>
 </html>

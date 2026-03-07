@@ -1,6 +1,21 @@
 /* ============================
    GLOBAL / MENU TOGGLE
 ============================ */
+const i18n = {
+  t(key, fallback = "") {
+    if (window.ParcelLinkI18n && typeof window.ParcelLinkI18n.t === "function") {
+      return window.ParcelLinkI18n.t(key, fallback);
+    }
+    return fallback;
+  },
+  getLanguage() {
+    if (window.ParcelLinkI18n && typeof window.ParcelLinkI18n.getLanguage === "function") {
+      return window.ParcelLinkI18n.getLanguage();
+    }
+    return "en";
+  }
+};
+
 document.addEventListener("DOMContentLoaded", () => {
   const menuToggle = document.getElementById("menu-toggle");
   const navLinks = document.querySelector(".nav-links ul");
@@ -161,7 +176,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (responseBox) {
       responseBox.style.color = "blue";
-      responseBox.textContent = "Calculating... Please wait.";
+      responseBox.textContent = i18n.t("ui.calculating", "Calculating... Please wait.");
     }
 
     try {
@@ -173,11 +188,15 @@ document.addEventListener("DOMContentLoaded", () => {
       const data = await res.json();
 
       if (responseBox) {
+        const quoteMessage = data.message || i18n.t("ui.quoteCalculated", "Quote calculated");
+        const packageSummary = packageCount > 1
+          ? `<strong>${packageCount} ${i18n.t("ui.packages", "packages")}</strong> - `
+          : "";
         responseBox.style.color = "green";
         responseBox.innerHTML = `
-          <strong>${data.message || "Quote calculated"}</strong><br>
-          ${packageCount > 1 ? `<strong>${packageCount} packages</strong> - ` : ""}
-          Estimated shipping cost from <b>${from}</b> to <b>${to}</b>:
+          <strong>${quoteMessage}</strong><br>
+          ${packageSummary}
+          ${i18n.t("ui.estimatedShipping", "Estimated shipping cost from")} <b>${from}</b> ${i18n.t("ui.to", "to")} <b>${to}</b>:
           <span style="color:#8b5cf6;">AED ${price.toFixed(2)}</span>
         `;
       }
@@ -185,7 +204,7 @@ document.addEventListener("DOMContentLoaded", () => {
       console.error("Parcel submit error:", error);
       if (responseBox) {
         responseBox.style.color = "red";
-        responseBox.textContent = "Error: Could not connect to backend.";
+        responseBox.textContent = i18n.t("ui.backendError", "Error: Could not connect to backend.");
       }
     }
   });
@@ -202,8 +221,25 @@ document.addEventListener("DOMContentLoaded", () => {
   if (!typeButtons.length || !fromSelect || !toSelect) return;
 
   // Lists
-  const uaeList = ["Dubai", "Abu Dhabi", "Sharjah", "Ajman", "Ras Al Khaimah"];
-  const intlList = ["United Kingdom", "USA", "Canada", "Germany", "France"];
+  const uaeList = [
+    { en: "Dubai", ar: "دبي" },
+    { en: "Abu Dhabi", ar: "أبوظبي" },
+    { en: "Sharjah", ar: "الشارقة" },
+    { en: "Ajman", ar: "عجمان" },
+    { en: "Ras Al Khaimah", ar: "رأس الخيمة" }
+  ];
+  const intlList = [
+    { en: "United Kingdom", ar: "المملكة المتحدة" },
+    { en: "USA", ar: "الولايات المتحدة" },
+    { en: "Canada", ar: "كندا" },
+    { en: "Germany", ar: "ألمانيا" },
+    { en: "France", ar: "فرنسا" }
+  ];
+
+  const mapOptions = (list) => {
+    const lang = i18n.getLanguage() === "ar" ? "ar" : "en";
+    return list.map((country) => `<option>${country[lang]}</option>`).join("");
+  };
 
   function updateMode(mode) {
     // Toggle active button styles
@@ -214,14 +250,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Export: UAE → International
     if (mode === "export") {
-      fromSelect.innerHTML = uaeList.map(c => `<option>${c}</option>`).join("");
-      toSelect.innerHTML = intlList.map(c => `<option>${c}</option>`).join("");
+      fromSelect.innerHTML = mapOptions(uaeList);
+      toSelect.innerHTML = mapOptions(intlList);
     }
 
     // Import: International → UAE
     if (mode === "import") {
-      fromSelect.innerHTML = intlList.map(c => `<option>${c}</option>`).join("");
-      toSelect.innerHTML = uaeList.map(c => `<option>${c}</option>`).join("");
+      fromSelect.innerHTML = mapOptions(intlList);
+      toSelect.innerHTML = mapOptions(uaeList);
     }
   }
 
@@ -245,22 +281,22 @@ document.querySelector(".add-package").addEventListener("click", function () {
 
         <div class="form-row">
             <div class="form-group">
-                <label>Weight (kg)</label>
+          <label>${i18n.t("forms.weight", "Weight (kg)")}</label>
                 <input type="number" class="weight" step="0.01" placeholder="0.5">
             </div>
 
             <div class="form-group">
-                <label>Length (cm)</label>
+          <label>${i18n.t("forms.length", "Length (cm)")}</label>
                 <input type="number" class="length" step="0.1">
             </div>
 
             <div class="form-group">
-                <label>Width (cm)</label>
+          <label>${i18n.t("forms.width", "Width (cm)")}</label>
                 <input type="number" class="width" step="0.1">
             </div>
 
             <div class="form-group">
-                <label>Height (cm)</label>
+          <label>${i18n.t("forms.height", "Height (cm)")}</label>
                 <input type="number" class="height" step="0.1">
             </div>
         </div>
@@ -276,6 +312,11 @@ document.querySelector(".add-package").addEventListener("click", function () {
 
   // Default
   updateMode("export");
+
+  document.addEventListener("parcellink:language-changed", () => {
+    const activeMode = document.querySelector(".type-btn.active")?.dataset.type || "export";
+    updateMode(activeMode);
+  });
 });
 
 
@@ -309,7 +350,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function showError(msg) {
-    showResult(`<div class="track-error"><strong>Error</strong><div style="margin-top:8px">${msg}</div></div>`, { scroll: true });
+    showResult(`<div class="track-error"><strong>${i18n.t("track.errorTitle", "Error")}</strong><div style="margin-top:8px">${msg}</div></div>`, { scroll: true });
   }
 
   async function fetchTrack(code) {
@@ -325,36 +366,36 @@ document.addEventListener("DOMContentLoaded", () => {
       }
       const data = await res.json().catch(() => null);
       if (!data || !data.success || !data.parcel) {
-        throw new Error(data?.message || "No tracking information found.");
+        throw new Error(data?.message || i18n.t("track.noTrackingInfo", "No tracking information found."));
       }
 
       const parcel = data.parcel;
       const current = data.latestStatus || parcel.statusHistory?.[parcel.statusHistory.length - 1] || null;
-      const lastUpdated = current ? new Date(current.timestamp).toLocaleString() : "No updates yet";
+      const lastUpdated = current ? new Date(current.timestamp).toLocaleString() : i18n.t("track.noEvents", "No events yet");
       const timeline = (parcel.statusHistory || []).slice().reverse()
         .map(s => `<li class="track-step ${s === current ? "current" : ""}">
             <strong>${s.status}</strong>
             <div class="meta">${s.location || ""} • ${new Date(s.timestamp).toLocaleString()}</div>
             ${s.remark ? `<div class="remark">${s.remark}</div>` : ""}
-          </li>`).join("");
+          </li>`).join("") || `<li>${i18n.t("track.noEvents", "No events yet")}</li>`;
 
       const html = `
         <div class="track-summary">
           <h3>${parcel.trackingCode}</h3>
           <div class="track-meta">${parcel.from || ""} → ${parcel.to || ""}</div>
           <div class="track-current">
-            <div><strong>${current ? current.status : "No status"}</strong></div>
-            <div class="track-meta">Last updated: ${lastUpdated}</div>
+            <div><strong>${current ? current.status : i18n.t("track.noStatus", "No status")}</strong></div>
+            <div class="track-meta">${i18n.t("track.lastUpdated", "Last updated:")} ${lastUpdated}</div>
           </div>
         </div>
         <div class="track-history">
-          <h4>Tracking History</h4>
-          <ul class="track-timeline">${timeline || "<li>No events yet</li>"}</ul>
+          <h4>${i18n.t("track.historyTitle", "Tracking History")}</h4>
+          <ul class="track-timeline">${timeline}</ul>
         </div>`;
       showResult(html);
     } catch (err) {
       console.error("Tracking error:", err);
-      showError(err.message || "Unable to fetch tracking info");
+      showError(err.message || i18n.t("track.unableFetch", "Unable to fetch tracking info"));
     }
   }
 
@@ -362,10 +403,10 @@ document.addEventListener("DOMContentLoaded", () => {
     e.preventDefault();
     const code = (input.value || "").trim();
     if (!code) {
-      showError("Please enter a tracking number");
+      showError(i18n.t("track.enterTracking", "Please enter a tracking number"));
       return;
     }
-    showResult("<div>Loading tracking information…</div>");
+    showResult(`<div>${i18n.t("track.loading", "Loading tracking information…")}</div>`);
     fetchTrack(code);
   });
 
@@ -433,24 +474,24 @@ document.addEventListener("DOMContentLoaded", () => {
     const newPackage = document.createElement("div");
     newPackage.className = "package-block";
     newPackage.innerHTML = `
-      <h4>Package ${packageCount} 
-        <button type="button" class="remove-package">✖ Remove</button>
+      <h4>${i18n.t("forms.package", "Package")} ${packageCount} 
+        <button type="button" class="remove-package">✖ ${i18n.t("forms.remove", "Remove")}</button>
       </h4>
       <div class="form-row">
         <div class="form-group">
-          <label>Weight (kg)</label>
+          <label>${i18n.t("forms.weight", "Weight (kg)")}</label>
           <input type="number" name="weight" step="0.01" placeholder="0.5">
         </div>
         <div class="form-group">
-          <label>Length (cm)</label>
+          <label>${i18n.t("forms.length", "Length (cm)")}</label>
           <input type="number" name="length" step="0.1">
         </div>
         <div class="form-group">
-          <label>Width (cm)</label>
+          <label>${i18n.t("forms.width", "Width (cm)")}</label>
           <input type="number" name="width" step="0.1">
         </div>
         <div class="form-group">
-          <label>Height (cm)</label>
+          <label>${i18n.t("forms.height", "Height (cm)")}</label>
           <input type="number" name="height" step="0.1">
         </div>
       </div>
@@ -466,7 +507,7 @@ document.addEventListener("DOMContentLoaded", () => {
       // Renumber remaining packages
       document.querySelectorAll(".package-block h4").forEach((h, i) => {
         const removeBtn = h.querySelector(".remove-package");
-        h.childNodes[0].textContent = `Package ${i + 1} `;
+        h.childNodes[0].textContent = `${i18n.t("forms.package", "Package")} ${i + 1} `;
         if (removeBtn) h.appendChild(removeBtn); // keep button at end
       });
     });
