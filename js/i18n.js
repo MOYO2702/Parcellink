@@ -416,7 +416,7 @@
       .lang-switcher {
         position: fixed !important;
         right: 16px !important;
-        top: 16px !important;
+        top: var(--parcellink-lang-top, 16px) !important;
         bottom: auto !important;
         z-index: 4000;
         display: inline-flex;
@@ -519,7 +519,7 @@
       @media (max-width: 768px) {
         .lang-switcher {
           right: 10px !important;
-          top: 10px !important;
+          top: var(--parcellink-lang-top-mobile, 10px) !important;
           gap: 6px;
           padding: 7px 9px;
         }
@@ -534,6 +534,45 @@
       }
     `;
     document.head.appendChild(style);
+  };
+
+  const isElementVisible = (element) => {
+    if (!element) return false;
+    const style = window.getComputedStyle(element);
+    if (style.display === "none" || style.visibility === "hidden" || parseFloat(style.opacity || "1") === 0) {
+      return false;
+    }
+    const rect = element.getBoundingClientRect();
+    return rect.width > 0 && rect.height > 0;
+  };
+
+  const updateSwitcherPosition = () => {
+    const root = document.documentElement;
+    if (!root || !document.body) return;
+
+    let desktopTop = 16;
+    let mobileTop = 10;
+
+    const blockers = [
+      ...document.querySelectorAll(".top-header .auth-links"),
+      ...document.querySelectorAll(".auth-links"),
+      ...document.querySelectorAll(".top-header"),
+      ...document.querySelectorAll("header")
+    ];
+
+    blockers.forEach((element) => {
+      if (!isElementVisible(element)) return;
+      const rect = element.getBoundingClientRect();
+
+      if (rect.top <= 120) {
+        const safeTop = Math.ceil(rect.bottom + 8);
+        desktopTop = Math.max(desktopTop, safeTop);
+        mobileTop = Math.max(mobileTop, safeTop);
+      }
+    });
+
+    root.style.setProperty("--parcellink-lang-top", `${desktopTop}px`);
+    root.style.setProperty("--parcellink-lang-top-mobile", `${mobileTop}px`);
   };
 
   const ensureGoogleContainer = () => {
@@ -828,6 +867,12 @@
     createLanguageSwitcher();
     loadGoogleTranslate();
     applyTranslations();
+    updateSwitcherPosition();
     createLanguagePrompt();
+
+    window.addEventListener("resize", updateSwitcherPosition);
+    window.addEventListener("load", updateSwitcherPosition);
+    setTimeout(updateSwitcherPosition, 200);
+    setTimeout(updateSwitcherPosition, 800);
   });
 })();
