@@ -343,7 +343,156 @@
     "Submit Shipment": "إرسال الشحنة",
     "2025 ParcelLink Logistics - Fast | Secure | Reliable": "2025 بارسل لينك للخدمات اللوجستية - سريع | آمن | موثوق",
     "© 2026 ParcelLink Logistics. All rights reserved.": "© 2026 بارسل لينك للخدمات اللوجستية. جميع الحقوق محفوظة.",
-    "© 2026 ParcelLink - All Rights Reserved": "© 2026 بارسل لينك - جميع الحقوق محفوظة"
+    "© 2026 ParcelLink - All Rights Reserved": "© 2026 بارسل لينك - جميع الحقوق محفوظة",
+    "Log In": "تسجيل الدخول",
+    "Portal Login": "تسجيل دخول البوابة",
+    "Manager Login": "تسجيل دخول المدير",
+    "Manager Access": "وصول المدير",
+    "ParcelLink | Login": "بارسل لينك | تسجيل الدخول",
+    "ParcelLink | Register": "بارسل لينك | إنشاء حساب",
+    "ParcelLink | Dashboard": "بارسل لينك | لوحة التحكم",
+    "Staff Portal | ParcelLink": "بوابة الموظفين | بارسل لينك",
+    "Admin Portal | ParcelLink": "بوابة الإدارة | بارسل لينك",
+    "Investor Portal | ParcelLink": "بوابة المستثمر | بارسل لينك",
+    "Investor ROI Dashboard": "لوحة عائد الاستثمار للمستثمر",
+    "Investor ROI Dashboard | ParcelLink": "لوحة عائد الاستثمار للمستثمر | بارسل لينك",
+    "Welcome to Your Client Zone": "مرحبًا بك في منطقة العملاء",
+    "ParcelLink - Client Zone": "بارسل لينك - منطقة العملاء",
+    "Manager-only workspace to create staff and investor logins. Sign in once, then generate IDs and passwords easily.": "مساحة عمل مخصصة للمديرين لإنشاء حسابات دخول الموظفين والمستثمرين. سجّل الدخول مرة واحدة ثم أنشئ المعرفات وكلمات المرور بسهولة.",
+    "Use your manager/admin staff account. Non-manager accounts will be redirected to Staff or Investor portal.": "استخدم حساب الموظف الإداري/المدير. سيتم تحويل الحسابات غير الإدارية إلى بوابة الموظفين أو المستثمرين.",
+    "Staff Access Manager Console": "لوحة إدارة وصول الموظفين",
+    "Provision Key (optional fallback)": "مفتاح التهيئة (احتياطي اختياري)",
+    "Create Login": "إنشاء تسجيل دخول",
+    "View Accounts": "عرض الحسابات",
+    "Load Accounts": "تحميل الحسابات",
+    "Account Type": "نوع الحساب",
+    "Role (optional check)": "الدور (تحقق اختياري)",
+    "Staff/Investor ID": "معرّف الموظف/المستثمر",
+    "Staff/Admin": "موظف/إداري",
+    "-- Select Role --": "-- اختر الدور --",
+    "Type": "النوع",
+    "Search": "بحث",
+    "Limit": "الحد",
+    "Department": "القسم",
+    "Role": "الدور",
+    "Staff ID": "معرّف الموظف",
+    "Investor ID": "معرّف المستثمر",
+    "New Password": "كلمة المرور الجديدة",
+    "Reset Password": "إعادة تعيين كلمة المرور",
+    "Go to Staff Portal": "الانتقال إلى بوابة الموظفين",
+    "Go to Investor Portal": "الانتقال إلى بوابة المستثمر",
+    "Investor Login": "تسجيل دخول المستثمر",
+    "Secure investor login for portfolio tracking and daily growth visibility. Use your assigned `INV` ID and password.": "تسجيل دخول آمن للمستثمرين لتتبع المحفظة ورؤية النمو اليومي. استخدم معرّف `INV` وكلمة المرور المخصصين لك.",
+    "Annual ROI model:": "نموذج العائد السنوي:",
+    "split into daily growth tracking across 365 days.": "مقسّم إلى تتبع نمو يومي على مدار 365 يومًا.",
+    "Key Responsibilities": "المسؤوليات الرئيسية",
+    "Requirements": "المتطلبات",
+    "Apply for this role": "قدّم لهذا الدور",
+    "View details": "عرض التفاصيل",
+    "Submit Application": "إرسال الطلب",
+    "Attach CV (optional)": "إرفاق السيرة الذاتية (اختياري)",
+    "Email Address": "عنوان البريد الإلكتروني",
+    "Phone (with country code)": "الهاتف (مع رمز الدولة)",
+    "Role / Area of Interest": "الدور / مجال الاهتمام",
+    "Select area": "اختر المجال",
+    "Brief Introduction": "نبذة مختصرة",
+    "Didn't see a perfect match?": "لم تجد الوظيفة المناسبة تمامًا؟",
+    "We review every application submitted through this form.": "نراجع كل طلب يتم تقديمه عبر هذا النموذج.",
+    "Shortlisted candidates will be contacted by the HR team.": "سيتم التواصل مع المرشحين المختارين من قبل فريق الموارد البشرية.",
+    "You can attach a CV file name for HR review after submission.": "يمكنك إرفاق اسم ملف السيرة الذاتية لمراجعته من قبل الموارد البشرية بعد التقديم.",
+    "Delivery Rider (Motorbike)": "مندوب توصيل (دراجة نارية)",
+    "Warehouse Associate": "موظف مستودع",
+    "Customer Experience Officer": "مسؤول تجربة العملاء",
+    "Dispatch Coordinator": "منسق التوزيع",
+    "Operations Supervisor": "مشرف العمليات",
+    "Finance & Billing Officer": "مسؤول المالية والفوترة",
+    "Delivery Rider": "مندوب توصيل",
+    "Operations": "العمليات",
+    "Warehouse": "المستودع",
+    "Dispatch": "التوزيع",
+    "Fleet": "الأسطول",
+    "Customer Service": "خدمة العملاء",
+    "Finance": "المالية",
+    "Corporate": "الشركات",
+    "All": "الكل",
+    "Full-time - Dubai": "دوام كامل - دبي",
+    "Full-time - Dubai (Hybrid)": "دوام كامل - دبي (هجين)",
+    "Full-time - Field": "دوام كامل - ميداني",
+    "Dubai & Sharjah": "دبي والشارقة",
+    "Sunday - Friday": "الأحد - الجمعة",
+    "Night Shift Available": "تتوفر مناوبة ليلية",
+    "Same-day & Next-day": "نفس اليوم واليوم التالي",
+    "English + Arabic preferred": "يفضّل الإنجليزية + العربية",
+    "Valid UAE license required": "مطلوب رخصة إماراتية سارية",
+    "Good knowledge of city routes.": "معرفة جيدة بمسارات المدينة.",
+    "Valid UAE motorbike license.": "رخصة دراجة نارية إماراتية سارية.",
+    "Good knowledge of Dubai roads and industrial areas.": "معرفة جيدة بطرق دبي والمناطق الصناعية.",
+    "Basic English or Arabic communication.": "القدرة على التواصل الأساسي بالإنجليزية أو العربية.",
+    "Experience in route planning or dispatch preferred.": "يفضّل وجود خبرة في تخطيط المسارات أو التوزيع.",
+    "1-3 years in customer support or call centre.": "من 1 إلى 3 سنوات في دعم العملاء أو مركز الاتصال.",
+    "2+ years in logistics or operations.": "أكثر من سنتين في اللوجستيات أو العمليات.",
+    "Degree or diploma in Accounting/Finance.": "درجة أو دبلوم في المحاسبة/المالية.",
+    "Experience with basic accounting systems.": "خبرة في أنظمة المحاسبة الأساسية.",
+    "Excellent communication skills and empathy.": "مهارات تواصل ممتازة وتعاطف.",
+    "Strong communication and people management skills.": "مهارات قوية في التواصل وإدارة الأفراد.",
+    "Physically fit and comfortable with manual handling.": "لياقة بدنية جيدة والقدرة على التعامل اليدوي.",
+    "Plan daily routes based on shipment volume.": "خطط المسارات اليومية بناءً على حجم الشحنات.",
+    "Coordinate with drivers to avoid failed deliveries.": "نسّق مع السائقين لتجنب فشل عمليات التسليم.",
+    "Complete daily assigned delivery routes.": "أكمل مسارات التسليم اليومية الموكلة.",
+    "Capture proof of delivery via mobile app.": "سجّل إثبات التسليم عبر تطبيق الهاتف.",
+    "Maintain safety, speed and professionalism.": "حافظ على السلامة والسرعة والاحترافية.",
+    "Sort parcels by route and destination.": "فرز الطرود حسب المسار والوجهة.",
+    "Handle loading/unloading of vehicles.": "التعامل مع تحميل/تفريغ المركبات.",
+    "Report damages and discrepancies promptly.": "الإبلاغ عن الأضرار والاختلافات فورًا.",
+    "Monitor KPIs such as delivery time, exceptions and returns.": "راقب مؤشرات الأداء مثل وقت التسليم والاستثناءات والمرتجعات.",
+    "Track live performance using internal tools.": "تتبّع الأداء المباشر باستخدام الأدوات الداخلية.",
+    "Work closely with Dispatch and Warehouse teams.": "العمل عن قرب مع فرق التوزيع والمستودع.",
+    "Coordinate inbound and outbound parcel flow.": "تنسيق تدفق الطرود الواردة والصادرة.",
+    "Respond to customer queries via phone, email and chat.": "الرد على استفسارات العملاء عبر الهاتف والبريد الإلكتروني والدردشة.",
+    "Coordinate with operations for escalated cases.": "التنسيق مع العمليات للحالات المصعّدة.",
+    "Capture feedback and suggest service improvements.": "جمع الملاحظات واقتراح تحسينات الخدمة.",
+    "Prepare and issue invoices to clients on time.": "إعداد وإصدار الفواتير للعملاء في الوقت المناسب.",
+    "Reconcile payments, adjustments and credits.": "مطابقة المدفوعات والتعديلات والأرصدة.",
+    "Support management with financial insights.": "دعم الإدارة برؤى مالية.",
+    "Manage billing cycles, reconciliations and financial reporting for parcel accounts and partners.": "إدارة دورات الفوترة والمطابقات والتقارير المالية لحسابات الطرود والشركاء.",
+    "Pick up and deliver parcels safely and professionally while representing the ParcelLink brand.": "استلام وتسليم الطرود بأمان واحترافية مع تمثيل علامة بارسل لينك.",
+    "Plan and assign delivery routes, support drivers on-road and optimize last-mile coverage.": "تخطيط وتوزيع مسارات التسليم، ودعم السائقين ميدانيًا، وتحسين تغطية الميل الأخير.",
+    "Scan, sort and stage parcels accurately while maintaining safety and cleanliness standards.": "مسح الطرود وفرزها وتجهيزها بدقة مع الالتزام بمعايير السلامة والنظافة.",
+    "Support senders and receivers with tracking, delivery changes and issue resolution across channels.": "دعم المرسلين والمستلمين في التتبع وتغييرات التسليم وحل المشكلات عبر القنوات المختلفة.",
+    "Roles are available across Operations, Fleet, Customer Experience and Corporate teams.": "تتوفر الأدوار عبر فرق العمليات والأسطول وتجربة العملاء وفرق الشركات.",
+    "Other / General Application": "أخرى / طلب عام",
+    "B2B & corporate clients": "عملاء الشركات وB2B",
+    "Terms & Conditions | ParcelLink": "الشروط والأحكام | بارسل لينك",
+    "Privacy Policy | ParcelLink": "سياسة الخصوصية | بارسل لينك",
+    "Partners | ParcelLink": "الشركاء | بارسل لينك",
+    "Service Scope": "نطاق الخدمة",
+    "Customer Responsibilities": "مسؤوليات العميل",
+    "Liability": "المسؤولية",
+    "Provide accurate sender and receiver details.": "قدّم بيانات دقيقة للمرسل والمستلم.",
+    "Ensure packaging is suitable for transit.": "تأكد من أن التغليف مناسب للنقل.",
+    "Declare shipment contents and comply with legal restrictions.": "صرّح بمحتويات الشحنة والتزم بالقيود القانونية.",
+    "Pay applicable charges before release where required.": "ادفع الرسوم المستحقة قبل الإفراج عند الحاجة.",
+    "For terms-related questions, contact": "للاستفسارات المتعلقة بالشروط، تواصل مع",
+    "Information We Collect": "المعلومات التي نجمعها",
+    "How We Use Your Information": "كيف نستخدم معلوماتك",
+    "Data Security": "أمن البيانات",
+    "Process parcel bookings, tracking, and delivery operations.": "معالجة حجوزات الطرود والتتبع وعمليات التسليم.",
+    "Generate receipts, billing records, and account history.": "إنشاء الإيصالات وسجلات الفوترة وسجل الحساب.",
+    "Send service notifications and support updates.": "إرسال إشعارات الخدمة وتحديثات الدعم.",
+    "Improve reliability, fraud prevention, and platform security.": "تحسين الموثوقية ومنع الاحتيال وأمن المنصة.",
+    "For privacy requests or questions, contact us at": "لطلبات الخصوصية أو الاستفسارات، تواصل معنا على",
+    "Last updated: March 5, 2026": "آخر تحديث: 5 مارس 2026",
+    "ParcelLink Logistics. All rights reserved.": "بارسل لينك للخدمات اللوجستية. جميع الحقوق محفوظة.",
+    "Logistics Partners": "شركاء الخدمات اللوجستية",
+    "Storage Partners": "شركاء التخزين",
+    "Enterprise Merchants": "تجّار المؤسسات",
+    "Join our transport and distribution network for route-level collaboration and delivery optimization.": "انضم إلى شبكة النقل والتوزيع لدينا للتعاون على مستوى المسارات وتحسين التسليم.",
+    "Offer warehousing capacity, inventory handling, and fulfillment support through structured service agreements.": "قدّم سعة تخزينية ومعالجة للمخزون ودعمًا للتنفيذ عبر اتفاقيات خدمة منظمة.",
+    "Integrate shipping operations, tracking, and dispatch workflows for scalable customer delivery experiences.": "دمج عمليات الشحن والتتبع وسير عمل التوزيع لتجارب تسليم قابلة للتوسع.",
+    "20% discount if parcel is greater than 100kg": "خصم 20% إذا كان وزن الشحنة أكثر من 100 كجم",
+    "10% discount on all freights": "خصم 10% على جميع الشحنات",
+    "ðŸšš 20% discount if parcel is greater than 100kg": "🚚 خصم 20% إذا كان وزن الشحنة أكثر من 100 كجم",
+    "ðŸ”¥ 10% discount on all freights": "🔥 خصم 10% على جميع الشحنات"
   };
 
   const literalFallbackEn = Object.fromEntries(
@@ -363,17 +512,36 @@
     }
   };
 
+  const readGoogleTranslateCookieLanguage = () => {
+    try {
+      const match = document.cookie.match(/(?:^|;\s*)googtrans=([^;]+)/i);
+      if (!match || !match[1]) return "";
+      const value = decodeURIComponent(match[1]).toLowerCase();
+      if (value.endsWith("/ar")) return "ar";
+      if (value.endsWith("/en")) return "en";
+      return "";
+    } catch (_) {
+      return "";
+    }
+  };
+
   const textNodeOriginal = new WeakMap();
   const attrOriginal = new WeakMap();
   let googleTranslateReady = false;
   let pendingGoogleLanguage = null;
+  let mutationObserver = null;
+  let mutationTimer = null;
+  let mutationPassActive = false;
 
   let currentLanguage = (() => {
     try {
-      return normalizeLanguage(localStorage.getItem(STORAGE_KEY));
+      const rawStored = localStorage.getItem(STORAGE_KEY);
+      if (rawStored) return normalizeLanguage(rawStored);
     } catch (_) {
-      return FALLBACK_LANGUAGE;
+      // continue to cookie fallback
     }
+    const cookieLang = readGoogleTranslateCookieLanguage();
+    return cookieLang ? normalizeLanguage(cookieLang) : FALLBACK_LANGUAGE;
   })();
 
   const t = (key, fallback = "") => {
@@ -574,6 +742,30 @@
     root.style.setProperty("--parcellink-lang-top-mobile", `${mobileTop}px`);
   };
 
+  const getCookieBaseDomain = () => {
+    const hostname = String(window.location.hostname || "").trim();
+    if (!hostname || hostname === "localhost" || /^\d+\.\d+\.\d+\.\d+$/.test(hostname)) {
+      return "";
+    }
+
+    const pieces = hostname.split(".").filter(Boolean);
+    if (pieces.length < 2) return "";
+    return `.${pieces.slice(-2).join(".")}`;
+  };
+
+  const setGoogleTranslateCookie = (lang) => {
+    const normalized = normalizeLanguage(lang);
+    const cookieValue = normalized === "ar" ? "/en/ar" : "/en/en";
+    const oneYear = 60 * 60 * 24 * 365;
+
+    document.cookie = `googtrans=${cookieValue};path=/;max-age=${oneYear}`;
+
+    const baseDomain = getCookieBaseDomain();
+    if (baseDomain) {
+      document.cookie = `googtrans=${cookieValue};path=/;domain=${baseDomain};max-age=${oneYear}`;
+    }
+  };
+
   const ensureGoogleContainer = () => {
     if (document.getElementById(GOOGLE_TRANSLATE_CONTAINER_ID)) return;
     const container = document.createElement("div");
@@ -608,6 +800,7 @@
   };
 
   const loadGoogleTranslate = () => {
+    setGoogleTranslateCookie(currentLanguage);
     ensureGoogleContainer();
 
     if (window.google && window.google.translate && window.google.translate.TranslateElement) {
@@ -730,6 +923,48 @@
     });
   };
 
+  const scheduleMutationTranslationPass = () => {
+    if (mutationTimer) {
+      clearTimeout(mutationTimer);
+    }
+
+    mutationTimer = setTimeout(() => {
+      if (mutationPassActive) return;
+      mutationPassActive = true;
+      try {
+        applyLiteralFallbackTranslations();
+      } finally {
+        mutationPassActive = false;
+      }
+    }, 120);
+  };
+
+  const startAutoTranslationObserver = () => {
+    if (mutationObserver || !document.body) return;
+
+    mutationObserver = new MutationObserver((mutations) => {
+      if (mutationPassActive) return;
+
+      const shouldTranslate = mutations.some((mutation) => {
+        if (mutation.type === "characterData") return true;
+        if (mutation.type === "attributes") return true;
+        return mutation.type === "childList" && (mutation.addedNodes?.length || mutation.removedNodes?.length);
+      });
+
+      if (shouldTranslate) {
+        scheduleMutationTranslationPass();
+      }
+    });
+
+    mutationObserver.observe(document.body, {
+      subtree: true,
+      childList: true,
+      characterData: true,
+      attributes: true,
+      attributeFilter: ["placeholder", "title", "aria-label"]
+    });
+  };
+
   const installDialogTranslationWrappers = () => {
     if (window.__parcelLinkDialogTranslationInstalled) return;
     window.__parcelLinkDialogTranslationInstalled = true;
@@ -795,6 +1030,7 @@
 
   const setLanguage = (lang, options = { persist: true }) => {
     currentLanguage = normalizeLanguage(lang);
+    setGoogleTranslateCookie(currentLanguage);
     if (options.persist) {
       try {
         localStorage.setItem(STORAGE_KEY, currentLanguage);
@@ -864,9 +1100,11 @@
     injectRuntimeStyles();
     installDialogTranslationWrappers();
     createLanguageSwitcher();
+    setGoogleTranslateCookie(currentLanguage);
     loadGoogleTranslate();
     applyTranslations();
     updateSwitcherPosition();
+    startAutoTranslationObserver();
     createLanguagePrompt();
 
     window.addEventListener("resize", updateSwitcherPosition);
