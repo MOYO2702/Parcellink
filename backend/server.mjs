@@ -20,6 +20,11 @@ const PORT = process.env.PORT || 3000;
 const ROOT = path.join(__dirname, "..");
 const IS_PRODUCTION = String(process.env.NODE_ENV || "").toLowerCase() === "production";
 const I18N_SCRIPT_TAG = '<script src="/js/i18n.js"></script>';
+const DEEPSEEK_API_KEY = (process.env.DEEPSEEK_API_KEY || "").trim();
+const DEEPSEEK_BASE_URL = (process.env.DEEPSEEK_BASE_URL || "https://api.deepseek.com").replace(/\/+$/, "");
+const DEEPSEEK_MODEL = (process.env.DEEPSEEK_MODEL || "deepseek-chat").trim() || "deepseek-chat";
+const DEEPSEEK_MAX_BATCH = Math.min(Math.max(Number(process.env.DEEPSEEK_MAX_BATCH || 30), 5), 60);
+const deepSeekArabicCache = new Map();
 
 console.log("Starting server:", __filename, "PID:", process.pid);
 
@@ -258,6 +263,118 @@ function calculateShippingCost(weight, baseRatePerKg = 10) {
   };
 }
 
+function parseJsonArrayFromText(content) {
+  if (!content || typeof content !== "string") return null;
+
+  const parseCandidate = (value) => {
+    try {
+      const parsed = JSON.parse(value);
+      return Array.isArray(parsed) ? parsed : null;
+    } catch {
+      return null;
+    }
+  };
+
+  const direct = parseCandidate(content.trim());
+  if (direct) return direct;
+
+  const fencedMatch = content.match(/```(?:json)?\s*([\s\S]*?)```/i);
+  if (fencedMatch?.[1]) {
+    const fenced = parseCandidate(fencedMatch[1].trim());
+    if (fenced) return fenced;
+  }
+
+  const firstBracket = content.indexOf("[");
+  const lastBracket = content.lastIndexOf("]");
+  if (firstBracket !== -1 && lastBracket !== -1 && lastBracket > firstBracket) {
+    const sliced = parseCandidate(content.slice(firstBracket, lastBracket + 1));
+    if (sliced) return sliced;
+  }
+
+  return null;
+}
+
+async function translateBatchWithDeepSeek(batch) {
+  const endpoint = `${DEEPSEEK_BASE_URL}/chat/completions`;
+  const payload = {
+    model: DEEPSEEK_MODEL,
+    temperature: 0.2,
+    messages: [
+      {
+        role: "system",
+        content: "You are an expert website localization translator for UAE logistics services. Translate from English to Modern Standard Arabic. Keep meaning accurate, natural, and customer-friendly. Preserve brand names, email addresses, IDs, numbers, URLs, placeholders, and punctuation. Return only a JSON array of translated strings in the exact same order."
+      },
+      {
+        role: "user",
+        content: JSON.stringify({
+          targetLanguage: "ar",
+          texts: batch
+        })
+      }
+    ]
+  };
+
+  const response = await fetch(endpoint, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${DEEPSEEK_API_KEY}`
+    },
+    body: JSON.stringify(payload)
+  });
+
+  if (!response.ok) {
+    const errorBody = await response.text().catch(() => "");
+    throw new Error(`DeepSeek request failed (${response.status}): ${errorBody.slice(0, 300)}`);
+  }
+
+  const result = await response.json();
+  const content = result?.choices?.[0]?.message?.content || "";
+  const parsed = parseJsonArrayFromText(content);
+
+  if (!Array.isArray(parsed) || parsed.length !== batch.length) {
+    throw new Error("DeepSeek response format mismatch.");
+  }
+
+  return parsed.map((entry, index) => {
+    if (typeof entry !== "string") return batch[index];
+    const normalized = entry.trim();
+    return normalized || batch[index];
+  });
+}
+
+async function translateTextsToArabicWithDeepSeek(texts) {
+  if (!DEEPSEEK_API_KEY) {
+    const error = new Error("DEEPSEEK_NOT_CONFIGURED");
+    error.code = "DEEPSEEK_NOT_CONFIGURED";
+    throw error;
+  }
+
+  const ordered = texts
+    .map((text) => (typeof text === "string" ? text.trim() : ""))
+    .filter(Boolean);
+
+  const uniqueTexts = [];
+  const seen = new Set();
+  ordered.forEach((value) => {
+    if (seen.has(value)) return;
+    seen.add(value);
+    uniqueTexts.push(value);
+  });
+
+  const uncached = uniqueTexts.filter((value) => !deepSeekArabicCache.has(value));
+
+  for (let index = 0; index < uncached.length; index += DEEPSEEK_MAX_BATCH) {
+    const batch = uncached.slice(index, index + DEEPSEEK_MAX_BATCH);
+    const translatedBatch = await translateBatchWithDeepSeek(batch);
+    batch.forEach((sourceText, position) => {
+      deepSeekArabicCache.set(sourceText, translatedBatch[position] || sourceText);
+    });
+  }
+
+  return ordered.map((value) => deepSeekArabicCache.get(value) || value);
+}
+
 function buildInvestmentDashboard(interestRow) {
   const annualRoi = Number(process.env.INVESTOR_ANNUAL_ROI || 25);
   const dailyRate = Math.pow(1 + (annualRoi / 100), 1 / 365) - 1;
@@ -447,6 +564,61 @@ app.get("/api/db-health", async (req, res) => {
     return res.status(500).json({ success: false, message: "Database health check failed" });
   }
 });
+
+app.post(
+  "/api/i18n/translate",
+  [
+    body("target").optional().isIn(["ar"]).withMessage("Only Arabic translation is currently supported."),
+    body("texts").isArray({ min: 1, max: 80 }).withMessage("texts must be an array with 1 to 80 entries."),
+    body("texts.*").isString().withMessage("Each text entry must be a string.").isLength({ min: 1, max: 300 }).withMessage("Each text entry must be between 1 and 300 characters.")
+  ],
+  async (req, res) => {
+    try {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return res.status(400).json({
+          success: false,
+          errors: errors.array(),
+          message: "Invalid translation request payload."
+        });
+      }
+
+      const target = (req.body.target || "ar").toLowerCase();
+      if (target !== "ar") {
+        return res.status(400).json({ success: false, message: "Only Arabic translation is currently supported." });
+      }
+
+      const requestedTexts = (req.body.texts || [])
+        .map((value) => (typeof value === "string" ? value.trim() : ""))
+        .filter(Boolean);
+
+      if (!requestedTexts.length) {
+        return res.status(400).json({ success: false, message: "No translatable text entries were provided." });
+      }
+
+      if (!DEEPSEEK_API_KEY) {
+        return res.status(503).json({
+          success: false,
+          message: "DeepSeek translation is not configured on this server.",
+          data: { missingEnv: "DEEPSEEK_API_KEY" }
+        });
+      }
+
+      const translations = await translateTextsToArabicWithDeepSeek(requestedTexts);
+      return res.json({
+        success: true,
+        message: "Translations generated successfully.",
+        data: {
+          target,
+          translations
+        }
+      });
+    } catch (error) {
+      console.error("DeepSeek translation endpoint error:", error);
+      return res.status(500).json({ success: false, message: "Unable to generate translations right now." });
+    }
+  }
+);
 
 app.post(
   "/api/investor-interest",

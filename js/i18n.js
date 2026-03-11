@@ -5,6 +5,12 @@
   const GOOGLE_TRANSLATE_CONTAINER_ID = "google_translate_element";
   const GOOGLE_TRANSLATE_SCRIPT_ID = "parcellink-google-translate-script";
   const RUNTIME_STYLE_ID = "parcellink-i18n-runtime-style";
+  const ENABLE_GOOGLE_TRANSLATE = ["1", "true", "yes"].includes(
+    String(window.PARCELLINK_ENABLE_GOOGLE_TRANSLATE || "").toLowerCase()
+  );
+  const DEEPSEEK_TRANSLATE_ENDPOINT = "/api/i18n/translate";
+  const DEEPSEEK_BATCH_SIZE = 24;
+  const DEEPSEEK_CACHE_KEY = "parcellink_deepseek_ar_cache_v1";
 
   const dictionaries = {
     en: {
@@ -489,6 +495,248 @@
     "Join our transport and distribution network for route-level collaboration and delivery optimization.": "انضم إلى شبكة النقل والتوزيع لدينا للتعاون على مستوى المسارات وتحسين التسليم.",
     "Offer warehousing capacity, inventory handling, and fulfillment support through structured service agreements.": "قدّم سعة تخزينية ومعالجة للمخزون ودعمًا للتنفيذ عبر اتفاقيات خدمة منظمة.",
     "Integrate shipping operations, tracking, and dispatch workflows for scalable customer delivery experiences.": "دمج عمليات الشحن والتتبع وسير عمل التوزيع لتجارب تسليم قابلة للتوسع.",
+    "© 2025 ParcelLink Logistics. All Rights Reserved.": "© 2025 بارسل لينك للخدمات اللوجستية. جميع الحقوق محفوظة.",
+    "➕ Add another package": "➕ إضافة طرد آخر",
+    "🔥 10% discount on all freights": "🔥 خصم 10% على جميع الشحنات",
+    "🚚 20% discount if parcel is greater than 100kg": "🚚 خصم 20% إذا كان وزن الشحنة أكثر من 100 كجم",
+    "123 Main St, Dubai": "123 الشارع الرئيسي، دبي",
+    "2026 ParcelLink. All rights reserved.": "2026 بارسل لينك. جميع الحقوق محفوظة.",
+    "456 Oxford St, London": "456 شارع أكسفورد، لندن",
+    "About Us": "من نحن",
+    "Abu Dhabi": "أبوظبي",
+    "Accelerate your supply chain using our efficient cross-docking and cargo transfer services.": "سرّع سلسلة الإمداد لديك عبر خدمات النقل العابر وتحويل الشحنات بكفاءة.",
+    "Access Client Dashboard": "الوصول إلى لوحة العميل",
+    "Account & Login": "الحساب وتسجيل الدخول",
+    "ADMINISTRATIVE": "الإدارة",
+    "Administrator": "المسؤول",
+    "After the merchant approves, we arrange the pickup.": "بعد موافقة التاجر، نقوم بترتيب الاستلام.",
+    "Ajman": "عجمان",
+    "Be part of a modern tech-enabled logistics company.": "كن جزءًا من شركة لوجستية حديثة مدعومة بالتقنية.",
+    "Billing issues, refunds, payment failures, and transaction verification.": "مشكلات الفوترة، الاسترداد، فشل الدفع، والتحقق من المعاملات.",
+    "Blog": "المدونة",
+    "Bonded warehouse processing": "إجراءات المستودعات الجمركية",
+    "Browse available roles and apply for the one that best matches your experience.": "تصفّح الوظائف المتاحة وقدّم على الوظيفة الأنسب لخبرتك.",
+    "Build Your Career with ParcelLink": "ابنِ مسيرتك المهنية مع بارسل لينك",
+    "Business Bay, Dubai": "الخليج التجاري، دبي",
+    "Business dashboards for delivery, revenue, and performance metrics.": "لوحات أعمال لمؤشرات التسليم والإيرادات والأداء.",
+    "Business-level operational insights": "رؤى تشغيلية على مستوى الأعمال",
+    "Calculate Shipping": "احسب تكلفة الشحن",
+    "Calculate UAE Shipping": "احسب شحن الإمارات",
+    "CAREERS": "الوظائف",
+    "Careers | ParcelLink Logistics": "الوظائف | بارسل لينك للخدمات اللوجستية",
+    "Clear Shipments Faster": "سرّع تخليص الشحنات",
+    "CLIENT ZONE": "منطقة العملاء",
+    "Company": "الشركة",
+    "Contact": "اتصل بنا",
+    "Contact support immediately.": "تواصل مع الدعم فورًا.",
+    "Cookies": "ملفات تعريف الارتباط",
+    "Corporate SME quotes coming soon. Please use International or UAE-to-UAE for now.": "عروض الشركات الصغيرة والمتوسطة قريبًا. يرجى استخدام الشحن الدولي أو الشحن داخل الإمارات حاليًا.",
+    "Corporate SME’s": "حلول الشركات الصغيرة والمتوسطة",
+    "Create Transfer Shipment": "إنشاء شحنة تحويل",
+    "Cross-Docking": "النقل العابر",
+    "Customer Experience": "تجربة العملاء",
+    "Customs & Bonded": "الجمارك والمستودعات الجمركية",
+    "Damaged parcels, insurance claims, return support.": "الطرود المتضررة، مطالبات التأمين، ودعم المرتجعات.",
+    "Delivery Location": "موقع التسليم",
+    "Delivery performance analytics": "تحليلات أداء التسليم",
+    "Driver": "سائق",
+    "Driver/partner onboarding, documentation, payout cycles, navigation.": "تهيئة السائقين/الشركاء، التوثيق، دورات الدفعات، والملاحة.",
+    "Drivers & Riders": "السائقون والمندوبون",
+    "Dubai": "دبي",
+    "Dubai, UAE": "دبي، الإمارات",
+    "Duty handling, paperwork, and faster border clearance workflows.": "إدارة الرسوم والمستندات وسير عمل أسرع للتخليص الحدودي.",
+    "Duty-free logistics solutions": "حلول لوجستية معفاة من الرسوم",
+    "Email or Suite Number": "البريد الإلكتروني أو رقم الجناح",
+    "Ensure correct input.": "يرجى التأكد من صحة الإدخال.",
+    "Ensure Secure Packaging": "ضمان تغليف آمن",
+    "Enter password": "أدخل كلمة المرور",
+    "Enterprise Logistics": "الخدمات اللوجستية للمؤسسات",
+    "Experience faster international shipping with our bonded warehousing and duty-free customs clearance solutions.": "استمتع بشحن دولي أسرع عبر حلول المستودعات الجمركية والتخليص المعفى من الرسوم.",
+    "Explore All Supported Stores": "استعرض جميع المتاجر المدعومة",
+    "Export": "تصدير",
+    "Express": "سريع",
+    "Express Delivery": "توصيل سريع",
+    "Facebook": "فيسبوك",
+    "Fast claims resolution": "معالجة سريعة للمطالبات",
+    "Fast Delivery • Best Rates • Zero Hassle": "توصيل سريع • أفضل الأسعار • بدون تعقيد",
+    "Faster customs clearance worldwide": "تخليص جمركي أسرع حول العالم",
+    "Faster regional and international distribution": "توزيع إقليمي ودولي أسرع",
+    "Find answers, resolve issues, and get expert support - quickly and efficiently.": "اعثر على الإجابات، وحل المشكلات، واحصل على دعم متخصص بسرعة وكفاءة.",
+    "for individuals, SMEs, and enterprise clients across the UAE.": "للأفراد والشركات الصغيرة والمتوسطة وعملاء المؤسسات في جميع أنحاء الإمارات.",
+    "Fragile, handle with care": "قابل للكسر، يُرجى التعامل بحذر",
+    "Freight & Cargo": "الشحن والبضائع",
+    "From": "من",
+    "From secure shipping and intelligent storage to customs processing and live operational analytics, ParcelLink delivers an end-to-end logistics experience for individuals, merchants, and enterprise teams.": "من الشحن الآمن والتخزين الذكي إلى المعالجة الجمركية والتحليلات التشغيلية المباشرة، تقدم بارسل لينك تجربة لوجستية متكاملة للأفراد والتجار وفرق المؤسسات.",
+    "Full name": "الاسم الكامل",
+    "Full Name": "الاسم الكامل",
+    "Full-value coverage and rapid claims support for high-value goods.": "تغطية كاملة القيمة ودعم سريع للمطالبات للبضائع عالية القيمة.",
+    "Full-value insurance coverage": "تغطية تأمينية كاملة القيمة",
+    "Gain Tailored Insights": "احصل على رؤى مخصصة",
+    "Get In Touch": "تواصل معنا",
+    "Get Protected": "احصل على الحماية",
+    "Global": "عالمي",
+    "Growth & Innovation": "النمو والابتكار",
+    "Heavy-duty boxing for bulk cargo": "تغليف قوي للشحنات الضخمة",
+    "Height (cm)": "الارتفاع (سم)",
+    "HELP": "المساعدة",
+    "Help Center | ParcelLink": "مركز المساعدة | بارسل لينك",
+    "HOME": "الرئيسية",
+    "How can we help you today?": "كيف يمكننا مساعدتك اليوم؟",
+    "How do I return a parcel?": "كيف يمكنني إرجاع طرد؟",
+    "I entered the wrong address": "أدخلت عنوانًا خاطئًا",
+    "I missed my delivery": "فاتني التسليم",
+    "ID, name, email, role": "المعرف، الاسم، البريد الإلكتروني، الدور",
+    "If dispatch has not started, we can update the address.": "إذا لم يبدأ الإرسال بعد، يمكننا تحديث العنوان.",
+    "If you don't find an exact role that fits your profile, you can still send us a general application.": "إذا لم تجد وظيفة مطابقة تمامًا لملفك، يمكنك إرسال طلب عام.",
+    "If your parcel is over 48 hours late, contact support.": "إذا تأخر طردك أكثر من 48 ساعة، تواصل مع الدعم.",
+    "Import": "استيراد",
+    "Import and export documentation": "مستندات الاستيراد والتصدير",
+    "Import and export support": "دعم الاستيراد والتصدير",
+    "Inclusive and performance-driven culture.": "ثقافة شاملة قائمة على الأداء.",
+    "Instagram": "إنستغرام",
+    "Integrated Logistics Services Built for Reliable Growth": "خدمات لوجستية متكاملة مصممة لنمو موثوق",
+    "Inter-City": "بين المدن",
+    "International Shipping": "شحن دولي",
+    "International shipping compliant packing": "تغليف متوافق مع متطلبات الشحن الدولي",
+    "Investor": "مستثمر",
+    "Join a fast-growing last-mile logistics team in Dubai, delivering thousands of parcels daily": "انضم إلى فريق لوجستي سريع النمو للميل الأخير في دبي يوصل آلاف الطرود يوميًا",
+    "Join ParcelLink and enjoy fast global deliveries": "انضم إلى بارسل لينك واستمتع بتوصيل عالمي سريع",
+    "L x W x H (cm)": "الطول × العرض × الارتفاع (سم)",
+    "Large Parcel": "طرد كبير",
+    "Length (cm)": "الطول (سم)",
+    "Liability, claims windows, and compensation limits are governed by service type and applicable law. Supporting documents may be required for investigation.": "تخضع المسؤولية وفترات المطالبات وحدود التعويض لنوع الخدمة والقانون المعمول به، وقد تُطلب مستندات داعمة للتحقيق.",
+    "LinkedIn": "لينكدإن",
+    "Live tracking dashboards": "لوحات تتبع مباشرة",
+    "Local and international protection": "حماية محلية ودولية",
+    "Log in to your ParcelLink Account": "سجّل الدخول إلى حسابك في بارسل لينك",
+    "Logistics & Fleet": "اللوجستيات والأسطول",
+    "London": "لندن",
+    "Long-term and short-term storage available": "يتوفر تخزين قصير وطويل الأجل",
+    "Manage your parcels, view shipment history, download invoices, and track deliveries in one secure place.": "أدر طرودك، واطّلع على سجل الشحنات، وحمّل الفواتير، وتتبع التسليمات في مكان آمن واحد.",
+    "Management": "الإدارة",
+    "Medium Parcel": "طرد متوسط",
+    "Minimum 8 characters": "8 أحرف على الأقل",
+    "Monitor shipments, track performance, and analyze logistics data with our intelligent real-time dashboard.": "راقب الشحنات وتتبع الأداء وحلل البيانات اللوجستية عبر لوحة معلومات ذكية وفورية.",
+    "My parcel is delayed": "طردي متأخر",
+    "My tracking number is invalid": "رقم التتبع غير صحيح",
+    "New secure password": "كلمة مرور جديدة وآمنة",
+    "Only if needed": "فقط عند الحاجة",
+    "Open Live Dashboard": "افتح لوحة المعلومات المباشرة",
+    "Open Positions": "الوظائف المتاحة",
+    "Operational Insights": "رؤى تشغيلية",
+    "Opportunities across Operations, Dispatch, Fleet, and Corporate roles.": "فرص عبر العمليات والتوزيع والأسطول والأدوار المؤسسية.",
+    "Optimize Storage Solutions": "حسّن حلول التخزين",
+    "Our analytics suite gives teams clear visibility into operations, service levels, revenue patterns, and dispatch performance.": "توفر مجموعة التحليلات لدينا رؤية واضحة للفرق حول العمليات ومستويات الخدمة وأنماط الإيرادات وأداء التوزيع.",
+    "Our courier will try again within 24 hours.": "سيحاول مندوبنا التسليم مرة أخرى خلال 24 ساعة.",
+    "Our cross-docking and transfer systems reduce idle time and accelerate regional and international distribution.": "تقلل أنظمة النقل العابر والتحويل لدينا وقت التعطل وتسرّع التوزيع الإقليمي والدولي.",
+    "Our professional packaging standards protect your goods from vibration, impact, humidity, and route-specific handling conditions.": "تحمي معايير التغليف الاحترافية لدينا بضائعك من الاهتزاز والصدمات والرطوبة وظروف المناولة الخاصة بكل مسار.",
+    "Our Services": "خدماتنا",
+    "OUR SERVICES": "خدماتنا",
+    "Our Services | ParcelLink": "خدماتنا | بارسل لينك",
+    "Our smart warehousing technology ensures inventory is stored, managed, and dispatched with predictable speed and security.": "تضمن تقنيات المستودعات الذكية لدينا تخزين المخزون وإدارته وإرساله بسرعة متوقعة وبأمان.",
+    "Our support team is available 24/7 to assist you.": "فريق الدعم لدينا متاح على مدار الساعة لمساعدتك.",
+    "Our Value-Added Logistics Services": "خدماتنا اللوجستية ذات القيمة المضافة",
+    "Oversee day-to-day hub activities, ensuring parcels move on time and according to service-level agreements.": "الإشراف على أنشطة المركز اليومية لضمان تحرك الطرود في الوقت المحدد ووفق اتفاقيات مستوى الخدمة.",
+    "Pack & Ship Securely": "غلّف واشحن بأمان",
+    "Pack and Ship Now": "غلّف واشحن الآن",
+    "Package 1": "الطرد 1",
+    "Package status, delivery delays, missed delivery, location issues.": "حالة الطرد، تأخر التسليم، فوات التسليم، ومشكلات الموقع.",
+    "Package Type": "نوع الطرد",
+    "ParcelLink": "بارسل لينك",
+    "ParcelLink collects details required to process shipping and support requests, including contact data, shipment information, and account credentials.": "تجمع بارسل لينك البيانات اللازمة لمعالجة طلبات الشحن والدعم، بما في ذلك بيانات الاتصال ومعلومات الشحنة وبيانات الحساب.",
+    "ParcelLink provides shipping and logistics services subject to availability, route limitations, and operational safety requirements.": "تقدم بارسل لينك خدمات الشحن والخدمات اللوجستية وفق التوفر وحدود المسارات ومتطلبات السلامة التشغيلية.",
+    "Partner Support": "دعم الشركاء",
+    "Partners": "الشركاء",
+    "Password issues, authentication errors, updating profile details.": "مشكلات كلمة المرور، أخطاء التحقق، وتحديث بيانات الملف الشخصي.",
+    "Payments & Charges": "المدفوعات والرسوم",
+    "Pickup Location": "موقع الاستلام",
+    "Pickup problems, address errors, packaging requirements.": "مشكلات الاستلام، أخطاء العنوان، ومتطلبات التغليف.",
+    "Press & Media": "الإعلام والصحافة",
+    "Privacy": "الخصوصية",
+    "Process International Shipment": "معالجة شحنة دولية",
+    "Professional packaging standards for domestic and global shipping.": "معايير تغليف احترافية للشحن المحلي والعالمي.",
+    "Protect your goods using professional packaging engineered for impact resistance and long-distance shipping.": "احمِ بضائعك بتغليف احترافي مصمم لمقاومة الصدمات والشحن لمسافات طويلة.",
+    "Protect Your Shipments": "احمِ شحناتك",
+    "Provide sender and receiver details to create a seamless delivery experience.": "قدّم بيانات المرسل والمستلم لإنشاء تجربة تسليم سلسة.",
+    "Rapid inbound-to-outbound transfers that cut delays and cost.": "تحويلات سريعة من الوارد إلى الصادر تقلل التأخير والتكلفة.",
+    "Real-time inventory visibility": "رؤية فورية للمخزون",
+    "Real-time shipment visibility": "رؤية فورية للشحنات",
+    "Reduced cargo handling damage": "تقليل أضرار مناولة الشحنات",
+    "Reduced warehousing costs": "خفض تكاليف التخزين",
+    "Regional transfer capability": "قدرة تحويل إقليمية",
+    "Reliable Logistics Services You Can Trust": "خدمات لوجستية موثوقة يمكنك الاعتماد عليها",
+    "Request Storage Partnership": "طلب شراكة تخزين",
+    "Returns & Claims": "المرتجعات والمطالبات",
+    "Returns depend on the merchant.": "المرتجعات تعتمد على سياسة التاجر.",
+    "Revenue and shipment reporting": "تقارير الإيرادات والشحنات",
+    "Risk-free shipping for fragile and high-value goods": "شحن آمن للبضائع الهشة وعالية القيمة",
+    "Same-day": "نفس اليوم",
+    "Same-day inbound-to-outbound movement": "حركة من الوارد إلى الصادر في نفس اليوم",
+    "Secure Packaging": "تغليف آمن",
+    "Secure your parcels against loss, damage, and unexpected transit risks with our comprehensive freight insurance solutions.": "أمّن طرودك ضد الفقدان أو التلف والمخاطر غير المتوقعة أثناء النقل عبر حلول التأمين الشاملة لدينا.",
+    "SEND": "إرسال",
+    "Send a General Application": "إرسال طلب عام",
+    "Send Parcel": "إرسال طرد",
+    "Send Parcel | ParcelLink": "إرسال طرد | بارسل لينك",
+    "Send Parcel International": "إرسال طرد دولي",
+    "Send UAE to UAE": "إرسال داخل الإمارات",
+    "Send UAE To UAE": "إرسال داخل الإمارات",
+    "Sending a Parcel": "إرسال طرد",
+    "Sharjah": "الشارقة",
+    "Ship With Full Protection": "اشحن مع حماية كاملة",
+    "Shipment Protection": "حماية الشحنات",
+    "Shipping Calculator": "حاسبة الشحن",
+    "Shock-resistant packaging": "تغليف مقاوم للصدمات",
+    "Shop Your Favorite UAE & GCC Stores": "تسوق من أشهر متاجر الإمارات والخليج",
+    "Simplify Customs Duties": "بسّط الإجراءات الجمركية",
+    "Small Parcel": "طرد صغير",
+    "Smart logistics and freight solutions built for speed, reliability, and scale.": "حلول لوجستية وشحن ذكية مصممة للسرعة والموثوقية وقابلية التوسع.",
+    "Smart storage, live inventory control, and climate-safe options.": "تخزين ذكي، تحكم مباشر بالمخزون، وخيارات آمنة مناخيًا.",
+    "Smart warehouse automation": "أتمتة ذكية للمستودعات",
+    "Speed Up Delivery": "سرّع التسليم",
+    "Staff": "الموظفون",
+    "Store, manage, and control your inventory with real-time warehouse visibility and smart storage technology.": "قم بتخزين وإدارة والتحكم في مخزونك برؤية فورية وتقنيات تخزين ذكية.",
+    "Streamline Transfers": "سهولة نقل الشحنات",
+    "Structured training, mentorship and clear growth paths.": "تدريب منظم وإرشاد ومسارات نمو واضحة.",
+    "Support": "الدعم",
+    "Tell us a bit about your experience and availability": "أخبرنا قليلًا عن خبرتك ومدى توفرك",
+    "Temperature-controlled secure facilities": "مرافق آمنة مع تحكم بدرجة الحرارة",
+    "Terms": "الشروط",
+    "The Cheapest Parcel Delivery In The UAE.": "أرخص خدمة توصيل طرود في الإمارات.",
+    "Toggle navigation menu": "تبديل قائمة التنقل",
+    "TRACK": "تتبع",
+    "Track | ParcelLink": "تتبع | بارسل لينك",
+    "Track Parcel": "تتبع الطرد",
+    "Track Shipment": "تتبع الشحنة",
+    "Tracking & Delivery": "التتبع والتسليم",
+    "Tracking may activate 1-3 hours after parcel creation.": "قد يتفعّل التتبع خلال 1-3 ساعات بعد إنشاء الطرد.",
+    "Tracking Page": "صفحة التتبع",
+    "Twitter": "إكس",
+    "Type your order number to see the latest delivery status in real time.": "أدخل رقم طلبك لرؤية أحدث حالة للتسليم في الوقت الفعلي.",
+    "United Arab Emirates": "الإمارات العربية المتحدة",
+    "United Kingdom": "المملكة المتحدة",
+    "Updates appear instantly as the parcel moves through our network.": "تظهر التحديثات فورًا أثناء انتقال الطرد عبر شبكتنا.",
+    "USA": "الولايات المتحدة",
+    "Use your assigned unique Staff ID and password to access your workspace. Account creation and password governance are handled by Staff Access Manager.": "استخدم معرّف الموظف الفريد وكلمة المرور المخصصين لك للوصول إلى مساحة العمل. تتم إدارة إنشاء الحسابات وسياسات كلمات المرور عبر مدير وصول الموظفين.",
+    "Use your tracking number on our": "استخدم رقم التتبع الخاص بك على",
+    "View Open Roles": "عرض الوظائف المفتوحة",
+    "View Storage Options": "عرض خيارات التخزين",
+    "Warehousing": "التخزين",
+    "Waterproof and climate-safe protection": "حماية مقاومة للماء وآمنة مناخيًا",
+    "We apply technical and organizational safeguards to protect stored and transmitted information. Access is restricted to authorized personnel and systems.": "نطبق ضوابط تقنية وتنظيمية لحماية المعلومات المخزنة والمنقولة. ويقتصر الوصول على الأفراد والأنظمة المصرح لهم فقط.",
+    "We eliminate border delays with professional bonded warehousing and efficient customs support built for global trade flows.": "نزيل التأخيرات الحدودية عبر مستودعات جمركية احترافية ودعم جمركي فعّال مصمم لتدفقات التجارة العالمية.",
+    "We work with logistics operators, warehousing providers, and enterprise merchants to extend reliable last-mile and freight capabilities across the UAE and beyond.": "نعمل مع مشغلي اللوجستيات ومزودي التخزين وتجار المؤسسات لتوسيع قدرات الميل الأخير والشحن الموثوقة في الإمارات وخارجها.",
+    "We're always interested in meeting passionate people who want to grow with us.": "نحن دائمًا مهتمون بالتعرّف على أشخاص طموحين يرغبون في النمو معنا.",
+    "Weather, traffic, holidays, or customs may cause delays.": "قد تتسبب الأحوال الجوية أو الازدحام أو العطلات أو الجمارك في التأخير.",
+    "Where is my package?": "أين طردي؟",
+    "Whether you're shipping across the UAE or sending parcels worldwide, ParcelLink ensures smooth, fast, and secure deliveries. Our logistics network operates with precision, giving you confidence that every shipment is handled professionally from pick-up to drop-off.": "سواء كنت تشحن داخل الإمارات أو ترسل طرودًا إلى أنحاء العالم، تضمن بارسل لينك توصيلًا سلسًا وسريعًا وآمنًا. تعمل شبكتنا اللوجستية بدقة عالية لتمنحك الثقة بأن كل شحنة تُدار باحترافية من الاستلام حتى التسليم.",
+    "Why Work at ParcelLink?": "لماذا العمل في بارسل لينك؟",
+    "Width (cm)": "العرض (سم)",
+    "You can also request redelivery or pickup from the nearest hub.": "يمكنك أيضًا طلب إعادة التسليم أو الاستلام من أقرب مركز.",
+    "Your cargo deserves absolute protection. Our insurance programs are designed to secure every shipment from pickup to final delivery.": "شحناتك تستحق حماية كاملة. برامج التأمين لدينا مصممة لتأمين كل شحنة من الاستلام حتى التسليم النهائي.",
+    "Your full name": "اسمك الكامل",
+    "Your trusted logistics partner delivering excellence across the UAE and worldwide with speed, reliability, and care.": "شريكك اللوجستي الموثوق لتقديم خدمة متميزة داخل الإمارات وحول العالم بسرعة وموثوقية واهتمام.",
+    "YouTube": "يوتيوب",
     "20% discount if parcel is greater than 100kg": "خصم 20% إذا كان وزن الشحنة أكثر من 100 كجم",
     "10% discount on all freights": "خصم 10% على جميع الشحنات",
     "ðŸšš 20% discount if parcel is greater than 100kg": "🚚 خصم 20% إذا كان وزن الشحنة أكثر من 100 كجم",
@@ -498,6 +746,9 @@
   const literalFallbackEn = Object.fromEntries(
     Object.entries(literalFallbackAr).map(([en, ar]) => [ar, en])
   );
+
+  const literalEntriesAr = Object.entries(literalFallbackAr).sort((a, b) => b[0].length - a[0].length);
+  const literalEntriesEn = Object.entries(literalFallbackEn).sort((a, b) => b[0].length - a[0].length);
 
   const normalizeLanguage = (value) => {
     const normalized = (value || "").toLowerCase();
@@ -543,6 +794,47 @@
     const cookieLang = readGoogleTranslateCookieLanguage();
     return cookieLang ? normalizeLanguage(cookieLang) : FALLBACK_LANGUAGE;
   })();
+
+  const loadDeepSeekCache = () => {
+    try {
+      const raw = localStorage.getItem(DEEPSEEK_CACHE_KEY);
+      if (!raw) return new Map();
+      const parsed = JSON.parse(raw);
+      if (!parsed || typeof parsed !== "object") return new Map();
+      const entries = Object.entries(parsed).filter(([source, translated]) => {
+        return typeof source === "string" && typeof translated === "string" && source.trim() && translated.trim();
+      });
+      return new Map(entries);
+    } catch (_) {
+      return new Map();
+    }
+  };
+
+  const deepSeekRuntimeCache = loadDeepSeekCache();
+  const deepSeekPendingQueue = new Set();
+  let deepSeekQueueTimer = null;
+  let deepSeekRequestInFlight = false;
+  let deepSeekEndpointDisabled = false;
+
+  const persistDeepSeekCache = () => {
+    try {
+      const entries = [...deepSeekRuntimeCache.entries()];
+      if (entries.length > 1200) {
+        const trimmedEntries = entries.slice(entries.length - 1200);
+        deepSeekRuntimeCache.clear();
+        trimmedEntries.forEach(([source, translated]) => {
+          deepSeekRuntimeCache.set(source, translated);
+        });
+      }
+
+      localStorage.setItem(
+        DEEPSEEK_CACHE_KEY,
+        JSON.stringify(Object.fromEntries(deepSeekRuntimeCache.entries()))
+      );
+    } catch (_) {
+      // ignore storage failures
+    }
+  };
 
   const t = (key, fallback = "") => {
     const activeDictionary = dictionaries[currentLanguage] || {};
@@ -754,6 +1046,8 @@
   };
 
   const setGoogleTranslateCookie = (lang) => {
+    if (!ENABLE_GOOGLE_TRANSLATE) return;
+
     const normalized = normalizeLanguage(lang);
     const cookieValue = normalized === "ar" ? "/en/ar" : "/en/en";
     const oneYear = 60 * 60 * 24 * 365;
@@ -775,6 +1069,8 @@
   };
 
   const initializeGoogleTranslate = () => {
+    if (!ENABLE_GOOGLE_TRANSLATE) return;
+
     try {
       if (!(window.google && window.google.translate && window.google.translate.TranslateElement)) return;
       ensureGoogleContainer();
@@ -800,6 +1096,8 @@
   };
 
   const loadGoogleTranslate = () => {
+    if (!ENABLE_GOOGLE_TRANSLATE) return;
+
     setGoogleTranslateCookie(currentLanguage);
     ensureGoogleContainer();
 
@@ -825,6 +1123,8 @@
   };
 
   const applyGoogleLanguage = (lang, retries = 12) => {
+    if (!ENABLE_GOOGLE_TRANSLATE) return;
+
     pendingGoogleLanguage = normalizeLanguage(lang);
     if (!googleTranslateReady) return;
 
@@ -858,6 +1158,88 @@
     return `${leading}${translatedText}${trailing}`;
   };
 
+  const shouldQueueDeepSeekText = (rawText) => {
+    const trimmed = (rawText || "").trim();
+    if (!trimmed || trimmed.length < 3 || trimmed.length > 300) return false;
+    if (!/[A-Za-z]/.test(trimmed)) return false;
+    if (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmed)) return false;
+    if (/^[A-Z0-9_-]{3,}$/.test(trimmed)) return false;
+    if (/^https?:\/\//i.test(trimmed)) return false;
+    if (/^\d+[A-Za-z0-9\s.,\-/#()]*$/.test(trimmed)) return false;
+    return true;
+  };
+
+  const flushDeepSeekQueue = async () => {
+    if (deepSeekRequestInFlight || deepSeekEndpointDisabled || currentLanguage !== "ar") return;
+
+    const batch = Array.from(deepSeekPendingQueue).slice(0, DEEPSEEK_BATCH_SIZE);
+    if (!batch.length) return;
+
+    batch.forEach((entry) => deepSeekPendingQueue.delete(entry));
+    deepSeekRequestInFlight = true;
+
+    try {
+      const response = await fetch(DEEPSEEK_TRANSLATE_ENDPOINT, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ target: "ar", texts: batch })
+      });
+
+      if (!response.ok) {
+        if ([400, 401, 403, 404, 422, 429, 500, 503].includes(response.status)) {
+          if (response.status === 401 || response.status === 403 || response.status === 404 || response.status === 503) {
+            deepSeekEndpointDisabled = true;
+          }
+        }
+        throw new Error(`DeepSeek translation HTTP ${response.status}`);
+      }
+
+      const payload = await response.json();
+      const translations = payload?.data?.translations;
+      if (!payload?.success || !Array.isArray(translations)) {
+        throw new Error("Invalid DeepSeek translation payload.");
+      }
+
+      let updatedCache = false;
+      batch.forEach((sourceText, index) => {
+        const translatedText = typeof translations[index] === "string" ? translations[index].trim() : "";
+        if (!translatedText) return;
+        deepSeekRuntimeCache.set(sourceText, translatedText);
+        updatedCache = true;
+      });
+
+      if (updatedCache) {
+        persistDeepSeekCache();
+        applyLiteralFallbackTranslations();
+      }
+    } catch (error) {
+      console.warn("DeepSeek fallback translation failed:", error?.message || error);
+    } finally {
+      deepSeekRequestInFlight = false;
+      if (deepSeekPendingQueue.size) {
+        deepSeekQueueTimer = setTimeout(() => {
+          flushDeepSeekQueue();
+        }, 250);
+      }
+    }
+  };
+
+  const queueDeepSeekTranslation = (rawText) => {
+    if (currentLanguage !== "ar" || deepSeekEndpointDisabled) return;
+
+    const trimmed = (rawText || "").trim();
+    if (!shouldQueueDeepSeekText(trimmed)) return;
+    if (literalFallbackAr[trimmed]) return;
+    if (deepSeekRuntimeCache.has(trimmed)) return;
+    if (deepSeekPendingQueue.has(trimmed)) return;
+
+    deepSeekPendingQueue.add(trimmed);
+    if (deepSeekQueueTimer) clearTimeout(deepSeekQueueTimer);
+    deepSeekQueueTimer = setTimeout(() => {
+      flushDeepSeekQueue();
+    }, 220);
+  };
+
   const replaceLiteralText = (rawText, language) => {
     const sourceMap = language === "ar" ? literalFallbackAr : literalFallbackEn;
     const trimmed = rawText.trim();
@@ -866,13 +1248,25 @@
     const direct = sourceMap[trimmed];
     if (direct) return preserveWhitespace(rawText, direct);
 
+    if (language === "ar") {
+      const deepSeekTranslated = deepSeekRuntimeCache.get(trimmed);
+      if (deepSeekTranslated) {
+        return preserveWhitespace(rawText, deepSeekTranslated);
+      }
+    }
+
     let updated = rawText;
-    const entries = Object.entries(sourceMap).sort((a, b) => b[0].length - a[0].length);
+    const entries = language === "ar" ? literalEntriesAr : literalEntriesEn;
     for (const [from, to] of entries) {
       if (updated.includes(from)) {
         updated = updated.split(from).join(to);
       }
     }
+
+    if (language === "ar" && updated === rawText) {
+      queueDeepSeekTranslation(trimmed);
+    }
+
     return updated;
   };
 
@@ -1025,12 +1419,25 @@
     }
 
     document.dispatchEvent(new CustomEvent("parcellink:language-changed", { detail: { lang: currentLanguage } }));
-    applyGoogleLanguage(currentLanguage);
+    if (ENABLE_GOOGLE_TRANSLATE) {
+      applyGoogleLanguage(currentLanguage);
+    }
   };
 
   const setLanguage = (lang, options = { persist: true }) => {
     currentLanguage = normalizeLanguage(lang);
-    setGoogleTranslateCookie(currentLanguage);
+    if (ENABLE_GOOGLE_TRANSLATE) {
+      setGoogleTranslateCookie(currentLanguage);
+    }
+
+    if (currentLanguage !== "ar") {
+      deepSeekPendingQueue.clear();
+      if (deepSeekQueueTimer) {
+        clearTimeout(deepSeekQueueTimer);
+        deepSeekQueueTimer = null;
+      }
+    }
+
     if (options.persist) {
       try {
         localStorage.setItem(STORAGE_KEY, currentLanguage);
@@ -1100,8 +1507,10 @@
     injectRuntimeStyles();
     installDialogTranslationWrappers();
     createLanguageSwitcher();
-    setGoogleTranslateCookie(currentLanguage);
-    loadGoogleTranslate();
+    if (ENABLE_GOOGLE_TRANSLATE) {
+      setGoogleTranslateCookie(currentLanguage);
+      loadGoogleTranslate();
+    }
     applyTranslations();
     updateSwitcherPosition();
     startAutoTranslationObserver();
