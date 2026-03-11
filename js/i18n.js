@@ -8,9 +8,6 @@
   const ENABLE_GOOGLE_TRANSLATE = ["1", "true", "yes"].includes(
     String(window.PARCELLINK_ENABLE_GOOGLE_TRANSLATE || "").toLowerCase()
   );
-  const DEEPSEEK_TRANSLATE_ENDPOINT = "/api/i18n/translate";
-  const DEEPSEEK_BATCH_SIZE = 24;
-  const DEEPSEEK_CACHE_KEY = "parcellink_deepseek_ar_cache_v1";
 
   const dictionaries = {
     en: {
@@ -795,47 +792,6 @@
     return cookieLang ? normalizeLanguage(cookieLang) : FALLBACK_LANGUAGE;
   })();
 
-  const loadDeepSeekCache = () => {
-    try {
-      const raw = localStorage.getItem(DEEPSEEK_CACHE_KEY);
-      if (!raw) return new Map();
-      const parsed = JSON.parse(raw);
-      if (!parsed || typeof parsed !== "object") return new Map();
-      const entries = Object.entries(parsed).filter(([source, translated]) => {
-        return typeof source === "string" && typeof translated === "string" && source.trim() && translated.trim();
-      });
-      return new Map(entries);
-    } catch (_) {
-      return new Map();
-    }
-  };
-
-  const deepSeekRuntimeCache = loadDeepSeekCache();
-  const deepSeekPendingQueue = new Set();
-  let deepSeekQueueTimer = null;
-  let deepSeekRequestInFlight = false;
-  let deepSeekEndpointDisabled = false;
-
-  const persistDeepSeekCache = () => {
-    try {
-      const entries = [...deepSeekRuntimeCache.entries()];
-      if (entries.length > 1200) {
-        const trimmedEntries = entries.slice(entries.length - 1200);
-        deepSeekRuntimeCache.clear();
-        trimmedEntries.forEach(([source, translated]) => {
-          deepSeekRuntimeCache.set(source, translated);
-        });
-      }
-
-      localStorage.setItem(
-        DEEPSEEK_CACHE_KEY,
-        JSON.stringify(Object.fromEntries(deepSeekRuntimeCache.entries()))
-      );
-    } catch (_) {
-      // ignore storage failures
-    }
-  };
-
   const t = (key, fallback = "") => {
     const activeDictionary = dictionaries[currentLanguage] || {};
     const fallbackDictionary = dictionaries[FALLBACK_LANGUAGE] || {};
@@ -1158,88 +1114,6 @@
     return `${leading}${translatedText}${trailing}`;
   };
 
-  const shouldQueueDeepSeekText = (rawText) => {
-    const trimmed = (rawText || "").trim();
-    if (!trimmed || trimmed.length < 3 || trimmed.length > 300) return false;
-    if (!/[A-Za-z]/.test(trimmed)) return false;
-    if (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmed)) return false;
-    if (/^[A-Z0-9_-]{3,}$/.test(trimmed)) return false;
-    if (/^https?:\/\//i.test(trimmed)) return false;
-    if (/^\d+[A-Za-z0-9\s.,\-/#()]*$/.test(trimmed)) return false;
-    return true;
-  };
-
-  const flushDeepSeekQueue = async () => {
-    if (deepSeekRequestInFlight || deepSeekEndpointDisabled || currentLanguage !== "ar") return;
-
-    const batch = Array.from(deepSeekPendingQueue).slice(0, DEEPSEEK_BATCH_SIZE);
-    if (!batch.length) return;
-
-    batch.forEach((entry) => deepSeekPendingQueue.delete(entry));
-    deepSeekRequestInFlight = true;
-
-    try {
-      const response = await fetch(DEEPSEEK_TRANSLATE_ENDPOINT, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ target: "ar", texts: batch })
-      });
-
-      if (!response.ok) {
-        if ([400, 401, 403, 404, 422, 429, 500, 503].includes(response.status)) {
-          if (response.status === 401 || response.status === 403 || response.status === 404 || response.status === 503) {
-            deepSeekEndpointDisabled = true;
-          }
-        }
-        throw new Error(`DeepSeek translation HTTP ${response.status}`);
-      }
-
-      const payload = await response.json();
-      const translations = payload?.data?.translations;
-      if (!payload?.success || !Array.isArray(translations)) {
-        throw new Error("Invalid DeepSeek translation payload.");
-      }
-
-      let updatedCache = false;
-      batch.forEach((sourceText, index) => {
-        const translatedText = typeof translations[index] === "string" ? translations[index].trim() : "";
-        if (!translatedText) return;
-        deepSeekRuntimeCache.set(sourceText, translatedText);
-        updatedCache = true;
-      });
-
-      if (updatedCache) {
-        persistDeepSeekCache();
-        applyLiteralFallbackTranslations();
-      }
-    } catch (error) {
-      console.warn("DeepSeek fallback translation failed:", error?.message || error);
-    } finally {
-      deepSeekRequestInFlight = false;
-      if (deepSeekPendingQueue.size) {
-        deepSeekQueueTimer = setTimeout(() => {
-          flushDeepSeekQueue();
-        }, 250);
-      }
-    }
-  };
-
-  const queueDeepSeekTranslation = (rawText) => {
-    if (currentLanguage !== "ar" || deepSeekEndpointDisabled) return;
-
-    const trimmed = (rawText || "").trim();
-    if (!shouldQueueDeepSeekText(trimmed)) return;
-    if (literalFallbackAr[trimmed]) return;
-    if (deepSeekRuntimeCache.has(trimmed)) return;
-    if (deepSeekPendingQueue.has(trimmed)) return;
-
-    deepSeekPendingQueue.add(trimmed);
-    if (deepSeekQueueTimer) clearTimeout(deepSeekQueueTimer);
-    deepSeekQueueTimer = setTimeout(() => {
-      flushDeepSeekQueue();
-    }, 220);
-  };
-
   const replaceLiteralText = (rawText, language) => {
     const sourceMap = language === "ar" ? literalFallbackAr : literalFallbackEn;
     const trimmed = rawText.trim();
@@ -1248,23 +1122,12 @@
     const direct = sourceMap[trimmed];
     if (direct) return preserveWhitespace(rawText, direct);
 
-    if (language === "ar") {
-      const deepSeekTranslated = deepSeekRuntimeCache.get(trimmed);
-      if (deepSeekTranslated) {
-        return preserveWhitespace(rawText, deepSeekTranslated);
-      }
-    }
-
     let updated = rawText;
     const entries = language === "ar" ? literalEntriesAr : literalEntriesEn;
     for (const [from, to] of entries) {
       if (updated.includes(from)) {
         updated = updated.split(from).join(to);
       }
-    }
-
-    if (language === "ar" && updated === rawText) {
-      queueDeepSeekTranslation(trimmed);
     }
 
     return updated;
@@ -1428,14 +1291,6 @@
     currentLanguage = normalizeLanguage(lang);
     if (ENABLE_GOOGLE_TRANSLATE) {
       setGoogleTranslateCookie(currentLanguage);
-    }
-
-    if (currentLanguage !== "ar") {
-      deepSeekPendingQueue.clear();
-      if (deepSeekQueueTimer) {
-        clearTimeout(deepSeekQueueTimer);
-        deepSeekQueueTimer = null;
-      }
     }
 
     if (options.persist) {

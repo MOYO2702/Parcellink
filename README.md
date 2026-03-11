@@ -63,11 +63,6 @@ Email (company inbox) notes:
 - Set `EMAIL_REPLY_TO` to the inbox that should receive customer replies.
 - If your provider requires SSL/TLS on port 465, set `EMAIL_SECURE=true`.
 
-Arabic localization (optional DeepSeek fallback):
-- Set `DEEPSEEK_API_KEY` to enable AI-powered Arabic translation for unmapped page phrases.
-- Optional tuning vars: `DEEPSEEK_MODEL` (default `deepseek-chat`), `DEEPSEEK_BASE_URL`, `DEEPSEEK_MAX_BATCH`.
-- Endpoint used by frontend i18n fallback: `POST /api/i18n/translate` with `{ target: "ar", texts: string[] }`.
-
 Useful local checks:
 
 ```bash
