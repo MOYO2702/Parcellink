@@ -4,7 +4,8 @@
 <link rel="stylesheet" href="/css/theme.css">
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Track | ParcelLink</title>
+<meta name="google" content="notranslate" />
+<title data-i18n="trackPage.metaTitle">Track | ParcelLink</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
 
@@ -197,13 +198,13 @@ footer{
   <a href="/"><img src="/images/logo.png" alt="ParcelLink"></a>
   <nav>
     <ul>
-      <li><a href="/">Home</a></li>
-      <li><a class="active" href="/track">Track</a></li>
-      <li><a href="/send">Send</a></li>
-      <li><a href="/services">Services</a></li>
-      <li><a href="/career">Careers</a></li>
-      <li><a href="/help">Help</a></li>
-      <li><a href="/clientzone">Client Zone</a></li>
+      <li><a href="/" data-i18n="nav.home">Home</a></li>
+      <li><a class="active" href="/track" data-i18n="nav.track">Track</a></li>
+      <li><a href="/send" data-i18n="nav.send">Send</a></li>
+      <li><a href="/services" data-i18n="nav.services">Services</a></li>
+      <li><a href="/career" data-i18n="nav.careers">Careers</a></li>
+      <li><a href="/help" data-i18n="nav.help">Help</a></li>
+      <li><a href="/clientzone" data-i18n="nav.clientzone">Client Zone</a></li>
     </ul>
   </nav>
 </header>
@@ -211,25 +212,25 @@ footer{
 <!-- HERO FULL BACKGROUND -->
 <section class="hero">
   <div class="hero-content">
-    <h1>Track Your Order</h1>
-    <p>Type your order number to see the latest delivery status in real time.</p>
+    <h1 data-i18n="trackPage.title">Track Your Order</h1>
+    <p data-i18n="trackPage.subtitle">Type your order number to see the latest delivery status in real time.</p>
 
     <form id="trackForm" class="track-form">
-      <input id="trackingInput" type="text" placeholder="Enter tracking code">
-      <button type="submit">Track</button>
+      <input id="trackingInput" type="text" placeholder="Enter tracking code" data-i18n-placeholder="trackPage.inputPlaceholder">
+      <button type="submit" data-i18n="trackPage.button">Track</button>
     </form>
   </div>
 </section>
 
 <!-- ORDER STATUS -->
 <section id="orderStatus">
-  <h2>Order Status</h2>
+  <h2 data-i18n="trackPage.statusTitle">Order Status</h2>
   <div id="resultCard" hidden></div>
 </section>
 
 <!-- FOOTER -->
 <footer>
-   2025 ParcelLink Logistics - Fast | Secure | Reliable
+   <span data-i18n="trackPage.footer">2025 ParcelLink Logistics - Fast | Secure | Reliable</span>
 </footer>
 
 <script src="/js/i18n.js"></script>

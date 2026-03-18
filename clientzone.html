@@ -4,7 +4,8 @@
 <link rel="stylesheet" href="/css/theme.css">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ParcelLink - Client Zone</title>
+<meta name="google" content="notranslate">
+<title data-i18n="client.metaTitle">ParcelLink - Client Zone</title>
 
 <style>
 /* RESET */
@@ -276,13 +277,13 @@ footer{
   <a href="/"><img src="/images/logo.png" alt="ParcelLink"></a>
   <nav>
     <ul>
-      <li><a href="/">Home</a></li>
-      <li><a href="/track">Track</a></li>
-      <li><a href="/send">Send</a></li>
-      <li><a href="/services">Services</a></li>
-      <li><a href="/career">Careers</a></li>
-      <li><a href="/help">Help</a></li>
-      <li><a class="active" href="/clientzone">Client Zone</a></li>
+      <li><a href="/" data-i18n="nav.home">Home</a></li>
+      <li><a href="/track" data-i18n="nav.track">Track</a></li>
+      <li><a href="/send" data-i18n="nav.send">Send</a></li>
+      <li><a href="/services" data-i18n="nav.services">Services</a></li>
+      <li><a href="/career" data-i18n="nav.careers">Careers</a></li>
+      <li><a href="/help" data-i18n="nav.help">Help</a></li>
+      <li><a class="active" href="/clientzone" data-i18n="nav.clientzone">Client Zone</a></li>
     </ul>
   </nav>
 </header>
@@ -291,51 +292,57 @@ footer{
 <section class="hero">
   <div class="hero-overlay"></div>
   <div class="hero-content">
-    <h1>Welcome to Your Client Zone</h1>
-    <p>Manage your parcels, view shipment history, download invoices, and track deliveries in one secure place.</p>
+    <h1 data-i18n="client.heroTitle">Welcome to Your Client Zone</h1>
+    <p data-i18n="client.heroSubtitle">Manage your parcels, view shipment history, download invoices, and track deliveries in one secure place.</p>
   </div>
 </section>
 
 <!-- CLIENT ZONE CONTENT -->
 <div class="client-zone">
 
-  <h2 class="section-title">Client Login</h2>
+  <h2 class="section-title" data-i18n="client.loginTitle">Client Login</h2>
 
   <div class="login-box">
-    <h2>Sign In</h2>
-    <label>Email</label>
+    <h2 data-i18n="client.signIn">Sign In</h2>
+    <label data-i18n="client.email">Email</label>
     <input type="email" id="email">
-    <label>Password</label>
+    <label data-i18n="client.password">Password</label>
     <input type="password" id="password">
-    <button onclick="loginClient()">Login</button>
+    <button onclick="loginClient()" data-i18n="client.loginButton">Login</button>
     <p id="login-msg" style="margin-top:10px;color:red;"></p>
   </div>
 
-  <h2 class="section-title">Quick Actions</h2>
+  <h2 class="section-title" data-i18n="client.quickActions">Quick Actions</h2>
 
   <div class="quick-links">
     <div class="card" onclick="alert('Track Shipments')">
-      <h3>Track Shipments</h3>
+      <h3 data-i18n="client.trackShipments">Track Shipments</h3>
     </div>
 
     <div class="card" onclick="alert('View Invoice History')">
-      <h3>Invoice History</h3>
+      <h3 data-i18n="client.invoiceHistory">Invoice History</h3>
     </div>
 
     <div class="card" onclick="alert('Download Statements')">
-      <h3>Download Statements</h3>
+      <h3 data-i18n="client.downloadStatements">Download Statements</h3>
     </div>
   </div>
 
 </div>
 
 <footer>
-  &copy; 2026 ParcelLink - All Rights Reserved
+  <span data-i18n="client.footer">&copy; 2026 ParcelLink - All Rights Reserved</span>
 </footer>
 
 <script>
 // Dynamic API URL - works in both dev and production
 const API_URL = window.location.origin;
+const t = (key, fallback = "") => {
+  if (window.ParcelLinkI18n && typeof window.ParcelLinkI18n.t === "function") {
+    return window.ParcelLinkI18n.t(key, fallback);
+  }
+  return fallback;
+};
 
 let currentUser = null;
 let authToken = null;
@@ -347,7 +354,7 @@ async function loginClient(){
 
   if(email === "" || password === ""){
     msg.style.color = "red";
-    msg.textContent = "Please enter your credentials.";
+    msg.textContent = t("client.enterCredentials", "Please enter your credentials.");
     return;
   }
 
@@ -364,7 +371,7 @@ async function loginClient(){
       currentUser = result.user;
       authToken = result.token || null;
       msg.style.color = "green";
-      msg.textContent = "Login successful! Loading your dashboard...";
+      msg.textContent = t("client.loginSuccess", "Login successful! Loading your dashboard...");
       
       // Store user data
       sessionStorage.setItem('user', JSON.stringify(currentUser));
@@ -378,12 +385,12 @@ async function loginClient(){
       }, 1000);
     } else {
       msg.style.color = "red";
-      msg.textContent = result.message || "Invalid credentials.";
+      msg.textContent = result.message || t("client.invalidCredentials", "Invalid credentials.");
     }
   } catch (error) {
     console.error('Login error:', error);
     msg.style.color = "red";
-    msg.textContent = "Connection error. Please try again.";
+    msg.textContent = t("client.connectionError", "Connection error. Please try again.");
   }
 }
 
@@ -400,18 +407,18 @@ async function loadUserDashboard() {
 
   // Hide login box and show dashboard
   document.querySelector('.login-box').style.display = 'none';
-  document.querySelector('.section-title').textContent = `Welcome, ${currentUser.fullName}!`;
+  document.querySelector('.section-title').textContent = `${t("client.welcome", "Welcome")}, ${currentUser.fullName}!`;
   
   // Update quick links with real functionality
   document.querySelector('.quick-links').innerHTML = `
     <div class="card" onclick="viewShipments()">
-      <h3>My Shipments</h3>
+      <h3>${t("client.myShipments", "My Shipments")}</h3>
     </div>
     <div class="card" onclick="viewReceipts()">
-      <h3>Download Receipts</h3>
+      <h3>${t("client.downloadReceipts", "Download Receipts")}</h3>
     </div>
     <div class="card" onclick="logout()">
-      <h3>Logout</h3>
+      <h3>${t("client.logout", "Logout")}</h3>
     </div>
   `;
 }
@@ -424,18 +431,18 @@ async function viewShipments() {
     const result = await response.json();
 
     if (result.success && result.parcels.length > 0) {
-      let html = '<h3>Your Shipments:</h3><ul>';
+      let html = `<h3>${t("client.yourShipments", "Your Shipments")}:</h3><ul>`;
       result.parcels.forEach(p => {
-        html += `<li><strong>${p.trackingCode}</strong> - From: ${p.from} To: ${p.to} | Weight: ${p.weight}kg | Status: ${p.paymentStatus || 'Pending Payment'}</li>`;
+        html += `<li><strong>${p.trackingCode}</strong> - ${t("forms.from", "From")}: ${p.from} ${t("forms.to", "To")}: ${p.to} | ${t("forms.weight", "Weight (kg)")}: ${p.weight}kg | ${t("client.status", "Status")}: ${p.paymentStatus || t("client.pendingPayment", "Pending Payment")}</li>`;
       });
       html += '</ul>';
       alert(html.replace(/<[^>]*>/g, '\n'));
     } else {
-      alert('No shipments found.');
+      alert(t('client.noShipments', 'No shipments found.'));
     }
   } catch (error) {
     console.error('Error:', error);
-    alert('Failed to load shipments.');
+    alert(t('client.shipmentsLoadError', 'Failed to load shipments.'));
   }
 }
 
@@ -447,22 +454,22 @@ async function viewReceipts() {
     const result = await response.json();
 
     if (result.success && result.receipts.length > 0) {
-      let html = '=== YOUR RECEIPTS ===\n\n';
+      let html = `=== ${t('client.receipts', 'Your Receipts')} ===\n\n`;
       result.receipts.forEach(r => {
-        html += `Receipt: ${r.receiptNumber}\n`;
-        html += `Tracking: ${r.trackingCode}\n`;
-        html += `Amount: ${r.amount} ${r.pricing?.currency || 'AED'}\n`;
-        html += `Paid: ${new Date(r.paidAt).toLocaleString()}\n`;
-        html += `Payment: ${r.paymentMethod} ****${r.cardLast4}\n`;
+        html += `${t('client.receiptLabel', 'Receipt')}: ${r.receiptNumber}\n`;
+        html += `${t('client.trackingLabel', 'Tracking')}: ${r.trackingCode}\n`;
+        html += `${t('client.amountLabel', 'Amount')}: ${r.amount} ${r.pricing?.currency || 'AED'}\n`;
+        html += `${t('client.dateLabel', 'Paid')}: ${new Date(r.paidAt).toLocaleString()}\n`;
+        html += `${t('client.paymentLabel', 'Payment')}: ${r.paymentMethod} ****${r.cardLast4}\n`;
         html += `-----------------\n`;
       });
       alert(html);
     } else {
-      alert('No receipts found. Make a payment first!');
+      alert(t('client.noReceipts', 'No receipts found. Make a payment first!'));
     }
   } catch (error) {
     console.error('Error:', error);
-    alert('Failed to load receipts.');
+    alert(t('client.receiptsLoadError', 'Failed to load receipts.'));
   }
 }
 
