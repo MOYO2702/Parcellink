@@ -16,7 +16,34 @@ const i18n = {
   }
 };
 
+function ensureSharedFavicons() {
+  const head = document.head;
+  if (!head) return;
+
+  const existingIcons = head.querySelectorAll('link[rel="icon"], link[rel="shortcut icon"], link[rel="apple-touch-icon"]');
+  existingIcons.forEach((icon) => icon.remove());
+
+  const icons = [
+    { rel: "icon", type: "image/svg+xml", href: "/images/favicon/favicon.svg", sizes: "any" },
+    { rel: "icon", type: "image/png", href: "/images/favicon/favicon-128x128.png", sizes: "128x128" },
+    { rel: "icon", type: "image/png", href: "/images/favicon/favicon-256x256.png", sizes: "256x256" },
+    { rel: "apple-touch-icon", href: "/images/favicon/favicon-256x256.png", sizes: "256x256" },
+    { rel: "shortcut icon", href: "/images/favicon/favicon-128x128.png" }
+  ];
+
+  icons.forEach(({ rel, type, href, sizes }) => {
+    const link = document.createElement("link");
+    link.rel = rel;
+    link.href = href;
+    if (type) link.type = type;
+    if (sizes) link.sizes = sizes;
+    head.appendChild(link);
+  });
+}
+
 document.addEventListener("DOMContentLoaded", () => {
+  ensureSharedFavicons();
+
   const menuToggle = document.getElementById("menu-toggle");
   const navLinks = document.querySelector(".nav-links ul");
   const dropdownItems = document.querySelectorAll(".nav-links .has-dropdown");
