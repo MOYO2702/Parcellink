@@ -4,7 +4,8 @@
 <link rel="stylesheet" href="/css/theme.css">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ParcelLink | Login</title>
+    <meta name="google" content="notranslate">
+    <title data-i18n="auth.login.metaTitle">ParcelLink | Login</title>
     <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
@@ -14,31 +15,32 @@
     <div class="auth-wrapper">
         <img src="/images/logo.png" alt="ParcelLink Logo" class="auth-logo">
 
-        <h2>Welcome</h2>
-        <p>Log in to your ParcelLink Account</p>
+        <h2 data-i18n="auth.login.heading">Welcome</h2>
+        <p data-i18n="auth.login.subtitle">Log in to your ParcelLink Account</p>
 
         <!-- FIXED: Added id="loginForm" -->
         <form id="loginForm">
 
             <!-- FIXED: Added id="identifier" -->
-            <input type="text" id="identifier" placeholder="Email or Suite Number" required>
+            <input type="text" id="identifier" data-i18n-placeholder="auth.login.identifierPlaceholder" placeholder="Email or Suite Number" required>
 
             <div class="password-container">
                 <!-- FIXED: Added id="password" -->
-                <input type="password" id="password" placeholder="Password" required>
+                <input type="password" id="password" data-i18n-placeholder="auth.login.passwordPlaceholder" placeholder="Password" required>
                 <i class="fa fa-eye toggle-password"
                    onclick="togglePwd('password', this)"></i>
             </div>
 
-            <a href="#" class="forgot-link">Forgot password?</a>
+            <a href="#" class="forgot-link" data-i18n="auth.login.forgot">Forgot password?</a>
 
-            <button type="submit">Log In</button>
+            <button type="submit" data-i18n="auth.login.button">Log In</button>
         </form>
 
-        <p>Don't have an account? <a href="/register">Register</a></p>
+        <p><span data-i18n="auth.login.noAccount">Don't have an account?</span> <a href="/register" data-i18n="auth.login.registerLink">Register</a></p>
     </div>
 
 <script>
+const t = (key, fallback = "") => window.ParcelLinkI18n?.t?.(key, fallback) || fallback;
 
 // ============= Fix missing togglePwd function ============
 function togglePwd(id, icon) {
@@ -73,7 +75,7 @@ document.addEventListener("DOMContentLoaded", () => {
             console.log("Login Response:", data);
 
             if (data.success) {
-                alert(` Welcome ${data.user.fullName}`);
+                alert(`${t("auth.login.welcome", "Welcome")} ${data.user.fullName}`);
                 localStorage.setItem("parcelUser", JSON.stringify(data.user));
                 if (data.token) {
                     localStorage.setItem("parcelAuthToken", data.token);
@@ -85,7 +87,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         } catch (error) {
             console.error("Login error:", error);
-            alert("Something went wrong. Try again.");
+            alert(t("auth.login.error", "Something went wrong. Try again."));
         }
     });
 });

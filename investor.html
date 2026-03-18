@@ -4,7 +4,8 @@
 <link rel="stylesheet" href="/css/theme.css">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Investor Portal | ParcelLink</title>
+<meta name="google" content="notranslate">
+<title data-i18n="investor.metaTitle">Investor Portal | ParcelLink</title>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif}
@@ -66,24 +67,24 @@ th{background:#0f172a;color:#fff}
 <header>
   <a href="/"><img src="/images/logo.png" alt="ParcelLink"></a>
   <ul>
-    <li><a href="/">Home</a></li>
-    <li><a href="/track">Track</a></li>
-    <li><a href="/send">Send</a></li>
-    <li><a href="/services">Services</a></li>
-    <li><a href="/staff">Staff Portal</a></li>
-    <li><a class="active" href="/investor">Investor Portal</a></li>
+    <li><a href="/" data-i18n="nav.home">Home</a></li>
+    <li><a href="/track" data-i18n="nav.track">Track</a></li>
+    <li><a href="/send" data-i18n="nav.send">Send</a></li>
+    <li><a href="/services" data-i18n="nav.services">Services</a></li>
+    <li><a href="/staff" data-i18n="staff.nav">Staff Portal</a></li>
+    <li><a class="active" href="/investor" data-i18n="investor.nav">Investor Portal</a></li>
   </ul>
   <button id="headerLogout" type="button" onclick="logout()">Logout</button>
 </header>
 
 <section class="hero">
-  <h1>Investor Portal</h1>
-  <p>Secure investor login for portfolio tracking and daily growth visibility. Use your assigned `INV` ID and password.</p>
+  <h1 data-i18n="investor.title">Investor Portal</h1>
+  <p data-i18n="investor.subtitle">Secure investor login for portfolio tracking and daily growth visibility. Use your assigned `INV` ID and password.</p>
 </section>
 
 <main class="wrap">
   <section id="loginCard" class="card">
-    <h2>Investor Login</h2>
+    <h2 data-i18n="investor.loginTitle">Investor Login</h2>
     <div class="row" style="margin-top:12px;">
       <div class="group">
         <label for="staffId">Investor ID</label>

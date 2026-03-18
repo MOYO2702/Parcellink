@@ -4,7 +4,8 @@
 <link rel="stylesheet" href="/css/theme.css">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ParcelLink | Register</title>
+    <meta name="google" content="notranslate">
+    <title data-i18n="auth.register.metaTitle">ParcelLink | Register</title>
 
     <!-- Correct paths when served by Express -->
     <link rel="stylesheet" href="/css/style.css">
@@ -16,23 +17,23 @@
     <div class="auth-wrapper">
         <img src="/images/logo.png" alt="ParcelLink Logo" class="auth-logo">
 
-        <h2>Create Account</h2>
-        <p>Join ParcelLink and enjoy fast global deliveries</p>
+        <h2 data-i18n="auth.register.heading">Create Account</h2>
+        <p data-i18n="auth.register.subtitle">Join ParcelLink and enjoy fast global deliveries</p>
 
         <form id="registerForm">
-            <input type="text" id="fullName" name="fullName" placeholder="Full Name" required>
+            <input type="text" id="fullName" name="fullName" data-i18n-placeholder="auth.register.fullNamePlaceholder" placeholder="Full Name" required>
 
-            <input type="email" id="email" name="email" placeholder="Email" required>
+            <input type="email" id="email" name="email" data-i18n-placeholder="auth.register.emailPlaceholder" placeholder="Email" required>
 
             <div class="password-container">
-                <input type="password" id="password" name="password" placeholder="Password" required>
+                <input type="password" id="password" name="password" data-i18n-placeholder="auth.register.passwordPlaceholder" placeholder="Password" required>
                 <i class="fa fa-eye toggle-password" onclick="togglePwd('password', this)"></i>
             </div>
 
-            <button type="submit">Register</button>
+            <button type="submit" data-i18n="auth.register.button">Register</button>
         </form>
 
-        <p>Already have an account? <a href="/login">Login</a></p>
+        <p><span data-i18n="auth.register.hasAccount">Already have an account?</span> <a href="/login" data-i18n="auth.register.loginLink">Login</a></p>
     </div>
 
     <!-- ================= JS ================= -->
