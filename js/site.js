@@ -24,9 +24,13 @@ function ensureSharedFavicons() {
   existingIcons.forEach((icon) => icon.remove());
 
   const icons = [
-    { rel: "icon", type: "image/svg+xml", href: "/images/favicon/favicon.svg?v=7", sizes: "any" },
-    { rel: "apple-touch-icon", href: "/images/favicon/favicon.svg?v=7", sizes: "180x180" },
-    { rel: "shortcut icon", href: "/images/favicon/favicon.svg?v=7" }
+    { rel: "icon", type: "image/png", href: "/images/favicon/favicon-16x16.png?v=8", sizes: "16x16" },
+    { rel: "icon", type: "image/png", href: "/images/favicon/favicon-32x32.png?v=8", sizes: "32x32" },
+    { rel: "icon", type: "image/png", href: "/images/favicon/favicon-48x48.png?v=8", sizes: "48x48" },
+    { rel: "icon", type: "image/png", href: "/images/favicon/favicon-64x64.png?v=8", sizes: "64x64" },
+    { rel: "icon", type: "image/png", href: "/images/favicon/favicon-128x128.png?v=8", sizes: "128x128" },
+    { rel: "apple-touch-icon", href: "/images/favicon/favicon-128x128.png?v=8", sizes: "128x128" },
+    { rel: "shortcut icon", href: "/favicon.ico?v=8" }
   ];
 
   icons.forEach(({ rel, type, href, sizes }) => {
