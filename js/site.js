@@ -24,9 +24,9 @@ function ensureSharedFavicons() {
   existingIcons.forEach((icon) => icon.remove());
 
   const icons = [
-    { rel: "icon", type: "image/svg+xml", href: "/images/favicon/favicon.svg", sizes: "any" },
     { rel: "icon", type: "image/png", href: "/images/favicon/favicon-128x128.png", sizes: "128x128" },
     { rel: "icon", type: "image/png", href: "/images/favicon/favicon-256x256.png", sizes: "256x256" },
+    { rel: "icon", type: "image/png", href: "/images/favicon/favicon-64x64.png", sizes: "64x64" },
     { rel: "apple-touch-icon", href: "/images/favicon/favicon-256x256.png", sizes: "256x256" },
     { rel: "shortcut icon", href: "/images/favicon/favicon-128x128.png" }
   ];
