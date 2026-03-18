@@ -2,23 +2,13 @@
   const STORAGE_KEY = "parcellink_language";
   const FALLBACK_LANGUAGE = "en";
   const SUPPORTED_LANGUAGES = ["en", "ar"];
-  const GOOGLE_TRANSLATE_CONTAINER_ID = "google_translate_element";
-  const GOOGLE_TRANSLATE_SCRIPT_ID = "parcellink-google-translate-script";
   const RUNTIME_STYLE_ID = "parcellink-i18n-runtime-style";
-  const ENABLE_GOOGLE_TRANSLATE = ["1", "true", "yes"].includes(
-    String(window.PARCELLINK_ENABLE_GOOGLE_TRANSLATE || "").toLowerCase()
-  );
 
   const dictionaries = {
     en: {
       "meta.title": "ParcelLink",
-      "prompt.title": "Choose your language",
-      "prompt.message": "Would you like to view ParcelLink in Arabic?",
-      "prompt.arabic": "Arabic",
-      "prompt.english": "English",
-      "switch.label": "Language",
-      "switch.en": "EN",
-      "switch.ar": "AR",
+      "switch.en": "English",
+      "switch.ar": "Arabic",
 
       "promo.discount10": "🔥 10% discount on all freights",
       "promo.discount20": "🚚 20% discount if parcel is greater than 100kg",
@@ -149,8 +139,8 @@
       "prompt.arabic": "العربية",
       "prompt.english": "الإنجليزية",
       "switch.label": "اللغة",
-      "switch.en": "EN",
-      "switch.ar": "AR",
+      "switch.en": "English",
+      "switch.ar": "Arabic",
 
       "promo.discount10": "🔥 خصم 10% على جميع الشحنات",
       "promo.discount20": "🚚 خصم 20% إذا كان وزن الشحنة أكثر من 100 كجم",
@@ -752,31 +742,8 @@
     return SUPPORTED_LANGUAGES.includes(normalized) ? normalized : FALLBACK_LANGUAGE;
   };
 
-  const hasStoredPreference = () => {
-    try {
-      return !!localStorage.getItem(STORAGE_KEY);
-    } catch (_) {
-      return false;
-    }
-  };
-
-  const readGoogleTranslateCookieLanguage = () => {
-    try {
-      const match = document.cookie.match(/(?:^|;\s*)googtrans=([^;]+)/i);
-      if (!match || !match[1]) return "";
-      const value = decodeURIComponent(match[1]).toLowerCase();
-      if (value.endsWith("/ar")) return "ar";
-      if (value.endsWith("/en")) return "en";
-      return "";
-    } catch (_) {
-      return "";
-    }
-  };
-
   const textNodeOriginal = new WeakMap();
   const attrOriginal = new WeakMap();
-  let googleTranslateReady = false;
-  let pendingGoogleLanguage = null;
   let mutationObserver = null;
   let mutationTimer = null;
   let mutationPassActive = false;
@@ -786,10 +753,9 @@
       const rawStored = localStorage.getItem(STORAGE_KEY);
       if (rawStored) return normalizeLanguage(rawStored);
     } catch (_) {
-      // continue to cookie fallback
+      // ignore storage failures
     }
-    const cookieLang = readGoogleTranslateCookieLanguage();
-    return cookieLang ? normalizeLanguage(cookieLang) : FALLBACK_LANGUAGE;
+    return FALLBACK_LANGUAGE;
   })();
 
   const t = (key, fallback = "") => {
@@ -812,23 +778,6 @@
     const style = document.createElement("style");
     style.id = RUNTIME_STYLE_ID;
     style.textContent = `
-      #${GOOGLE_TRANSLATE_CONTAINER_ID} {
-        position: fixed;
-        left: -9999px;
-        top: -9999px;
-        width: 1px;
-        height: 1px;
-        overflow: hidden;
-      }
-      .goog-te-banner-frame.skiptranslate,
-      .goog-te-gadget-icon,
-      .goog-logo-link,
-      .goog-te-gadget span {
-        display: none !important;
-      }
-      body { top: 0 !important; }
-      .goog-te-gadget { font-size: 0 !important; color: transparent !important; }
-
       .lang-switcher {
         position: fixed !important;
         right: 16px !important;
@@ -837,18 +786,12 @@
         z-index: 4000;
         display: inline-flex;
         align-items: center;
-        gap: 8px;
-        padding: 8px 10px;
+        gap: 6px;
+        padding: 8px;
         background: rgba(255, 255, 255, 0.96);
         border: 1px solid #dbe3f0;
         border-radius: 999px;
         box-shadow: 0 10px 30px rgba(2, 8, 23, 0.15);
-      }
-
-      .lang-switcher-label {
-        font-size: 12px;
-        font-weight: 600;
-        color: #0f172a;
       }
 
       .lang-switch-btn {
@@ -856,8 +799,9 @@
         background: #fff;
         color: #1d6cff;
         border-radius: 999px;
-        padding: 4px 10px;
-        font-size: 12px;
+        min-width: 88px;
+        padding: 8px 14px;
+        font-size: 13px;
         font-weight: 700;
         cursor: pointer;
       }
@@ -866,61 +810,6 @@
         background: #1d6cff;
         border-color: #1d6cff;
         color: #fff;
-      }
-
-      .lang-prompt-overlay {
-        position: fixed;
-        inset: 0;
-        z-index: 5000;
-        display: grid;
-        place-items: center;
-        background: rgba(2, 8, 23, 0.45);
-        padding: 18px;
-      }
-
-      .lang-prompt-card {
-        width: min(520px, 92vw);
-        background: #fff;
-        border-radius: 14px;
-        padding: 22px;
-        border: 1px solid #dbe3f0;
-        box-shadow: 0 20px 50px rgba(2, 8, 23, 0.25);
-      }
-
-      .lang-prompt-title {
-        font-size: 1.15rem;
-        margin-bottom: 8px;
-        color: #0f172a;
-      }
-
-      .lang-prompt-message {
-        font-size: 0.95rem;
-        color: #334155;
-        margin-bottom: 16px;
-        line-height: 1.55;
-      }
-
-      .lang-prompt-actions {
-        display: flex;
-        justify-content: flex-end;
-        gap: 10px;
-        flex-wrap: wrap;
-      }
-
-      .lang-prompt-btn {
-        border: 1px solid #dbe3f0;
-        background: #fff;
-        color: #0f172a;
-        border-radius: 8px;
-        padding: 10px 14px;
-        font-weight: 600;
-        cursor: pointer;
-      }
-
-      .lang-prompt-btn.primary {
-        background: #1d6cff;
-        color: #fff;
-        border-color: #1d6cff;
       }
 
       html[lang="ar"] body {
@@ -945,8 +834,9 @@
           left: auto !important;
         }
 
-        .lang-switcher-label {
-          display: none;
+        .lang-switch-btn {
+          min-width: 76px;
+          padding: 7px 12px;
         }
       }
     `;
@@ -990,121 +880,12 @@
     root.style.setProperty("--parcellink-lang-top-mobile", `${mobileTop}px`);
   };
 
-  const getCookieBaseDomain = () => {
-    const hostname = String(window.location.hostname || "").trim();
-    if (!hostname || hostname === "localhost" || /^\d+\.\d+\.\d+\.\d+$/.test(hostname)) {
-      return "";
-    }
-
-    const pieces = hostname.split(".").filter(Boolean);
-    if (pieces.length < 2) return "";
-    return `.${pieces.slice(-2).join(".")}`;
-  };
-
-  const setGoogleTranslateCookie = (lang) => {
-    if (!ENABLE_GOOGLE_TRANSLATE) return;
-
-    const normalized = normalizeLanguage(lang);
-    const cookieValue = normalized === "ar" ? "/en/ar" : "/en/en";
-    const oneYear = 60 * 60 * 24 * 365;
-
-    document.cookie = `googtrans=${cookieValue};path=/;max-age=${oneYear}`;
-
-    const baseDomain = getCookieBaseDomain();
-    if (baseDomain) {
-      document.cookie = `googtrans=${cookieValue};path=/;domain=${baseDomain};max-age=${oneYear}`;
-    }
-  };
-
-  const ensureGoogleContainer = () => {
-    if (document.getElementById(GOOGLE_TRANSLATE_CONTAINER_ID)) return;
-    const container = document.createElement("div");
-    container.id = GOOGLE_TRANSLATE_CONTAINER_ID;
-    container.setAttribute("aria-hidden", "true");
-    document.body.appendChild(container);
-  };
-
-  const initializeGoogleTranslate = () => {
-    if (!ENABLE_GOOGLE_TRANSLATE) return;
-
-    try {
-      if (!(window.google && window.google.translate && window.google.translate.TranslateElement)) return;
-      ensureGoogleContainer();
-      if (!window.__parcelLinkGoogleTranslateInitialized) {
-        new window.google.translate.TranslateElement(
-          {
-            pageLanguage: "en",
-            includedLanguages: "en,ar",
-            autoDisplay: false,
-            layout: window.google.translate.TranslateElement.InlineLayout.SIMPLE
-          },
-          GOOGLE_TRANSLATE_CONTAINER_ID
-        );
-        window.__parcelLinkGoogleTranslateInitialized = true;
-      }
-      googleTranslateReady = true;
-      if (pendingGoogleLanguage) {
-        applyGoogleLanguage(pendingGoogleLanguage);
-      }
-    } catch (error) {
-      console.warn("Google Translate init failed:", error);
-    }
-  };
-
-  const loadGoogleTranslate = () => {
-    if (!ENABLE_GOOGLE_TRANSLATE) return;
-
-    setGoogleTranslateCookie(currentLanguage);
-    ensureGoogleContainer();
-
-    if (window.google && window.google.translate && window.google.translate.TranslateElement) {
-      initializeGoogleTranslate();
-      return;
-    }
-
-    window.googleTranslateElementInit = () => {
-      initializeGoogleTranslate();
-    };
-
-    if (document.getElementById(GOOGLE_TRANSLATE_SCRIPT_ID)) return;
-
-    const script = document.createElement("script");
-    script.id = GOOGLE_TRANSLATE_SCRIPT_ID;
-    script.src = "https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit";
-    script.async = true;
-    script.onerror = () => {
-      console.warn("Google Translate script could not be loaded. Falling back to local phrase translation.");
-    };
-    document.body.appendChild(script);
-  };
-
-  const applyGoogleLanguage = (lang, retries = 12) => {
-    if (!ENABLE_GOOGLE_TRANSLATE) return;
-
-    pendingGoogleLanguage = normalizeLanguage(lang);
-    if (!googleTranslateReady) return;
-
-    const combo = document.querySelector(".goog-te-combo");
-    if (!combo) {
-      if (retries > 0) {
-        setTimeout(() => applyGoogleLanguage(lang, retries - 1), 250);
-      }
-      return;
-    }
-
-    const targetValue = pendingGoogleLanguage === "ar" ? "ar" : "en";
-    if (combo.value !== targetValue) {
-      combo.value = targetValue;
-      combo.dispatchEvent(new Event("change"));
-    }
-  };
-
   const shouldIgnoreTextNode = (node) => {
     if (!node || !node.parentElement) return true;
     const parent = node.parentElement;
     const tag = (parent.tagName || "").toLowerCase();
     if (["script", "style", "noscript", "textarea"].includes(tag)) return true;
-    if (parent.closest(".lang-switcher, .lang-prompt-overlay, #google_translate_element")) return true;
+    if (parent.closest(".lang-switcher")) return true;
     if (parent.closest("[data-i18n], [data-i18n-placeholder]")) return true;
     return false;
   };
@@ -1271,32 +1052,23 @@
 
     applyLiteralFallbackTranslations();
 
-    const switcherLabel = document.querySelector("[data-lang-switcher-label]");
     const enButton = document.querySelector("[data-lang-switch='en']");
     const arButton = document.querySelector("[data-lang-switch='ar']");
 
-    if (switcherLabel) switcherLabel.textContent = t("switch.label", "Language");
     if (enButton) {
-      enButton.textContent = t("switch.en", "EN");
+      enButton.textContent = t("switch.en", "English");
       enButton.classList.toggle("active", currentLanguage === "en");
     }
     if (arButton) {
-      arButton.textContent = t("switch.ar", "AR");
+      arButton.textContent = t("switch.ar", "Arabic");
       arButton.classList.toggle("active", currentLanguage === "ar");
     }
 
     document.dispatchEvent(new CustomEvent("parcellink:language-changed", { detail: { lang: currentLanguage } }));
-    if (ENABLE_GOOGLE_TRANSLATE) {
-      applyGoogleLanguage(currentLanguage);
-    }
   };
 
   const setLanguage = (lang, options = { persist: true }) => {
     currentLanguage = normalizeLanguage(lang);
-    if (ENABLE_GOOGLE_TRANSLATE) {
-      setGoogleTranslateCookie(currentLanguage);
-    }
-
     if (options.persist) {
       try {
         localStorage.setItem(STORAGE_KEY, currentLanguage);
@@ -1313,9 +1085,8 @@
     const wrapper = document.createElement("div");
     wrapper.className = "lang-switcher";
     wrapper.innerHTML = `
-      <span class="lang-switcher-label" data-lang-switcher-label>Language</span>
-      <button type="button" class="lang-switch-btn" data-lang-switch="en">EN</button>
-      <button type="button" class="lang-switch-btn" data-lang-switch="ar">AR</button>
+      <button type="button" class="lang-switch-btn" data-lang-switch="en">English</button>
+      <button type="button" class="lang-switch-btn" data-lang-switch="ar">Arabic</button>
     `;
 
     wrapper.querySelectorAll("[data-lang-switch]").forEach((button) => {
@@ -1328,32 +1099,7 @@
     document.body.appendChild(wrapper);
   };
 
-  const createLanguagePrompt = () => {
-    if (hasStoredPreference()) return;
-
-    const overlay = document.createElement("div");
-    overlay.className = "lang-prompt-overlay";
-    overlay.innerHTML = `
-      <div class="lang-prompt-card" role="dialog" aria-modal="true" aria-labelledby="lang-prompt-title">
-        <h3 id="lang-prompt-title" class="lang-prompt-title">${t("prompt.title", "Choose your language")}</h3>
-        <p class="lang-prompt-message">${t("prompt.message", "Would you like to view ParcelLink in Arabic?")}</p>
-        <div class="lang-prompt-actions">
-          <button type="button" class="lang-prompt-btn primary" data-lang-choice="ar">${t("prompt.arabic", "Arabic")}</button>
-          <button type="button" class="lang-prompt-btn" data-lang-choice="en">${t("prompt.english", "English")}</button>
-        </div>
-      </div>
-    `;
-
-    overlay.querySelectorAll("[data-lang-choice]").forEach((button) => {
-      button.addEventListener("click", () => {
-        const choice = button.getAttribute("data-lang-choice") || FALLBACK_LANGUAGE;
-        setLanguage(choice, { persist: true });
-        overlay.remove();
-      });
-    });
-
-    document.body.appendChild(overlay);
-  };
+  const createLanguagePrompt = () => {};
 
   window.ParcelLinkI18n = {
     t,
@@ -1366,14 +1112,9 @@
     injectRuntimeStyles();
     installDialogTranslationWrappers();
     createLanguageSwitcher();
-    if (ENABLE_GOOGLE_TRANSLATE) {
-      setGoogleTranslateCookie(currentLanguage);
-      loadGoogleTranslate();
-    }
     applyTranslations();
     updateSwitcherPosition();
     startAutoTranslationObserver();
-    createLanguagePrompt();
 
     window.addEventListener("resize", updateSwitcherPosition);
     window.addEventListener("load", updateSwitcherPosition);
