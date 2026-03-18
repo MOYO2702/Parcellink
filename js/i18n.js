@@ -1105,6 +1105,7 @@
     const tag = (parent.tagName || "").toLowerCase();
     if (["script", "style", "noscript", "textarea"].includes(tag)) return true;
     if (parent.closest(".lang-switcher, .lang-prompt-overlay, #google_translate_element")) return true;
+    if (parent.closest("[data-i18n], [data-i18n-placeholder]")) return true;
     return false;
   };
 
@@ -1113,6 +1114,8 @@
     const trailing = originalText.match(/\s*$/)?.[0] || "";
     return `${leading}${translatedText}${trailing}`;
   };
+
+  const escapeRegExp = (value) => value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 
   const replaceLiteralText = (rawText, language) => {
     const sourceMap = language === "ar" ? literalFallbackAr : literalFallbackEn;
@@ -1126,7 +1129,8 @@
     const entries = language === "ar" ? literalEntriesAr : literalEntriesEn;
     for (const [from, to] of entries) {
       if (updated.includes(from)) {
-        updated = updated.split(from).join(to);
+        const pattern = new RegExp(`(^|[^\\p{L}\\p{N}])(${escapeRegExp(from)})(?=$|[^\\p{L}\\p{N}])`, "gu");
+        updated = updated.replace(pattern, (match, prefix) => `${prefix}${to}`);
       }
     }
 
