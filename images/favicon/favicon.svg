@@ -1,4 +1,21 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-  <circle cx="256" cy="256" r="256" fill="#1d6cff"/>
-  <text x="50%" y="55%" text-anchor="middle" font-size="220" fill="#fff" font-family="Poppins, Arial, sans-serif" dy=".35em">PL</text>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="ParcelLink">
+  <defs>
+    <linearGradient id="parcel-purple" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#a855f7"/>
+      <stop offset="100%" stop-color="#6d28d9"/>
+    </linearGradient>
+    <linearGradient id="parcel-cyan" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#22d3ee"/>
+      <stop offset="100%" stop-color="#0891b2"/>
+    </linearGradient>
+  </defs>
+  <g fill="none" stroke-linejoin="round" stroke-linecap="round">
+    <path d="M26 24 64 44 64 90 26 70Z" stroke="url(#parcel-purple)" stroke-width="8"/>
+    <path d="M64 44 100 24 100 70 64 90Z" stroke="url(#parcel-purple)" stroke-width="8"/>
+    <path d="M26 24 64 6 100 24 64 44Z" stroke="url(#parcel-purple)" stroke-width="8"/>
+    <path d="M43 20 80 38" stroke="url(#parcel-purple)" stroke-width="8"/>
+    <path d="M60 14 95 31" stroke="url(#parcel-purple)" stroke-width="8"/>
+    <path d="M76 80h20" stroke="url(#parcel-cyan)" stroke-width="10"/>
+    <path d="M88 68 102 80 88 92" stroke="url(#parcel-cyan)" stroke-width="10"/>
+  </g>
 </svg>
