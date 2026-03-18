@@ -24,12 +24,12 @@ function ensureSharedFavicons() {
   existingIcons.forEach((icon) => icon.remove());
 
   const icons = [
-    { rel: "icon", type: "image/svg+xml", href: "/images/favicon/favicon.svg?v=4", sizes: "any" },
-    { rel: "icon", type: "image/png", href: "/images/favicon/favicon-64x64.png?v=4", sizes: "64x64" },
-    { rel: "icon", type: "image/png", href: "/images/favicon/favicon-128x128.png?v=4", sizes: "128x128" },
-    { rel: "icon", type: "image/png", href: "/images/favicon/favicon-256x256.png?v=4", sizes: "256x256" },
-    { rel: "apple-touch-icon", href: "/images/favicon/favicon-256x256.png?v=4", sizes: "256x256" },
-    { rel: "shortcut icon", href: "/favicon.ico?v=4" }
+    { rel: "icon", type: "image/svg+xml", href: "/images/favicon/favicon.svg?v=5", sizes: "any" },
+    { rel: "icon", type: "image/png", href: "/images/favicon/favicon-64x64.png?v=5", sizes: "64x64" },
+    { rel: "icon", type: "image/png", href: "/images/favicon/favicon-128x128.png?v=5", sizes: "128x128" },
+    { rel: "icon", type: "image/png", href: "/images/favicon/favicon-256x256.png?v=5", sizes: "256x256" },
+    { rel: "apple-touch-icon", href: "/images/favicon/favicon-256x256.png?v=5", sizes: "256x256" },
+    { rel: "shortcut icon", href: "/favicon.ico?v=5" }
   ];
 
   icons.forEach(({ rel, type, href, sizes }) => {
