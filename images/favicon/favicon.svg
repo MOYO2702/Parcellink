@@ -1,14 +1,24 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="ParcelLink">
   <defs>
-    <linearGradient id="parcel-purple" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#a855f7"/>
-      <stop offset="100%" stop-color="#6d28d9"/>
+    <linearGradient id="parcel-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#8b3dff"/>
+      <stop offset="100%" stop-color="#5b21b6"/>
+    </linearGradient>
+    <linearGradient id="parcel-accent" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#67e8f9"/>
+      <stop offset="100%" stop-color="#06b6d4"/>
     </linearGradient>
   </defs>
-  <g fill="none" stroke-linejoin="round" stroke-linecap="round">
-    <path d="M12 18 32 28 32 52 12 42Z" stroke="url(#parcel-purple)" stroke-width="6"/>
-    <path d="M32 28 52 18 52 42 32 52Z" stroke="url(#parcel-purple)" stroke-width="6"/>
-    <path d="M12 18 32 8 52 18 32 28Z" stroke="url(#parcel-purple)" stroke-width="6"/>
-    <path d="M24 15 42 24" stroke="url(#parcel-purple)" stroke-width="6"/>
+  <rect x="2" y="2" width="60" height="60" rx="16" fill="url(#parcel-bg)"/>
+  <g fill="none" stroke="#ffffff" stroke-linejoin="round" stroke-linecap="round">
+    <path d="M16 20 31 28 31 46 16 38Z" stroke-width="4.5"/>
+    <path d="M31 28 46 20 46 38 31 46Z" stroke-width="4.5"/>
+    <path d="M16 20 31 12 46 20 31 28Z" stroke-width="4.5"/>
+    <path d="M24 18 37 24" stroke-width="4.5"/>
+  </g>
+  <path d="M39 40h10" stroke="url(#parcel-accent)" stroke-width="5" stroke-linecap="round"/>
+  <path d="M44 35 51 40 44 45" stroke="url(#parcel-accent)" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+  <g fill="none" stroke="rgba(255,255,255,0.16)" stroke-width="1.5">
+    <rect x="2.75" y="2.75" width="58.5" height="58.5" rx="15.25"/>
   </g>
 </svg>
