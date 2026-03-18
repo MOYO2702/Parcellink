@@ -266,6 +266,76 @@
     }
   };
 
+  Object.assign(dictionaries.en, {
+    "smallBox": "Small Box",
+    "mediumBox": "Medium Box",
+    "largeBox": "Large Box",
+    "send.metaTitle": "Send Parcel | ParcelLink",
+    "send.title": "Send a Parcel",
+    "send.subtitle": "Provide sender and receiver details to create a seamless delivery experience.",
+    "send.senderInfo": "Sender Information",
+    "send.senderName": "Sender Name",
+    "send.phoneNumber": "Phone Number",
+    "send.pickupAddress": "Pickup Address",
+    "send.city": "City",
+    "send.poBoxOptional": "P.O. Box (optional)",
+    "send.receiverInfo": "Receiver Information",
+    "send.receiverName": "Receiver Name",
+    "send.deliveryAddress": "Delivery Address",
+    "send.parcelInfo": "Parcel Information",
+    "send.dimensionsOptional": "Dimensions (optional)",
+    "send.notesOptional": "Notes (optional)",
+    "send.submitShipment": "Submit Shipment",
+    "send.placeholder.senderName": "John Doe",
+    "send.placeholder.senderPhone": "+971 55 123 4567",
+    "send.placeholder.pickupAddress": "123 Main St, Dubai",
+    "send.placeholder.pickupCity": "Dubai",
+    "send.placeholder.senderPoBox": "P.O. Box 12345",
+    "send.placeholder.receiverName": "Jane Smith",
+    "send.placeholder.receiverPhone": "+44 123 456 7890",
+    "send.placeholder.deliveryAddress": "456 Oxford St, London",
+    "send.placeholder.deliveryCity": "London",
+    "send.placeholder.receiverPoBox": "P.O. Box 67890",
+    "send.placeholder.weight": "0.5",
+    "send.placeholder.dimensions": "L x W x H (cm)",
+    "send.placeholder.notes": "Fragile, handle with care"
+  });
+
+  Object.assign(dictionaries.ar, {
+    "smallBox": "\u0635\u0646\u062f\u0648\u0642 \u0635\u063a\u064a\u0631",
+    "mediumBox": "\u0635\u0646\u062f\u0648\u0642 \u0645\u062a\u0648\u0633\u0637",
+    "largeBox": "\u0635\u0646\u062f\u0648\u0642 \u0643\u0628\u064a\u0631",
+    "send.metaTitle": "\u0625\u0631\u0633\u0627\u0644 \u0637\u0631\u062f | \u0628\u0627\u0631\u0633\u0644 \u0644\u064a\u0646\u0643",
+    "send.title": "\u0625\u0631\u0633\u0627\u0644 \u0637\u0631\u062f",
+    "send.subtitle": "\u0642\u062f\u0651\u0645 \u0628\u064a\u0627\u0646\u0627\u062a \u0627\u0644\u0645\u0631\u0633\u0644 \u0648\u0627\u0644\u0645\u0633\u062a\u0644\u0645 \u0644\u0625\u0646\u0634\u0627\u0621 \u062a\u062c\u0631\u0628\u0629 \u062a\u0633\u0644\u064a\u0645 \u0633\u0644\u0633\u0629.",
+    "send.senderInfo": "\u0645\u0639\u0644\u0648\u0645\u0627\u062a \u0627\u0644\u0645\u0631\u0633\u0644",
+    "send.senderName": "\u0627\u0633\u0645 \u0627\u0644\u0645\u0631\u0633\u0644",
+    "send.phoneNumber": "\u0631\u0642\u0645 \u0627\u0644\u0647\u0627\u062a\u0641",
+    "send.pickupAddress": "\u0639\u0646\u0648\u0627\u0646 \u0627\u0644\u0627\u0633\u062a\u0644\u0627\u0645",
+    "send.city": "\u0627\u0644\u0645\u062f\u064a\u0646\u0629",
+    "send.poBoxOptional": "\u0635\u0646\u062f\u0648\u0642 \u0628\u0631\u064a\u062f (\u0627\u062e\u062a\u064a\u0627\u0631\u064a)",
+    "send.receiverInfo": "\u0645\u0639\u0644\u0648\u0645\u0627\u062a \u0627\u0644\u0645\u0633\u062a\u0644\u0645",
+    "send.receiverName": "\u0627\u0633\u0645 \u0627\u0644\u0645\u0633\u062a\u0644\u0645",
+    "send.deliveryAddress": "\u0639\u0646\u0648\u0627\u0646 \u0627\u0644\u062a\u0633\u0644\u064a\u0645",
+    "send.parcelInfo": "\u0645\u0639\u0644\u0648\u0645\u0627\u062a \u0627\u0644\u0637\u0631\u062f",
+    "send.dimensionsOptional": "\u0627\u0644\u0623\u0628\u0639\u0627\u062f (\u0627\u062e\u062a\u064a\u0627\u0631\u064a)",
+    "send.notesOptional": "\u0645\u0644\u0627\u062d\u0638\u0627\u062a (\u0627\u062e\u062a\u064a\u0627\u0631\u064a)",
+    "send.submitShipment": "\u0625\u0631\u0633\u0627\u0644 \u0627\u0644\u0634\u062d\u0646\u0629",
+    "send.placeholder.senderName": "\u0623\u062d\u0645\u062f \u0639\u0644\u064a",
+    "send.placeholder.senderPhone": "+971 55 123 4567",
+    "send.placeholder.pickupAddress": "123 \u0627\u0644\u0634\u0627\u0631\u0639 \u0627\u0644\u0631\u0626\u064a\u0633\u064a\u060c \u062f\u0628\u064a",
+    "send.placeholder.pickupCity": "\u062f\u0628\u064a",
+    "send.placeholder.senderPoBox": "\u0635.\u0628 12345",
+    "send.placeholder.receiverName": "\u0633\u0627\u0631\u0629 \u062e\u0627\u0644\u062f",
+    "send.placeholder.receiverPhone": "+44 123 456 7890",
+    "send.placeholder.deliveryAddress": "456 \u0623\u0643\u0633\u0641\u0648\u0631\u062f \u0633\u062a\u0631\u064a\u062a\u060c \u0644\u0646\u062f\u0646",
+    "send.placeholder.deliveryCity": "\u0644\u0646\u062f\u0646",
+    "send.placeholder.receiverPoBox": "\u0635.\u0628 67890",
+    "send.placeholder.weight": "0.5",
+    "send.placeholder.dimensions": "\u0637 x \u0639 x \u0627 (\u0633\u0645)",
+    "send.placeholder.notes": "\u0642\u0627\u0628\u0644 \u0644\u0644\u0643\u0633\u0631\u060c \u064a\u0631\u062c\u0649 \u0627\u0644\u062a\u0639\u0627\u0645\u0644 \u0628\u0639\u0646\u0627\u064a\u0629"
+  });
+
   const literalFallbackAr = {
     "Home": "الرئيسية",
     "Track": "تتبع",
@@ -773,6 +843,22 @@
     document.head.appendChild(link);
   };
 
+  const ensureNoTranslateMeta = () => {
+    document.documentElement.classList.add("notranslate");
+    document.documentElement.setAttribute("translate", "no");
+    if (document.body) {
+      document.body.classList.add("notranslate");
+      document.body.setAttribute("translate", "no");
+    }
+
+    if (!document.querySelector('meta[name="google"][content="notranslate"]')) {
+      const meta = document.createElement("meta");
+      meta.name = "google";
+      meta.content = "notranslate";
+      document.head.appendChild(meta);
+    }
+  };
+
   const injectRuntimeStyles = () => {
     if (document.getElementById(RUNTIME_STYLE_ID)) return;
     const style = document.createElement("style");
@@ -780,9 +866,9 @@
     style.textContent = `
       .lang-switcher {
         position: fixed !important;
-        right: 16px !important;
-        top: var(--parcellink-lang-top, 16px) !important;
-        bottom: auto !important;
+        right: 20px !important;
+        top: auto !important;
+        bottom: 20px !important;
         z-index: 4000;
         display: inline-flex;
         align-items: center;
@@ -817,21 +903,36 @@
       }
 
       html[dir="rtl"] .lang-switcher {
-        right: 16px !important;
-        left: auto !important;
+        right: auto !important;
+        left: 20px !important;
+        bottom: 20px !important;
+      }
+
+      .send-hero,
+      .hero,
+      .hero-section {
+        overflow: visible;
+      }
+
+      body {
+        padding-bottom: 88px;
+      }
+
+      .notranslate {
+        translate: no;
       }
 
       @media (max-width: 768px) {
         .lang-switcher {
-          right: 10px !important;
-          top: var(--parcellink-lang-top-mobile, 10px) !important;
+          right: 12px !important;
+          bottom: 12px !important;
           gap: 6px;
           padding: 7px 9px;
         }
 
         html[dir="rtl"] .lang-switcher {
-          right: 10px !important;
-          left: auto !important;
+          right: auto !important;
+          left: 12px !important;
         }
 
         .lang-switch-btn {
@@ -1030,7 +1131,9 @@
     document.documentElement.lang = currentLanguage;
     document.documentElement.dir = currentLanguage === "ar" ? "rtl" : "ltr";
     document.body.classList.toggle("lang-ar", currentLanguage === "ar");
-    document.title = t("meta.title", document.title);
+    if (!document.querySelector("title[data-i18n]")) {
+      document.title = t("meta.title", document.title);
+    }
 
     document.querySelectorAll("[data-i18n]").forEach((node) => {
       const key = node.getAttribute("data-i18n");
@@ -1109,6 +1212,7 @@
 
   document.addEventListener("DOMContentLoaded", () => {
     ensureArabicFont();
+    ensureNoTranslateMeta();
     injectRuntimeStyles();
     installDialogTranslationWrappers();
     createLanguageSwitcher();
