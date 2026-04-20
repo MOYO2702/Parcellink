@@ -280,8 +280,7 @@
     if (!user.fullName || !authToken) {
         window.location.href = "/login";
     } else {
-        document.getElementById("welcomeTitle").innerText =
-            `${t("dashboard.welcome", "Welcome")}, ${user.fullName}`;
+        window.location.replace("/clientzone");
     }
 
     ////////////////////////////////////////////////////////////

@@ -120,7 +120,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 setLoginMessage(message, `${data.message || t("auth.login.success", "Login successful.")} ${t("client.loginSuccess", "Loading your dashboard...")}`, "success");
                 localStorage.removeItem("parcelLastRegisteredEmail");
                 window.setTimeout(() => {
-                    window.location.href = "/dashboard";
+                    window.location.href = "/clientzone";
                 }, 700);
             } else {
                 setLoginMessage(message, data.message || t("auth.login.error", "Something went wrong. Try again."), "error");
