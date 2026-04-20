@@ -450,6 +450,19 @@ export async function getInvestorInterestByInquiryId(inquiryId) {
   return res.rows[0];
 }
 
+export async function updateUserPassword(email, passwordHash) {
+  const normalizedEmail = (email || '').trim().toLowerCase();
+  const res = await query(
+    `UPDATE users
+     SET password_hash = $1,
+         updated_at = CURRENT_TIMESTAMP
+     WHERE LOWER(email) = LOWER($2)
+     RETURNING *`,
+    [passwordHash, normalizedEmail]
+  );
+  return res.rows[0];
+}
+
 export async function getLatestInvestorInterestByEmail(email) {
   await ensureInvestorInterestTable();
   const normalizedEmail = (email || '').trim().toLowerCase();

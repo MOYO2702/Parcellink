@@ -72,6 +72,7 @@ app.use("/api", limiter);
 
 const AUTH_TOKEN_SECRET = (process.env.AUTH_TOKEN_SECRET || process.env.ADMIN_PASSWORD || "").trim();
 const AUTH_TOKEN_TTL_HOURS = Number(process.env.AUTH_TOKEN_TTL_HOURS || 24);
+const PASSWORD_RESET_TTL_MINUTES = Number(process.env.PASSWORD_RESET_TTL_MINUTES || 60);
 
 function toBase64Url(input) {
   return Buffer.from(input).toString("base64url");
@@ -81,7 +82,10 @@ function signAuthToken(payload, type) {
   if (!AUTH_TOKEN_SECRET) return "";
   const header = { alg: "HS256", typ: "JWT" };
   const now = Math.floor(Date.now() / 1000);
-  const exp = now + Math.max(1, AUTH_TOKEN_TTL_HOURS) * 3600;
+  const ttlSeconds = type === "user-reset"
+    ? Math.max(5, PASSWORD_RESET_TTL_MINUTES) * 60
+    : Math.max(1, AUTH_TOKEN_TTL_HOURS) * 3600;
+  const exp = now + ttlSeconds;
   const tokenPayload = { ...payload, typ: type, iat: now, exp };
   const encodedHeader = toBase64Url(JSON.stringify(header));
   const encodedPayload = toBase64Url(JSON.stringify(tokenPayload));
@@ -371,6 +375,34 @@ async function sendWelcomeEmail(to, fullName, suiteNumber) {
       return false;
     }
   }
+
+async function sendPasswordResetEmail(to, fullName, resetUrl) {
+  try {
+    if (!process.env.EMAIL_HOST || !process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
+      console.warn("⚠️ SMTP not fully configured. Skipping password reset email.");
+      return false;
+    }
+
+    await transporter.sendMail({
+      from: `"${emailFromName}" <${emailFromAddress}>`,
+      replyTo: emailReplyTo,
+      to,
+      subject: "ParcelLink password reset",
+      html: `
+        <h2>Hello ${fullName || "ParcelLink customer"},</h2>
+        <p>We received a request to reset your ParcelLink password.</p>
+        <p><a href="${resetUrl}">Reset your password</a></p>
+        <p>This link expires in ${Math.max(5, PASSWORD_RESET_TTL_MINUTES)} minutes.</p>
+        <p>If you did not request this, you can safely ignore this email.</p>
+      `
+    });
+    console.log("✅ Password reset email sent to", to);
+    return true;
+  } catch (err) {
+    console.error("❌ Password reset email error:", err.message);
+    return false;
+  }
+}
 
 async function sendStaffAccessEmail(to, fullName, staffId, accountType) {
   try {
@@ -686,6 +718,78 @@ app.post("/api/login", async (req, res) => {
     res.status(500).json({ success: false, message: "Server error." });
   }
 });
+
+app.post(
+  "/api/forgot-password",
+  [
+    body("email").trim().isEmail().withMessage("A valid email is required.")
+  ],
+  async (req, res) => {
+    try {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return res.status(400).json({ success: false, message: "Please enter a valid email address." });
+      }
+
+      const normalizedEmail = String(req.body.email || "").trim().toLowerCase();
+      const user = await db.getUserByEmail(normalizedEmail);
+
+      if (user) {
+        const token = signAuthToken({ email: user.email }, "user-reset");
+        const resetUrl = `${req.protocol}://${req.get("host")}/reset-password?token=${encodeURIComponent(token)}`;
+        await sendPasswordResetEmail(user.email, user.full_name, resetUrl);
+      }
+
+      return res.json({
+        success: true,
+        message: "If an account exists for that email, a password reset link has been sent."
+      });
+    } catch (err) {
+      console.error("Forgot password error:", err);
+      return res.status(500).json({ success: false, message: "Unable to start password reset right now." });
+    }
+  }
+);
+
+app.post(
+  "/api/reset-password",
+  [
+    body("token").trim().notEmpty().withMessage("Reset token is required."),
+    body("password").isLength({ min: 8 }).withMessage("Password must be at least 8 characters.")
+  ],
+  async (req, res) => {
+    try {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return res.status(400).json({ success: false, message: "Please provide a valid reset token and password." });
+      }
+
+      const token = String(req.body.token || "").trim();
+      const password = String(req.body.password || "");
+      const payload = verifyAuthToken(token, "user-reset");
+
+      if (!payload?.email) {
+        return res.status(400).json({ success: false, message: "This reset link is invalid or has expired." });
+      }
+
+      const user = await db.getUserByEmail(payload.email);
+      if (!user) {
+        return res.status(400).json({ success: false, message: "This reset link is invalid or has expired." });
+      }
+
+      const passwordHash = await bcrypt.hash(password, 10);
+      const updatedUser = await db.updateUserPassword(user.email, passwordHash);
+      if (!updatedUser) {
+        return res.status(500).json({ success: false, message: "Unable to reset password right now." });
+      }
+
+      return res.json({ success: true, message: "Password reset successful. You can now log in." });
+    } catch (err) {
+      console.error("Reset password error:", err);
+      return res.status(500).json({ success: false, message: "Unable to reset password right now." });
+    }
+  }
+);
 
 // PARCEL ROUTES
 app.post("/api/parcel", (req, res) => {
@@ -1464,6 +1568,14 @@ app.get("/login", (req, res) => {
 
 app.get("/register", (req, res) => {
   return sendHtmlWithI18n(res, path.join(ROOT, "auth", "register.html"));
+});
+
+app.get("/forgot-password", (req, res) => {
+  return sendHtmlWithI18n(res, path.join(ROOT, "auth", "forgot-password.html"));
+});
+
+app.get("/reset-password", (req, res) => {
+  return sendHtmlWithI18n(res, path.join(ROOT, "auth", "reset-password.html"));
 });
 
 app.get("/dashboard", (req, res) => {
