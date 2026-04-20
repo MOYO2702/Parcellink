@@ -348,7 +348,7 @@ async function sendWelcomeEmail(to, fullName, suiteNumber) {
   try {
     if (!process.env.EMAIL_HOST || !process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
       console.warn("⚠️ SMTP not fully configured. Skipping welcome email.");
-      return;
+      return false;
     }
 
     await transporter.sendMail({
@@ -357,17 +357,20 @@ async function sendWelcomeEmail(to, fullName, suiteNumber) {
       to,
       subject: "Welcome to ParcelLink",
       html: `
-        <h2>Welcome to ParcelLink, ${fullName}!</h2>
-        <p>Your account has been created successfully.</p>
-        <p><strong>Your Suite Number:</strong> ${suiteNumber}</p>
-        <p>You can log in using either your email or your suite number.</p>
-      `
-    });
-    console.log("✅ Welcome email sent to", to);
-  } catch (err) {
-    console.error("❌ Error sending email:", err.message);
+          <h2>Welcome to ParcelLink, ${fullName}!</h2>
+          <p>Your account has been created successfully.</p>
+          <p><strong>Your Suite Number:</strong> ${suiteNumber}</p>
+          <p>You can log in using either your email or your suite number.</p>
+          <p><a href="https://www.parcellinkuae.com/login">Log in to your ParcelLink account</a></p>
+        `
+      });
+      console.log("✅ Welcome email sent to", to);
+      return true;
+    } catch (err) {
+      console.error("❌ Error sending email:", err.message);
+      return false;
+    }
   }
-}
 
 async function sendStaffAccessEmail(to, fullName, staffId, accountType) {
   try {
@@ -622,13 +625,17 @@ app.post(
 
       const newUser = await db.createUser(normalizedName, normalizedEmail, suiteNumber, passwordHash);
 
-      sendWelcomeEmail(normalizedEmail, normalizedName, suiteNumber).catch(() => {});
+      const welcomeEmailSent = await sendWelcomeEmail(normalizedEmail, normalizedName, suiteNumber);
 
       console.log("New user created:", newUser);
 
-      return res.json({ success: true,
-      message: "Registration successful.",
-      suiteNumber
+      return res.json({
+      success: true,
+      message: welcomeEmailSent
+        ? "Registration successful. A welcome email has been sent."
+        : "Registration successful.",
+      suiteNumber,
+      emailSent: welcomeEmailSent
     });
   } catch (err) {
     console.error("Register error:", err);

@@ -374,6 +374,12 @@ async function loginClient(){
       msg.textContent = t("client.loginSuccess", "Login successful! Loading your dashboard...");
       
       // Store user data
+      localStorage.setItem('parcelUser', JSON.stringify(currentUser));
+      if (authToken) {
+        localStorage.setItem('parcelAuthToken', authToken);
+      } else {
+        localStorage.removeItem('parcelAuthToken');
+      }
       sessionStorage.setItem('user', JSON.stringify(currentUser));
       if (authToken) {
         sessionStorage.setItem('userToken', authToken);
@@ -396,7 +402,7 @@ async function loginClient(){
 
 async function loadUserDashboard() {
   if (!currentUser) {
-    const stored = sessionStorage.getItem('user');
+    const stored = localStorage.getItem('parcelUser') || sessionStorage.getItem('user');
     if (stored) {
       currentUser = JSON.parse(stored);
       authToken = sessionStorage.getItem('userToken') || localStorage.getItem('parcelAuthToken') || null;
@@ -474,6 +480,8 @@ async function viewReceipts() {
 }
 
 function logout() {
+  localStorage.removeItem('parcelUser');
+  localStorage.removeItem('parcelAuthToken');
   sessionStorage.removeItem('user');
   sessionStorage.removeItem('userToken');
   currentUser = null;
@@ -483,7 +491,7 @@ function logout() {
 
 // Check if user is already logged in
 window.addEventListener('DOMContentLoaded', () => {
-  const stored = sessionStorage.getItem('user');
+  const stored = localStorage.getItem('parcelUser') || sessionStorage.getItem('user');
   if (stored) {
     currentUser = JSON.parse(stored);
     authToken = sessionStorage.getItem('userToken') || localStorage.getItem('parcelAuthToken') || null;

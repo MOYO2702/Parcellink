@@ -153,11 +153,12 @@ Fill in the deployment form:
 | **Environment** | `Node` |
 | **Build Command** | `npm install` |
 | **Start Command** | `npm start` |
-| **Instance Type** | `Free` |
+| **Instance Type** | `Starter` |
 
 **Scroll down** to Advanced Settings:
 - **Auto-Deploy**: Toggle **ON** (auto-redeploy on GitHub push)
 - **Health Check Path**: `/api/status`
+- Use an always-on paid instance so the homepage does not pause on the first visit after inactivity
 
 ### 3.4 Add Environment Variables
 
@@ -298,10 +299,10 @@ app.get('*', (req, res) => res.sendFile(path.join(ROOT, 'index.html')));
 - Check that routes are defined in `backend/server.mjs`
 - Test locally first: `npm start` → `curl http://localhost:3000/api/status`
 
-### Free Render instance sleeping (timeout)
-- Free tier instances sleep after 15 min of inactivity (normal behavior)
-- Next request wakes them (takes ~30 sec cold start)
-- To keep always warm: upgrade to Starter ($7/mo)
+### First visit is slow after inactivity
+- Confirm the web service is on Render `Starter` or another always-on paid plan
+- Free web services can sleep after inactivity, which delays the first request
+- With an always-on plan, the homepage and other site routes should load immediately
 
 ---
 

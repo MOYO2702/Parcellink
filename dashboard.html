@@ -58,14 +58,25 @@
         }
 
         .logout-btn {
-            background:#1a237e;
+            background:linear-gradient(135deg,#0f3686,#1d6cff);
             color:white;
-            padding:8px 20px;
-            border-radius:6px;
+            padding:10px 16px;
+            border-radius:999px;
             cursor:pointer;
             border:none;
             font-size:14px;
-            margin-left:20px;
+            font-weight:600;
+            margin-left:12px;
+            display:inline-flex;
+            align-items:center;
+            gap:8px;
+            box-shadow:0 10px 22px rgba(18,66,166,0.2);
+            transition:transform .2s ease, box-shadow .2s ease, opacity .2s ease;
+        }
+
+        .logout-btn:hover {
+            transform:translateY(-1px);
+            box-shadow:0 14px 28px rgba(18,66,166,0.24);
         }
 
         .main {
@@ -153,7 +164,8 @@
             }
             .logout-btn{
                 font-size:13px;
-                padding:6px 12px;
+                padding:8px 12px;
+                margin-left:0;
             }
             .main{
                 padding:30px 20px;
@@ -210,7 +222,7 @@
                 <li><a href="/career" data-i18n="nav.careers">Careers</a></li>
                 <li><a href="/help" data-i18n="nav.help">Help</a></li>
                 <li><a href="/clientzone" data-i18n="nav.clientzone">Client Zone</a></li>
-                <li><button class="logout-btn" onclick="logout()" data-i18n="dashboard.logout">Logout</button></li>
+                <li><button class="logout-btn" onclick="logout()"><i class="fa fa-sign-out-alt" aria-hidden="true"></i><span data-i18n="dashboard.logout">Logout</span></button></li>
             </ul>
         </nav>
     </header>
@@ -254,9 +266,18 @@
     // LOAD USER SESSION FROM LOCAL STORAGE
     ////////////////////////////////////////////////////////////
 
-    const user = JSON.parse(localStorage.getItem("parcelUser") || "{}");
+    function readStoredUser() {
+        try {
+            return JSON.parse(localStorage.getItem("parcelUser") || sessionStorage.getItem("user") || "{}");
+        } catch {
+            return {};
+        }
+    }
 
-    if (!user.fullName) {
+    const user = readStoredUser();
+    const authToken = localStorage.getItem("parcelAuthToken") || sessionStorage.getItem("userToken") || "";
+
+    if (!user.fullName || !authToken) {
         window.location.href = "/login";
     } else {
         document.getElementById("welcomeTitle").innerText =
@@ -269,6 +290,10 @@
 
     function logout() {
         localStorage.removeItem("parcelUser");
+        localStorage.removeItem("parcelAuthToken");
+        localStorage.removeItem("parcelLastRegisteredEmail");
+        sessionStorage.removeItem("user");
+        sessionStorage.removeItem("userToken");
         window.location.href = "/login";
     }
 </script>

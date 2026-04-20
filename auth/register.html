@@ -15,6 +15,7 @@
 <body class="auth-page">
 
     <div class="auth-wrapper">
+        <span class="auth-kicker">ParcelLink Access</span>
         <img src="/images/logo.png" alt="ParcelLink Logo" class="auth-logo">
 
         <h2 data-i18n="auth.register.heading">Create Account</h2>
@@ -32,12 +33,97 @@
 
             <button type="submit" data-i18n="auth.register.button">Register</button>
         </form>
+        <p id="registerMessage" class="auth-status" role="status" aria-live="polite"></p>
 
         <p><span data-i18n="auth.register.hasAccount">Already have an account?</span> <a href="/login" data-i18n="auth.register.loginLink">Login</a></p>
     </div>
 
     <!-- ================= JS ================= -->
 <script src="/js/i18n.js"></script>
+<script>
+const registerT = (key, fallback = "") => window.ParcelLinkI18n?.t?.(key, fallback) || fallback;
+
+function togglePwd(id, icon) {
+    const field = document.getElementById(id);
+    if (!field) return;
+    field.type = field.type === "password" ? "text" : "password";
+    icon.classList.toggle("fa-eye-slash");
+}
+
+function getRegisterErrorMessage(payload) {
+    if (payload?.message) return payload.message;
+    if (Array.isArray(payload?.errors) && payload.errors.length) {
+        return payload.errors.map((entry) => entry.msg).filter(Boolean).join(" ");
+    }
+    return registerT("auth.register.error", "We could not create your account right now.");
+}
+
+function setRegisterMessage(messageNode, text, type) {
+    messageNode.className = `auth-status ${type || ""}`.trim();
+    messageNode.textContent = text;
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+    const form = document.getElementById("registerForm");
+    const message = document.getElementById("registerMessage");
+    const submitButton = form?.querySelector('button[type="submit"]');
+
+    if (!form || !message || !submitButton) return;
+
+    form.addEventListener("submit", async (event) => {
+        event.preventDefault();
+
+        const fullName = document.getElementById("fullName")?.value.trim() || "";
+        const email = document.getElementById("email")?.value.trim() || "";
+        const password = document.getElementById("password")?.value || "";
+
+        setRegisterMessage(message, registerT("auth.register.submitting", "Creating your account..."), "info");
+        submitButton.disabled = true;
+        submitButton.setAttribute("aria-busy", "true");
+
+        try {
+            const response = await fetch("/api/register", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ fullName, email, password })
+            });
+
+            const data = await response.json();
+
+            if (!response.ok || !data.success) {
+                setRegisterMessage(message, getRegisterErrorMessage(data), "error");
+                return;
+            }
+
+            localStorage.setItem("parcelLastRegisteredEmail", email.toLowerCase());
+
+            const suiteMessage = data.suiteNumber
+                ? ` ${registerT("auth.register.suiteNumber", "Suite Number")}: ${data.suiteNumber}.`
+                : "";
+            const emailMessage = data.emailSent
+                ? ` ${registerT("auth.register.emailSent", "A welcome email has been sent to your inbox.")}`
+                : ` ${registerT("auth.register.emailPending", "If email is not configured yet, you can still log in with your email and suite number.")}`;
+
+            setRegisterMessage(
+                message,
+                `${data.message || registerT("auth.register.success", "Registration successful.")}${suiteMessage}${emailMessage} ${registerT("auth.register.redirecting", "Redirecting to login...")}`.trim(),
+                "success"
+            );
+            form.reset();
+
+            window.setTimeout(() => {
+                window.location.href = "/login";
+            }, 1800);
+        } catch (error) {
+            console.error("Register error:", error);
+            setRegisterMessage(message, registerT("auth.register.networkError", "Unable to reach the server. Please try again."), "error");
+        } finally {
+            submitButton.disabled = false;
+            submitButton.removeAttribute("aria-busy");
+        }
+    });
+});
+</script>
 <script src="/js/site.js"></script>
 </body>
 </html>

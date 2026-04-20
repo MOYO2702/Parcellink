@@ -13,6 +13,7 @@
 <body class="auth-page">
 
     <div class="auth-wrapper">
+        <span class="auth-kicker">ParcelLink Access</span>
         <img src="/images/logo.png" alt="ParcelLink Logo" class="auth-logo">
 
         <h2 data-i18n="auth.login.heading">Welcome</h2>
@@ -35,6 +36,7 @@
 
             <button type="submit" data-i18n="auth.login.button">Log In</button>
         </form>
+        <p id="loginMessage" class="auth-status" role="status" aria-live="polite"></p>
 
         <p><span data-i18n="auth.login.noAccount">Don't have an account?</span> <a href="/register" data-i18n="auth.login.registerLink">Register</a></p>
     </div>
@@ -42,9 +44,37 @@
 <script>
 const t = (key, fallback = "") => window.ParcelLinkI18n?.t?.(key, fallback) || fallback;
 
+function persistUserSession(user, token) {
+    localStorage.setItem("parcelUser", JSON.stringify(user));
+    if (token) {
+        localStorage.setItem("parcelAuthToken", token);
+    } else {
+        localStorage.removeItem("parcelAuthToken");
+    }
+    sessionStorage.setItem("user", JSON.stringify(user));
+    if (token) {
+        sessionStorage.setItem("userToken", token);
+    } else {
+        sessionStorage.removeItem("userToken");
+    }
+}
+
+function clearUserSession() {
+    localStorage.removeItem("parcelUser");
+    localStorage.removeItem("parcelAuthToken");
+    sessionStorage.removeItem("user");
+    sessionStorage.removeItem("userToken");
+}
+
+function setLoginMessage(messageNode, text, type) {
+    messageNode.className = `auth-status ${type || ""}`.trim();
+    messageNode.textContent = text;
+}
+
 // ============= Fix missing togglePwd function ============
 function togglePwd(id, icon) {
     const field = document.getElementById(id);
+    if (!field) return;
     field.type = field.type === "password" ? "text" : "password";
     icon.classList.toggle("fa-eye-slash");
 }
@@ -52,10 +82,17 @@ function togglePwd(id, icon) {
 // ============= LOGIN SCRIPT =================
 document.addEventListener("DOMContentLoaded", () => {
     const form = document.getElementById("loginForm");
+    const message = document.getElementById("loginMessage");
+    const submitButton = form?.querySelector('button[type="submit"]');
 
-    if (!form) {
+    if (!form || !message || !submitButton) {
         console.error("loginForm not found!");
         return;
+    }
+
+    const lastRegisteredEmail = localStorage.getItem("parcelLastRegisteredEmail");
+    if (lastRegisteredEmail && !document.getElementById("identifier").value.trim()) {
+        document.getElementById("identifier").value = lastRegisteredEmail;
     }
 
     form.addEventListener("submit", async (e) => {
@@ -63,6 +100,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const identifier = document.getElementById("identifier").value.trim();
         const password = document.getElementById("password").value.trim();
+        clearUserSession();
+        setLoginMessage(message, t("auth.login.loading", "Signing you in..."), "info");
+        submitButton.disabled = true;
+        submitButton.setAttribute("aria-busy", "true");
 
         try {
             const res = await fetch("/api/login", {
@@ -74,20 +115,23 @@ document.addEventListener("DOMContentLoaded", () => {
             const data = await res.json();
             console.log("Login Response:", data);
 
-            if (data.success) {
-                alert(`${t("auth.login.welcome", "Welcome")} ${data.user.fullName}`);
-                localStorage.setItem("parcelUser", JSON.stringify(data.user));
-                if (data.token) {
-                    localStorage.setItem("parcelAuthToken", data.token);
-                }
-                window.location.href = "/dashboard";  // redirect to homepage
+            if (res.ok && data.success) {
+                persistUserSession(data.user, data.token);
+                setLoginMessage(message, `${data.message || t("auth.login.success", "Login successful.")} ${t("client.loginSuccess", "Loading your dashboard...")}`, "success");
+                localStorage.removeItem("parcelLastRegisteredEmail");
+                window.setTimeout(() => {
+                    window.location.href = "/dashboard";
+                }, 700);
             } else {
-                alert(" " + data.message);
+                setLoginMessage(message, data.message || t("auth.login.error", "Something went wrong. Try again."), "error");
             }
 
         } catch (error) {
             console.error("Login error:", error);
-            alert(t("auth.login.error", "Something went wrong. Try again."));
+            setLoginMessage(message, t("auth.login.networkError", "Unable to reach the server. Please try again."), "error");
+        } finally {
+            submitButton.disabled = false;
+            submitButton.removeAttribute("aria-busy");
         }
     });
 });

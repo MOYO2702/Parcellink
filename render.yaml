@@ -8,10 +8,11 @@ services:
   - type: web
     name: parcellink-api
     env: node
-    plan: free
+    plan: starter
     branch: main
     buildCommand: npm install
-    startCommand: npm run db:init && npm start
+    preDeployCommand: npm run db:init
+    startCommand: npm start
     healthCheckPath: /api/status
     envVars:
       - key: NODE_ENV

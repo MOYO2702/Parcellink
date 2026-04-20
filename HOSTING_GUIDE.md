@@ -11,7 +11,7 @@
 ## 🚀 RENDER HOSTING (Recommended for Full Stack)
 
 ### Why Render?
-- Free tier available ($0/month)
+- Always-on Starter web service removes first-visit cold starts
 - Easy Node.js deployment
 - Automatic deployments from GitHub
 - Built-in PostgreSQL (optional)
@@ -74,11 +74,12 @@ Fill in the deployment form:
 | **Environment** | `Node` |
 | **Build Command** | `npm install` |
 | **Start Command** | `npm start` |
-| **Instance Type** | `Free` |
+| **Instance Type** | `Starter` |
 
 **Advanced Settings:**
 - **Auto-Deploy**: Toggle ON (auto-deploy on GitHub push)
 - **Health Check Path**: `/api/status`
+- Keep the web service on an always-on paid plan so the homepage and other HTML routes load immediately on first visit
 
 #### 2.4 Add Environment Variables
 Go to **Environment** tab and add:
@@ -165,7 +166,7 @@ fetch(`${API_BASE_URL}/api/login`, {...})
 
 ## 🔗 FULL STACK ON RENDER (All-in-One)
 
-**Best Setup**: Backend on Render + Frontend on Render (same service)
+**Best Setup**: Backend on Render + Frontend on Render (same always-on service)
 
 ### Step 1: Modify Server to Serve Frontend
 
@@ -335,7 +336,7 @@ npm install  # Ensure all dependencies installed
 
 | Platform | Frontend | Backend | Cost | Best For |
 |----------|----------|---------|------|----------|
-| **Render** | ✅ Single URL | ✅ Node.js | Free | Full Stack |
+| **Render** | ✅ Single URL | ✅ Node.js | Starter | Full Stack |
 | **Hostinger** | ✅ Static | ❌ No Node | $2-5/mo | Frontend only |
 | **Combined** | Hostinger | Render | $0-5/mo | Hybrid |
 
