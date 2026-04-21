@@ -10,7 +10,8 @@
       "smtp:check": "node backend/check_smtp.mjs",
       "smoke": "node backend/smoke_test.mjs",
       "db:init": "node backend/init_db.mjs",
-      "db:migrate": "node backend/migrate_to_pg.js"
+      "db:migrate": "node backend/migrate_to_pg.js",
+      "db:clear": "node backend/clear_all_data.mjs"
    },
    "keywords": [],
    "author": "",

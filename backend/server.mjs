@@ -226,6 +226,9 @@ async function sendHtmlWithI18n(res, filePath) {
         html += `\n${I18N_SCRIPT_TAG}\n`;
       }
     }
+    res.set("Cache-Control", "no-store, no-cache, must-revalidate, proxy-revalidate");
+    res.set("Pragma", "no-cache");
+    res.set("Expires", "0");
     return res.type("html").send(html);
   } catch (error) {
     console.error("Failed to render HTML page:", filePath, error);
@@ -1637,6 +1640,74 @@ app.use("/js", express.static(path.join(ROOT, "js")));
 app.use("/images", express.static(path.join(ROOT, "images")));
 app.use("/fonts", express.static(path.join(ROOT, "fonts")));
 app.use(express.static(ROOT));
+
+// ================= DATABASE RESET (ADMIN ONLY) =================
+app.post("/api/admin/db/reset", async (req, res) => {
+  try {
+    // Security: require ADMIN_PASSWORD in header or body
+    const adminPassword = (process.env.ADMIN_PASSWORD || "").trim();
+    if (!adminPassword) {
+      return res.status(503).json({
+        success: false,
+        message: "Database reset is not configured on this server."
+      });
+    }
+
+    const providedPassword = (
+      req.headers["x-admin-password"] ||
+      req.body.adminPassword ||
+      ""
+    ).toString().trim();
+
+    if (providedPassword !== adminPassword) {
+      console.warn("[Admin Reset] Unauthorized reset attempt - invalid credentials");
+      return res.status(403).json({
+        success: false,
+        message: "Unauthorized. Invalid admin password."
+      });
+    }
+
+    console.log("[Admin Reset] Starting database reset...");
+
+    // Tables to clear in dependency order
+    const tables = [
+      "password_reset_tokens",
+      "parcel_status_history",
+      "receipts",
+      "parcels",
+      "career_applications",
+      "investor_interest_submissions",
+      "partners",
+      "staff_accounts",
+      "users"
+    ];
+
+    for (const table of tables) {
+      try {
+        await db.query(`TRUNCATE TABLE ${table} CASCADE;`);
+        console.log(`[Admin Reset] ✓ Cleared ${table}`);
+      } catch (err) {
+        // Table might not exist, continue
+        console.log(`[Admin Reset] ⊘ ${table} not found (skipped)`);
+      }
+    }
+
+    console.log("[Admin Reset] ✓ All data cleared successfully!");
+    return res.json({
+      success: true,
+      message: "Database reset complete. All user data has been cleared. Schema remains intact.",
+      timestamp: new Date().toISOString(),
+      tablesCleared: tables.length
+    });
+  } catch (err) {
+    console.error("[Admin Reset] ✗ Error:", err.message);
+    return res.status(500).json({
+      success: false,
+      message: "Database reset failed.",
+      error: err.message
+    });
+  }
+});
 
 // ================= FALLBACK =================
 app.use(async (req, res, next) => {

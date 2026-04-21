@@ -122,6 +122,17 @@
             margin-top:5px;
         }
 
+        .debug-banner {
+            padding: 10px 16px;
+            margin-bottom: 20px;
+            border-radius: 10px;
+            background: rgba(18, 66, 166, 0.08);
+            color: #0f3686;
+            font-size: 14px;
+            border: 1px solid rgba(18, 66, 166, 0.12);
+            max-width: 780px;
+        }
+
         /* RESPONSIVE */
         @media (max-width: 992px) {
             header{
@@ -230,31 +241,32 @@
     <!-- MAIN CONTENT -->
     <div class="main">
         <h1 id="welcomeTitle" data-i18n="dashboard.welcomeTitle">Welcome to your Dashboard</h1>
+        <div class="debug-banner">Dashboard build: v1.1 - Zero defaults, real data fetch. If you see old numbers, redeploy on Render.</div>
 
         <div class="card-grid">
 
             <div class="card">
                 <i class="fa fa-box"></i>
                 <div class="card-title" data-i18n="dashboard.parcelsSent">Parcels Sent</div>
-                <div class="card-value">12</div>
+                <div class="card-value" id="parcelsSentValue">0</div>
             </div>
 
             <div class="card">
                 <i class="fa fa-truck"></i>
                 <div class="card-title" data-i18n="dashboard.inTransit">In Transit</div>
-                <div class="card-value">3</div>
+                <div class="card-value" id="inTransitValue">0</div>
             </div>
 
             <div class="card">
                 <i class="fa fa-check-circle"></i>
                 <div class="card-title" data-i18n="dashboard.delivered">Delivered</div>
-                <div class="card-value">8</div>
+                <div class="card-value" id="deliveredValue">0</div>
             </div>
 
             <div class="card">
                 <i class="fa fa-wallet"></i>
                 <div class="card-title" data-i18n="dashboard.balance">Account Balance</div>
-                <div class="card-value">$250</div>
+                <div class="card-value" id="accountBalanceValue">AED 0</div>
             </div>
 
         </div>
@@ -277,10 +289,63 @@
     const user = readStoredUser();
     const authToken = localStorage.getItem("parcelAuthToken") || sessionStorage.getItem("userToken") || "";
 
+    const parcelsSentValue = document.getElementById("parcelsSentValue");
+    const inTransitValue = document.getElementById("inTransitValue");
+    const deliveredValue = document.getElementById("deliveredValue");
+    const accountBalanceValue = document.getElementById("accountBalanceValue");
+    const welcomeTitleEl = document.getElementById("welcomeTitle");
+
+    async function loadDashboardMetrics() {
+        if (!user?.email) {
+            return;
+        }
+
+        try {
+            const parcelResponse = await fetch(`/api/parcels/user/${encodeURIComponent(user.email)}`, {
+                headers: {
+                    Authorization: authToken ? `Bearer ${authToken}` : ""
+                }
+            });
+            const parcelData = await parcelResponse.json();
+
+            const parcels = parcelData.success ? parcelData.parcels || [] : [];
+            const parcelsSent = parcels.length;
+            const deliveredCount = parcels.filter((p) => {
+                const lastStatus = p.statusHistory?.[p.statusHistory.length - 1];
+                return lastStatus?.status?.toLowerCase().includes("delivered");
+            }).length;
+            const inTransitCount = parcelsSent - deliveredCount;
+
+            parcelsSentValue.textContent = parcelsSent;
+            inTransitValue.textContent = inTransitCount >= 0 ? inTransitCount : 0;
+            deliveredValue.textContent = deliveredCount;
+
+            const receiptResponse = await fetch(`/api/receipts/${encodeURIComponent(user.email)}`, {
+                headers: {
+                    Authorization: authToken ? `Bearer ${authToken}` : ""
+                }
+            });
+            const receiptData = await receiptResponse.json();
+            const balance = receiptData.success ? (receiptData.receipts || []).reduce((sum, receipt) => {
+                return sum + Number(receipt.amount || 0);
+            }, 0) : 0;
+            accountBalanceValue.textContent = `AED ${balance.toFixed(2)}`;
+        } catch (err) {
+            console.error("Error loading dashboard metrics:", err);
+            parcelsSentValue.textContent = "0";
+            inTransitValue.textContent = "0";
+            deliveredValue.textContent = "0";
+            accountBalanceValue.textContent = "AED 0";
+        }
+    }
+
     if (!user.fullName || !authToken) {
         window.location.href = "/login";
     } else {
-        window.location.replace("/clientzone");
+        console.log("Dashboard updated code loaded.");
+        console.log("Dashboard user:", user.email, "auth token present:", Boolean(authToken));
+        welcomeTitleEl.textContent = `${t("dashboard.welcomeUser", "Welcome back")}, ${user.fullName}!`;
+        loadDashboardMetrics();
     }
 
     ////////////////////////////////////////////////////////////

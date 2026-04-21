@@ -1,0 +1,202 @@
+{
+  "summary": {
+    "pageCount": 17,
+    "totalMissingKeys": 0,
+    "totalUnmappedTexts": 0
+  },
+  "pages": [
+    {
+      "file": "admin.html",
+      "route": "/admin",
+      "dataI18nKeyCount": 0,
+      "missingKeyCount": 0,
+      "missingKeys": [],
+      "unmappedTextCount": 0,
+      "unmappedSample": [],
+      "nonTranslatableSample": [
+        "ADM005",
+        "ADM005 or INV003",
+        "name@company.com"
+      ]
+    },
+    {
+      "file": "auth/login.html",
+      "route": "/login",
+      "dataI18nKeyCount": 0,
+      "missingKeyCount": 0,
+      "missingKeys": [],
+      "unmappedTextCount": 0,
+      "unmappedSample": [],
+      "nonTranslatableSample": []
+    },
+    {
+      "file": "auth/register.html",
+      "route": "/register",
+      "dataI18nKeyCount": 0,
+      "missingKeyCount": 0,
+      "missingKeys": [],
+      "unmappedTextCount": 0,
+      "unmappedSample": [],
+      "nonTranslatableSample": []
+    },
+    {
+      "file": "career.html",
+      "route": "/career",
+      "dataI18nKeyCount": 0,
+      "missingKeyCount": 0,
+      "missingKeys": [],
+      "unmappedTextCount": 0,
+      "unmappedSample": [],
+      "nonTranslatableSample": [
+        "you@example.com"
+      ]
+    },
+    {
+      "file": "clientzone.html",
+      "route": "/clientzone",
+      "dataI18nKeyCount": 0,
+      "missingKeyCount": 0,
+      "missingKeys": [],
+      "unmappedTextCount": 0,
+      "unmappedSample": [],
+      "nonTranslatableSample": []
+    },
+    {
+      "file": "dashboard.html",
+      "route": "/dashboard",
+      "dataI18nKeyCount": 0,
+      "missingKeyCount": 0,
+      "missingKeys": [],
+      "unmappedTextCount": 0,
+      "unmappedSample": [],
+      "nonTranslatableSample": []
+    },
+    {
+      "file": "help.html",
+      "route": "/help",
+      "dataI18nKeyCount": 0,
+      "missingKeyCount": 0,
+      "missingKeys": [],
+      "unmappedTextCount": 0,
+      "unmappedSample": [],
+      "nonTranslatableSample": []
+    },
+    {
+      "file": "index.html",
+      "route": "/",
+      "dataI18nKeyCount": 94,
+      "missingKeyCount": 0,
+      "missingKeys": [],
+      "unmappedTextCount": 0,
+      "unmappedSample": [],
+      "nonTranslatableSample": [
+        "admin@parcellinkuae.com"
+      ]
+    },
+    {
+      "file": "investor-dashboard.html",
+      "route": "/investor-dashboard",
+      "dataI18nKeyCount": 0,
+      "missingKeyCount": 0,
+      "missingKeys": [],
+      "unmappedTextCount": 0,
+      "unmappedSample": [],
+      "nonTranslatableSample": []
+    },
+    {
+      "file": "investor.html",
+      "route": "/investor",
+      "dataI18nKeyCount": 0,
+      "missingKeyCount": 0,
+      "missingKeys": [],
+      "unmappedTextCount": 0,
+      "unmappedSample": [],
+      "nonTranslatableSample": [
+        "INV003"
+      ]
+    },
+    {
+      "file": "partners.html",
+      "route": "/partners",
+      "dataI18nKeyCount": 0,
+      "missingKeyCount": 0,
+      "missingKeys": [],
+      "unmappedTextCount": 0,
+      "unmappedSample": [],
+      "nonTranslatableSample": []
+    },
+    {
+      "file": "privacy.html",
+      "route": "/privacy",
+      "dataI18nKeyCount": 0,
+      "missingKeyCount": 0,
+      "missingKeys": [],
+      "unmappedTextCount": 0,
+      "unmappedSample": [],
+      "nonTranslatableSample": [
+        "admin@parcellinkuae.com"
+      ]
+    },
+    {
+      "file": "send.html",
+      "route": "/send",
+      "dataI18nKeyCount": 0,
+      "missingKeyCount": 0,
+      "missingKeys": [],
+      "unmappedTextCount": 0,
+      "unmappedSample": [],
+      "nonTranslatableSample": [
+        "Jane Smith",
+        "John Doe",
+        "P.O. Box 12345",
+        "P.O. Box 67890"
+      ]
+    },
+    {
+      "file": "services.html",
+      "route": "/services",
+      "dataI18nKeyCount": 0,
+      "missingKeyCount": 0,
+      "missingKeys": [],
+      "unmappedTextCount": 0,
+      "unmappedSample": [],
+      "nonTranslatableSample": [
+        "admin@parcellinkuae.com"
+      ]
+    },
+    {
+      "file": "staff.html",
+      "route": "/staff",
+      "dataI18nKeyCount": 0,
+      "missingKeyCount": 0,
+      "missingKeys": [],
+      "unmappedTextCount": 0,
+      "unmappedSample": [],
+      "nonTranslatableSample": [
+        "ADM005 or INV003"
+      ]
+    },
+    {
+      "file": "terms.html",
+      "route": "/terms",
+      "dataI18nKeyCount": 0,
+      "missingKeyCount": 0,
+      "missingKeys": [],
+      "unmappedTextCount": 0,
+      "unmappedSample": [],
+      "nonTranslatableSample": [
+        "admin@parcellinkuae.com"
+      ]
+    },
+    {
+      "file": "track.html",
+      "route": "/track",
+      "dataI18nKeyCount": 0,
+      "missingKeyCount": 0,
+      "missingKeys": [],
+      "unmappedTextCount": 0,
+      "unmappedSample": [],
+      "nonTranslatableSample": []
+    }
+  ]
+}
