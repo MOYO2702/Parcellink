@@ -122,7 +122,183 @@
             margin-top:5px;
         }
 
+        .card {
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .card:active {
+            transform: scale(0.98);
+        }
+
+        /* MODAL STYLES */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal.show {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 700px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            animation: slideUp 0.3s ease;
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            border-bottom: 1px solid #eee;
+            background: linear-gradient(135deg, #0f3686, #1d6cff);
+            color: white;
+            border-radius: 12px 12px 0 0;
+        }
+
+        .modal-header h2 {
+            margin: 0;
+            font-size: 20px;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 28px;
+            cursor: pointer;
+            padding: 0;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: background 0.2s;
+        }
+
+        .modal-close:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .modal-body {
+            padding: 20px;
+        }
+
+        .parcel-item {
+            background: #f9fafb;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .parcel-item:hover {
+            background: #f3f4f6;
+            border-color: #0a66ff;
+            box-shadow: 0 2px 8px rgba(10, 102, 255, 0.1);
+        }
+
+        .parcel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .parcel-tracking {
+            font-weight: 600;
+            color: #0a66ff;
+            font-size: 14px;
+        }
+
+        .parcel-status {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .status-delivered {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .status-in-transit {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        .status-pending {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .parcel-detail-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            font-size: 14px;
+            color: #4b5563;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .parcel-detail-row:last-child {
+            border-bottom: none;
+        }
+
+        .detail-label {
+            font-weight: 600;
+            color: #1f2937;
+        }
+
+        .detail-value {
+            color: #374151;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #999;
+        }
+
+        .empty-state i {
+            font-size: 48px;
+            margin-bottom: 15px;
+            opacity: 0.5;
+        }
+
         /* RESPONSIVE */
+
         @media (max-width: 992px) {
             header{
                 padding:0 24px;
@@ -233,19 +409,19 @@
 
         <div class="card-grid">
 
-            <div class="card">
+            <div class="card" onclick="showParcels('all')">
                 <i class="fa fa-box"></i>
                 <div class="card-title" data-i18n="dashboard.parcelsSent">Parcels Sent</div>
                 <div class="card-value" id="parcelsSentValue">0</div>
             </div>
 
-            <div class="card">
+            <div class="card" onclick="showParcels('in-transit')">
                 <i class="fa fa-truck"></i>
                 <div class="card-title" data-i18n="dashboard.inTransit">In Transit</div>
                 <div class="card-value" id="inTransitValue">0</div>
             </div>
 
-            <div class="card">
+            <div class="card" onclick="showParcels('delivered')">
                 <i class="fa fa-check-circle"></i>
                 <div class="card-title" data-i18n="dashboard.delivered">Delivered</div>
                 <div class="card-value" id="deliveredValue">0</div>
@@ -260,7 +436,124 @@
         </div>
     </div>
 
+    <!-- MODAL FOR PARCEL DETAILS -->
+    <div id="parcelsModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">Parcels</h2>
+                <button class="modal-close" onclick="closeParcelsModal()">&times;</button>
+            </div>
+            <div class="modal-body" id="modalBody">
+                <!-- Parcel items will be inserted here -->
+            </div>
+        </div>
+    </div>
+
 <script>
+    let allParcels = [];
+
+    function showParcels(filterType) {
+        const modal = document.getElementById('parcelsModal');
+        const modalTitle = document.getElementById('modalTitle');
+        const modalBody = document.getElementById('modalBody');
+
+        // Filter parcels based on status
+        let filtered = [];
+        if (filterType === 'all') {
+            filtered = allParcels;
+            modalTitle.textContent = t("dashboard.parcelsSent", "All Parcels");
+        } else if (filterType === 'in-transit') {
+            filtered = allParcels.filter(p => {
+                const lastStatus = p.statusHistory?.[p.statusHistory.length - 1];
+                return !lastStatus?.status?.toLowerCase().includes("delivered");
+            });
+            modalTitle.textContent = t("dashboard.inTransit", "In Transit");
+        } else if (filterType === 'delivered') {
+            filtered = allParcels.filter(p => {
+                const lastStatus = p.statusHistory?.[p.statusHistory.length - 1];
+                return lastStatus?.status?.toLowerCase().includes("delivered");
+            });
+            modalTitle.textContent = t("dashboard.delivered", "Delivered");
+        }
+
+        // Generate HTML for parcels
+        if (filtered.length === 0) {
+            modalBody.innerHTML = `
+                <div class="empty-state">
+                    <i class="fa fa-inbox"></i>
+                    <p>${filterType === 'all' ? 'No parcels yet' : 'No parcels in this category'}</p>
+                </div>
+            `;
+        } else {
+            modalBody.innerHTML = filtered.map(parcel => {
+                const lastStatus = parcel.statusHistory?.[parcel.statusHistory.length - 1];
+                const statusText = lastStatus?.status || 'Pending';
+                const statusClass = statusText.toLowerCase().includes('delivered')
+                    ? 'status-delivered'
+                    : statusText.toLowerCase().includes('transit')
+                    ? 'status-in-transit'
+                    : 'status-pending';
+
+                return `
+                    <div class="parcel-item">
+                        <div class="parcel-header">
+                            <div class="parcel-tracking">🔗 ${parcel.trackingCode}</div>
+                            <div class="parcel-status ${statusClass}">${statusText}</div>
+                        </div>
+                        <div class="parcel-detail-row">
+                            <span class="detail-label">From:</span>
+                            <span class="detail-value">${parcel.from || 'N/A'}</span>
+                        </div>
+                        <div class="parcel-detail-row">
+                            <span class="detail-label">To:</span>
+                            <span class="detail-value">${parcel.to || 'N/A'}</span>
+                        </div>
+                        <div class="parcel-detail-row">
+                            <span class="detail-label">Sender:</span>
+                            <span class="detail-value">${parcel.senderName || 'N/A'}</span>
+                        </div>
+                        <div class="parcel-detail-row">
+                            <span class="detail-label">Receiver:</span>
+                            <span class="detail-value">${parcel.receiverName || 'N/A'}</span>
+                        </div>
+                        <div class="parcel-detail-row">
+                            <span class="detail-label">Weight:</span>
+                            <span class="detail-value">${parcel.weight || 0} kg</span>
+                        </div>
+                        <div class="parcel-detail-row">
+                            <span class="detail-label">Cost:</span>
+                            <span class="detail-value">AED ${parcel.finalCost || 0}</span>
+                        </div>
+                        <div class="parcel-detail-row">
+                            <span class="detail-label">Last Update:</span>
+                            <span class="detail-value">${lastStatus?.timestamp ? new Date(lastStatus.timestamp).toLocaleDateString() : 'N/A'}</span>
+                        </div>
+                        ${lastStatus?.remark ? `
+                        <div class="parcel-detail-row">
+                            <span class="detail-label">Remark:</span>
+                            <span class="detail-value">${lastStatus.remark}</span>
+                        </div>
+                        ` : ''}
+                    </div>
+                `;
+            }).join('');
+        }
+
+        modal.classList.add('show');
+    }
+
+    function closeParcelsModal() {
+        const modal = document.getElementById('parcelsModal');
+        modal.classList.remove('show');
+    }
+
+    // Close modal when clicking outside
+    document.getElementById('parcelsModal').addEventListener('click', (e) => {
+        if (e.target.id === 'parcelsModal') {
+            closeParcelsModal();
+        }
+    });
+
     const t = (key, fallback = "") => window.ParcelLinkI18n?.t?.(key, fallback) || fallback;
     ////////////////////////////////////////////////////////////
     // LOAD USER SESSION FROM LOCAL STORAGE
@@ -297,6 +590,8 @@
             const parcelData = await parcelResponse.json();
 
             const parcels = parcelData.success ? parcelData.parcels || [] : [];
+            allParcels = parcels; // Store globally for modal
+
             const parcelsSent = parcels.length;
             const deliveredCount = parcels.filter((p) => {
                 const lastStatus = p.statusHistory?.[p.statusHistory.length - 1];
