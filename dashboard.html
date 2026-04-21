@@ -285,6 +285,72 @@
             color: #374151;
         }
 
+        /* TRACKING TIMELINE */
+        .tracking-timeline {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 2px solid #e5e7eb;
+        }
+
+        .tracking-title {
+            font-weight: 700;
+            color: #1f2937;
+            margin-bottom: 12px;
+            font-size: 14px;
+        }
+
+        .timeline-item {
+            display: flex;
+            margin-bottom: 15px;
+            position: relative;
+        }
+
+        .timeline-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #0a66ff;
+            margin-top: 3px;
+            flex-shrink: 0;
+            margin-right: 12px;
+            border: 3px solid white;
+            box-shadow: 0 0 0 2px #bfdbfe;
+        }
+
+        .timeline-item:last-child .timeline-dot {
+            background: #10b981;
+            box-shadow: 0 0 0 2px #a7f3d0;
+        }
+
+        .timeline-content {
+            flex: 1;
+        }
+
+        .timeline-status {
+            font-weight: 600;
+            color: #1f2937;
+            font-size: 13px;
+        }
+
+        .timeline-location {
+            font-size: 12px;
+            color: #6b7280;
+            margin-top: 2px;
+        }
+
+        .timeline-time {
+            font-size: 12px;
+            color: #9ca3af;
+            margin-top: 2px;
+        }
+
+        .timeline-remark {
+            font-size: 12px;
+            color: #4b5563;
+            margin-top: 4px;
+            font-style: italic;
+        }
+
         .empty-state {
             text-align: center;
             padding: 40px 20px;
@@ -722,8 +788,8 @@
         <nav>
             <ul>
                 <li><a href="/" data-i18n="nav.home">Home</a></li>
-                <li><a href="/track" data-i18n="nav.track">Track</a></li>
-                <li><a href="/send" data-i18n="nav.send">Send</a></li>
+
+
                 <li><a href="/services" data-i18n="nav.services">Services</a></li>
                 <li><a href="/career" data-i18n="nav.careers">Careers</a></li>
                 <li><a href="/help" data-i18n="nav.help">Help</a></li>
@@ -1025,6 +1091,23 @@
                         <div class="parcel-detail-row">
                             <span class="detail-label">Remark:</span>
                             <span class="detail-value">${lastStatus.remark}</span>
+                        </div>
+                        ` : ''}
+                        
+                        ${parcel.statusHistory && parcel.statusHistory.length > 0 ? `
+                        <div class="tracking-timeline">
+                            <div class="tracking-title">📍 Tracking History</div>
+                            ${parcel.statusHistory.map(status => `
+                                <div class="timeline-item">
+                                    <div class="timeline-dot"></div>
+                                    <div class="timeline-content">
+                                        <div class="timeline-status">${status.status}</div>
+                                        ${status.location ? `<div class="timeline-location">📍 ${status.location}</div>` : ''}
+                                        <div class="timeline-time">${new Date(status.timestamp).toLocaleString()}</div>
+                                        ${status.remark ? `<div class="timeline-remark">"${status.remark}"</div>` : ''}
+                                    </div>
+                                </div>
+                            `).join('')}
                         </div>
                         ` : ''}
                     </div>
