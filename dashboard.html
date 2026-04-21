@@ -442,6 +442,185 @@
             margin-top: 10px;
         }
 
+        /* PAYMENT MODAL */
+        .payment-modal {
+            display: none;
+            position: fixed;
+            z-index: 1001;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            animation: fadeIn 0.3s ease;
+        }
+
+        .payment-modal.show {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .payment-modal-content {
+            background: white;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            animation: slideUp 0.3s ease;
+        }
+
+        .payment-modal-header {
+            background: linear-gradient(135deg, #0f3686, #1d6cff);
+            color: white;
+            padding: 20px;
+            border-radius: 12px 12px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .payment-modal-header h2 {
+            margin: 0;
+            font-size: 20px;
+        }
+
+        .payment-modal-body {
+            padding: 25px;
+        }
+
+        .payment-summary {
+            background: #f0f9ff;
+            border: 1px solid #bfdbfe;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+
+        .payment-summary-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #bfdbfe;
+            font-size: 14px;
+        }
+
+        .payment-summary-row.total {
+            border-bottom: none;
+            font-weight: 700;
+            font-size: 18px;
+            color: #0a66ff;
+            margin-top: 10px;
+        }
+
+        .payment-form-group {
+            margin-bottom: 15px;
+        }
+
+        .payment-form-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #1f2937;
+            font-size: 14px;
+        }
+
+        .payment-form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 14px;
+            box-sizing: border-box;
+        }
+
+        .payment-form-group input:focus {
+            outline: none;
+            border-color: #0a66ff;
+            box-shadow: 0 0 0 3px rgba(10, 102, 255, 0.1);
+        }
+
+        .payment-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .pay-button, .cancel-payment-button {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .pay-button {
+            background: linear-gradient(135deg, #0f3686, #1d6cff);
+            color: white;
+            box-shadow: 0 10px 22px rgba(18, 66, 166, 0.2);
+        }
+
+        .pay-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 14px 28px rgba(18, 66, 166, 0.24);
+        }
+
+        .pay-button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .cancel-payment-button {
+            background: #e5e7eb;
+            color: #374151;
+        }
+
+        .cancel-payment-button:hover {
+            background: #d1d5db;
+        }
+
+        .success-message {
+            background: #d1fae5;
+            border: 1px solid #a7f3d0;
+            border-radius: 8px;
+            padding: 15px;
+            color: #065f46;
+            margin-top: 15px;
+            font-size: 14px;
+        }
+
+        .pay-now-prompt {
+            background: #fef3c7;
+            border: 1px solid #fcd34d;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 15px;
+            text-align: center;
+        }
+
+        .pay-now-button {
+            background: linear-gradient(135deg, #0f3686, #1d6cff);
+            color: white;
+            padding: 10px 24px;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: all 0.2s;
+            box-shadow: 0 10px 22px rgba(18, 66, 166, 0.2);
+        }
+
+        .pay-now-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 14px 28px rgba(18, 66, 166, 0.24);
+        }
+
         /* RESPONSIVE */
 
         @media (max-width: 992px) {
@@ -697,6 +876,68 @@
             </div>
             <div class="modal-body" id="modalBody">
                 <!-- Parcel items will be inserted here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- PAYMENT MODAL -->
+    <div id="paymentModal" class="payment-modal">
+        <div class="payment-modal-content">
+            <div class="payment-modal-header">
+                <h2>💳 Payment</h2>
+                <button class="modal-close" onclick="closePaymentModal()" style="width:auto; margin:0;">&times;</button>
+            </div>
+            <div class="payment-modal-body">
+                <div class="payment-summary">
+                    <div class="payment-summary-row">
+                        <span>Tracking Code:</span>
+                        <span id="paymentTrackingCode">-</span>
+                    </div>
+                    <div class="payment-summary-row">
+                        <span>Weight:</span>
+                        <span id="paymentWeight">-</span>
+                    </div>
+                    <div class="payment-summary-row">
+                        <span>Base Cost:</span>
+                        <span id="paymentBaseCost">-</span>
+                    </div>
+                    <div class="payment-summary-row">
+                        <span>Discount:</span>
+                        <span id="paymentDiscount">-</span>
+                    </div>
+                    <div class="payment-summary-row total">
+                        <span>Total Due:</span>
+                        <span id="paymentTotal">-</span>
+                    </div>
+                </div>
+
+                <form id="paymentForm" onsubmit="processPayment(event)">
+                    <div class="payment-form-group">
+                        <label>Email Address *</label>
+                        <input type="email" id="paymentEmail" required>
+                    </div>
+
+                    <div class="payment-form-group">
+                        <label>Card Number *</label>
+                        <input type="text" id="cardNumber" placeholder="1234 5678 9012 3456" maxlength="19" required>
+                    </div>
+
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+                        <div class="payment-form-group">
+                            <label>Expiry (MM/YY) *</label>
+                            <input type="text" id="cardExpiry" placeholder="12/25" maxlength="5" required>
+                        </div>
+                        <div class="payment-form-group">
+                            <label>CVV *</label>
+                            <input type="text" id="cardCVV" placeholder="123" maxlength="4" required>
+                        </div>
+                    </div>
+
+                    <div class="payment-buttons">
+                        <button type="submit" class="pay-button">Pay Now</button>
+                        <button type="button" class="cancel-payment-button" onclick="closePaymentModal()">Cancel</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
@@ -963,10 +1204,31 @@
                 const trackingCode = result.trackingCode;
                 const pricing = result.pricing;
                 
-                showResponseMessage(
-                    `✅ Parcel created successfully!\nTracking Code: ${trackingCode}\nTotal Cost: AED ${pricing.finalCost}`,
-                    'success'
-                );
+                // Store payment info globally
+                window.currentParcelPayment = {
+                    trackingCode,
+                    weight: pricing.weight,
+                    baseCost: pricing.baseCost,
+                    discountAmount: pricing.discountAmount,
+                    discountPercentage: pricing.discountPercentage,
+                    finalCost: pricing.finalCost
+                };
+
+                // Show success message with Pay Now button
+                const responseBox = document.getElementById('responseBox');
+                responseBox.innerHTML = `
+                    <div class="success-message">
+                        <strong>✅ Parcel Created Successfully!</strong><br>
+                        Tracking Code: <strong>${trackingCode}</strong><br>
+                        Total Cost: <strong>AED ${pricing.finalCost}</strong>
+                        <div class="pay-now-prompt">
+                            <p style="margin:10px 0 0 0;">Ready to pay now?</p>
+                            <button type="button" class="pay-now-button" onclick="openPaymentModal()">💳 Pay Now</button>
+                            <p style="margin:10px 0 0 0; font-size:12px;">Or pay later from Client Zone</p>
+                        </div>
+                    </div>
+                `;
+                responseBox.className = 'response-box show success';
 
                 // Clear form
                 sendForm.reset();
@@ -989,6 +1251,109 @@
     function showResponseMessage(message, type) {
         responseBox.textContent = message;
         responseBox.className = `response-box show ${type}`;
+    }
+
+    ////////////////////////////////////////////////////////////
+    // PAYMENT MODAL
+    ////////////////////////////////////////////////////////////
+
+    function openPaymentModal() {
+        if (!window.currentParcelPayment) {
+            alert('No pending payment');
+            return;
+        }
+
+        const payment = window.currentParcelPayment;
+        document.getElementById('paymentTrackingCode').textContent = payment.trackingCode;
+        document.getElementById('paymentWeight').textContent = `${payment.weight} kg`;
+        document.getElementById('paymentBaseCost').textContent = `AED ${payment.baseCost.toFixed(2)}`;
+        document.getElementById('paymentDiscount').textContent = `-${payment.discountPercentage}% (AED ${payment.discountAmount.toFixed(2)})`;
+        document.getElementById('paymentTotal').textContent = `AED ${payment.finalCost.toFixed(2)}`;
+        
+        // Pre-fill email if available
+        const userEmail = user?.email || '';
+        document.getElementById('paymentEmail').value = userEmail;
+        
+        document.getElementById('paymentModal').classList.add('show');
+    }
+
+    function closePaymentModal() {
+        document.getElementById('paymentModal').classList.remove('show');
+    }
+
+    // Close modal when clicking outside
+    document.getElementById('paymentModal').addEventListener('click', (e) => {
+        if (e.target.id === 'paymentModal') {
+            closePaymentModal();
+        }
+    });
+
+    async function processPayment(e) {
+        e.preventDefault();
+
+        if (!window.currentParcelPayment) {
+            alert('No pending payment');
+            return;
+        }
+
+        const email = document.getElementById('paymentEmail').value.trim();
+        const cardNumber = document.getElementById('cardNumber').value.replace(/\s/g, '');
+        const cardExpiry = document.getElementById('cardExpiry').value.trim();
+        const cardCVV = document.getElementById('cardCVV').value.trim();
+
+        // Validation
+        if (!email || !cardNumber || !cardExpiry || !cardCVV) {
+            alert('Please fill in all payment details');
+            return;
+        }
+
+        if (!/^\d{13,19}$/.test(cardNumber)) {
+            alert('Invalid card number');
+            return;
+        }
+
+        if (!/^\d{2}\/\d{2}$/.test(cardExpiry)) {
+            alert('Invalid expiry date format (MM/YY)');
+            return;
+        }
+
+        if (!/^\d{3,4}$/.test(cardCVV)) {
+            alert('Invalid CVV');
+            return;
+        }
+
+        const payment = window.currentParcelPayment;
+        const cardLast4 = cardNumber.slice(-4);
+
+        try {
+            const response = await fetch('/api/payments', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${authToken}`
+                },
+                body: JSON.stringify({
+                    trackingCode: payment.trackingCode,
+                    amount: payment.finalCost,
+                    paymentMethod: 'Card',
+                    cardDetails: { last4: cardLast4 }
+                })
+            });
+
+            const result = await response.json();
+
+            if (result.success) {
+                alert(`✅ PAYMENT SUCCESSFUL!\n\nReceipt: ${result.receiptNumber}\nTracking: ${payment.trackingCode}\n\nYou can view details in Client Zone.`);
+                closePaymentModal();
+                window.currentParcelPayment = null;
+                loadDashboardMetrics();
+            } else {
+                alert(`❌ Payment failed: ${result.message}`);
+            }
+        } catch (error) {
+            console.error('Payment error:', error);
+            alert('❌ Payment processing failed. Please try again.');
+        }
     }
 
     ////////////////////////////////////////////////////////////
