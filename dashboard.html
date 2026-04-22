@@ -83,6 +83,80 @@
             padding: 40px;
         }
 
+        /* ONBOARDING HINT */
+        .onboarding-banner {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.2);
+        }
+
+        .onboarding-content {
+            flex: 1;
+        }
+
+        .onboarding-banner h3 {
+            margin: 0 0 8px 0;
+            font-size: 16px;
+        }
+
+        .onboarding-banner p {
+            margin: 0;
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .onboarding-close {
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+            padding: 0;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s;
+            margin-left: 20px;
+        }
+
+        .onboarding-close:hover {
+            background: rgba(255,255,255,0.3);
+        }
+
+        /* PROGRESS INDICATOR */
+        .section-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 40px;
+            margin-bottom: 20px;
+            font-size: 20px;
+            font-weight: 600;
+            color: #1a237e;
+        }
+
+        .section-badge {
+            background: #0a66ff;
+            color: white;
+            border-radius: 50%;
+            width: 28px;
+            height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
         h1 {
             color:#1a237e;
             margin-bottom: 25px;
@@ -803,24 +877,36 @@
     <div class="main">
         <h1 id="welcomeTitle" data-i18n="dashboard.welcomeTitle">Welcome to your Dashboard</h1>
 
+        <!-- Onboarding Banner -->
+        <div id="onboardingBanner" class="onboarding-banner" style="display: none;">
+            <div class="onboarding-content">
+                <h3>👋 Welcome to Your Dashboard</h3>
+                <p>Send parcels, track deliveries, manage payments—all in one place. Click any card below to explore.</p>
+            </div>
+            <button class="onboarding-close" onclick="closeOnboarding()">✕</button>
+        </div>
+
         <div class="card-grid">
 
-            <div class="card" onclick="showParcels('all')">
+            <div class="card" onclick="showParcels('all')" title="Click to view all parcels">
                 <i class="fa fa-box"></i>
                 <div class="card-title" data-i18n="dashboard.parcelsSent">Parcels Sent</div>
                 <div class="card-value" id="parcelsSentValue">0</div>
+                <small style="color:#999; font-size:12px; margin-top:8px;">👆 Click to view</small>
             </div>
 
-            <div class="card" onclick="showParcels('in-transit')">
+            <div class="card" onclick="showParcels('in-transit')" title="Click to view in-transit parcels">
                 <i class="fa fa-truck"></i>
                 <div class="card-title" data-i18n="dashboard.inTransit">In Transit</div>
                 <div class="card-value" id="inTransitValue">0</div>
+                <small style="color:#999; font-size:12px; margin-top:8px;">👆 Click to view</small>
             </div>
 
-            <div class="card" onclick="showParcels('delivered')">
+            <div class="card" onclick="showParcels('delivered')" title="Click to view delivered parcels">
                 <i class="fa fa-check-circle"></i>
                 <div class="card-title" data-i18n="dashboard.delivered">Delivered</div>
                 <div class="card-value" id="deliveredValue">0</div>
+                <small style="color:#999; font-size:12px; margin-top:8px;">👆 Click to view</small>
             </div>
 
             <div class="card">
@@ -835,6 +921,7 @@
     <!-- SEND PARCEL SECTION -->
     <div class="send-section">
         <h2>📦 Send a Parcel</h2>
+        <p style="color:#666; font-size:14px; margin-bottom:20px;">💡 Fill in the form below. The price will calculate automatically based on your package weight and dimensions.</p>
         
         <form id="sendParcelForm">
             <!-- Sender Details -->
@@ -1450,6 +1537,33 @@
         sessionStorage.removeItem("user");
         sessionStorage.removeItem("userToken");
         window.location.href = "/login";
+    }
+
+    ////////////////////////////////////////////////////////////
+    // ONBOARDING HINTS
+    ////////////////////////////////////////////////////////////
+
+    function showOnboarding() {
+        const banner = document.getElementById('onboardingBanner');
+        if (banner) {
+            banner.style.display = 'flex';
+        }
+    }
+
+    function closeOnboarding() {
+        const banner = document.getElementById('onboardingBanner');
+        if (banner) {
+            banner.style.display = 'none';
+        }
+        // Mark as visited so it doesn't show again
+        localStorage.setItem('dashboardOnboardingDone', 'true');
+    }
+
+    // Show onboarding on first dashboard visit
+    if (!localStorage.getItem('dashboardOnboardingDone')) {
+        setTimeout(() => {
+            showOnboarding();
+        }, 500);
     }
 </script>
 <!-- add script using /js if needed -->
