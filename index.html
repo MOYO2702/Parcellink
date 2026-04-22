@@ -77,47 +77,85 @@
 </div>
 
 <section class="hero">
+  <div class="hero-bg"></div>
   <div class="hero-container">
-    <div class="hero-content">
-      <h1 data-i18n="hero.title">The Cheapest Parcel Delivery In The UAE.</h1>
-      <p class="hero-subtitle" data-i18n="hero.subtitle">Fast, Reliable, and Affordable Shipping Solutions</p>
-      
-      <div class="hero-cta-buttons">
-        <a href="/register" class="btn-primary">
-          <i class="fa fa-rocket"></i> Get Started
-        </a>
-        <a href="#calculator" class="btn-secondary">
-          <i class="fa fa-calculator"></i> Calculate Price
+    <div class="hero-grid">
+      <div class="hero-content">
+        <h1 data-i18n="hero.title">The Cheapest Parcel Delivery In The UAE.</h1>
+        <p class="hero-subtitle" data-i18n="hero.subtitle">Fast, Reliable, and Affordable Shipping Solutions Worldwide</p>
+        
+        <div class="hero-benefits">
+          <div class="benefit-row">
+            <i class="fas fa-check-circle"></i>
+            <span>Competitive rates • 10% discount on all shipments</span>
+          </div>
+          <div class="benefit-row">
+            <i class="fas fa-truck"></i>
+            <span>Fast and reliable worldwide delivery</span>
+          </div>
+          <div class="benefit-row">
+            <i class="fas fa-shield-alt"></i>
+            <span>Secure and insured parcels</span>
+          </div>
+        </div>
+
+        <a href="/register" class="btn-primary-large">
+          <i class="fa fa-arrow-right"></i> Get Started Now
         </a>
       </div>
-      
-      <div class="hero-features">
-        <div class="feature-item">
-          <i class="fa fa-check-circle"></i>
-          <span>10% Discount</span>
-        </div>
-        <div class="feature-item">
-          <i class="fa fa-truck"></i>
-          <span>Fast Delivery</span>
-        </div>
-        <div class="feature-item">
-          <i class="fa fa-lock"></i>
-          <span>Secure</span>
-        </div>
+
+      <div class="hero-calculator-card">
+        <h3>Quick Quote</h3>
+        <p>Get an instant estimate in seconds</p>
+        
+        <form id="hero-quick-calc" class="quick-calc-form">
+          <div class="form-group-compact">
+            <label>From</label>
+            <select id="quick-from">
+              <option>Dubai</option>
+              <option>Abu Dhabi</option>
+            </select>
+          </div>
+          
+          <div class="form-group-compact">
+            <label>To</label>
+            <select id="quick-to">
+              <option>United Kingdom</option>
+              <option>USA</option>
+              <option>Australia</option>
+            </select>
+          </div>
+
+          <div class="form-group-compact">
+            <label>Weight (kg)</label>
+            <input type="number" id="quick-weight" placeholder="0.5" step="0.1" min="0">
+          </div>
+
+          <button type="submit" class="btn-secondary-compact">Calculate</button>
+          
+          <div id="quick-result" style="margin-top:12px;padding:15px;background:#f0f4f8;border-radius:8px;display:none;text-align:center;border-left:4px solid #1d6cff">
+            <div style="font-size:12px;color:#666;margin-bottom:6px">Estimated shipping cost</div>
+            <div style="font-size:24px;font-weight:800;color:#1d6cff">AED <span id="quick-price">0</span></div>
+          </div>
+        </form>
+
+        <p class="card-footer">Need full details? <a href="#full-calculator">Use full calculator →</a></p>
       </div>
     </div>
   </div>
 </section>
 
-<section class="calculator-section" id="calculator">
+<section class="full-calculator-section" id="full-calculator">
   <div class="calculator-container">
-    <h2 data-i18n="calculator.title">Calculate Your Shipping Cost</h2>
-    <p data-i18n="calculator.subtitle">Get an instant quote for your parcel</p>
+    <div class="section-header">
+      <h2 data-i18n="calculator.title">Complete Shipping Calculator</h2>
+      <p data-i18n="calculator.subtitle">Calculate detailed shipping costs with multiple packages</p>
+    </div>
 
     <div class="parcel-tabs">
-      <button class="tab-btn active" data-target="international-form" data-i18n="tabs.international">Send Parcel International</button>
-      <button class="tab-btn" data-target="uae-form" data-i18n="tabs.uae">Send UAE to UAE</button>
-      <button class="tab-btn" data-target="corporate-form" data-i18n="tabs.corporate">Corporate SME’s</button>
+      <button class="tab-btn active" data-target="international-form" data-i18n="tabs.international">International Shipping</button>
+      <button class="tab-btn" data-target="uae-form" data-i18n="tabs.uae">UAE to UAE</button>
+      <button class="tab-btn" data-target="corporate-form" data-i18n="tabs.corporate">Corporate Solutions</button>
     </div>
 
     <form id="international-form" class="parcel-form active">
@@ -524,9 +562,28 @@
   </div>
 </footer>
 
+<script>
+  // Quick Calculator in Hero
+  document.getElementById('hero-quick-calc').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const weight = parseFloat(document.getElementById('quick-weight').value);
+    const result = document.getElementById('quick-result');
+    
+    if (!weight || weight <= 0) {
+      result.style.display = 'none';
+      return;
+    }
 
+    // Simple calculation: 10 AED/kg base rate + 10% discount
+    const baseRate = 10;
+    const baseCost = weight * baseRate;
+    const discount = baseCost * 0.10;
+    const finalCost = baseCost - discount;
 
-
+    document.getElementById('quick-price').textContent = finalCost.toFixed(2);
+    result.style.display = 'block';
+  });
+</script>
 
     <script src="/js/i18n.js"></script>
     <script src="/js/site.js"></script>
